@@ -3333,23 +3333,28 @@ textarea:focus, input[type="text"]:focus {
   text-align: right;
 }
 
-/* Creature Stage & Body */
+/* Creature Stage & Body (Clean Minimal Size) */
 .dazy-creature-stage {
   pointer-events: auto;
   position: relative;
-  width: 105px;
-  height: 105px;
+  width: 84px;
+  height: 84px;
   cursor: grab;
   user-select: none;
   -webkit-user-select: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: filter 0.2s;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.dazy-creature-stage:hover {
+  transform: scale(1.06);
 }
 
 .dazy-creature-stage:active {
   cursor: grabbing;
+  transform: scale(0.96);
 }
 
 .dazy-creature-stage:focus-visible {
@@ -3365,7 +3370,7 @@ textarea:focus, input[type="text"]:focus {
   display: flex;
   flex-direction: column;
   align-items: center;
-  animation: dazyIdleFloat 3.6s ease-in-out infinite;
+  animation: dazyIdleFloat 3.8s ease-in-out infinite;
   will-change: transform;
 }
 
@@ -3373,63 +3378,100 @@ textarea:focus, input[type="text"]:focus {
   width: 100%;
   height: 100%;
   overflow: visible;
-  filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.45));
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.35));
 }
 
 /* Name Tag underneath */
 .dazy-name-tag {
   position: absolute;
-  bottom: -4px;
+  bottom: -6px;
   display: flex;
   align-items: center;
   gap: 3px;
   background: rgba(11, 19, 36, 0.88);
-  border: 1px solid rgba(45, 212, 191, 0.5);
+  border: 1px solid rgba(56, 189, 248, 0.45);
   backdrop-filter: blur(8px);
-  padding: 2px 7px;
+  padding: 2px 8px;
   border-radius: 999px;
   font-size: 0.66rem;
   font-weight: 800;
   color: #f8fafc;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), 0 0 10px rgba(45, 212, 191, 0.35);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), 0 0 10px rgba(56, 189, 248, 0.25);
   pointer-events: none;
 }
 
-.dazy-name-tag .tag-ver {
-  color: #2dd4bf;
-  font-size: 0.6rem;
-}
-
 /* ========================================================
-   KAWAII CREATURE ANIMATIONS & EMOTE STATES
+   MINIMAL CUTE CREATURE ANIMATIONS & GENTLE EMOTES
    ======================================================== */
 
-/* 1. Default Idle Bobbing & Gentle Breath */
+/* 1. Peaceful, Gentle Idle Bobbing */
 @keyframes dazyIdleFloat {
   0%, 100% {
-    transform: translateY(0px) rotate(0deg);
+    transform: translateY(0px);
   }
-  25% {
-    transform: translateY(-7px) rotate(-2deg);
-  }
-  75% {
-    transform: translateY(3px) rotate(2deg);
+  50% {
+    transform: translateY(-8px);
   }
 }
 
 .dazy-shadow-aura {
-  animation: dazyAuraPulse 3.6s ease-in-out infinite;
+  animation: dazyAuraPulse 3.8s ease-in-out infinite;
 }
 
 @keyframes dazyAuraPulse {
-  0%, 100% { transform: scale(1); opacity: 0.3; }
-  50% { transform: scale(0.85); opacity: 0.18; }
+  0%, 100% { transform: scale(1); opacity: 0.25; }
+  50% { transform: scale(0.8); opacity: 0.12; }
 }
 
-/* Blank Eyes Cute Kawaii Blink */
-.dazy-eyes-container {
-  transform-origin: 60px 58px;
+/* Cute Kawaii Eyes Blink */
+.dazy-eyes {
+  transform-origin: 50px 50px;
   animation: dazyCuteBlink 4.5s ease-in-out infinite;
+}
+
+@keyframes dazyCuteBlink {
+  0%, 94%, 98%, 100% {
+    transform: scaleY(1);
+  }
+  96% {
+    transform: scaleY(0.1);
+  }
+}
+
+/* Gentle Soft Emotes - Subtle & Peaceful */
+.dazy-body-wrapper.emote-pet {
+  animation: dazyCutePet 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes dazyCutePet {
+  0%, 100% { transform: scale(1); }
+  40% { transform: scale(1.14, 0.88) translateY(3px); }
+  70% { transform: scale(0.95, 1.05) translateY(-3px); }
+}
+
+.dazy-body-wrapper.emote-dance {
+  animation: dazyCuteDance 1.6s ease-in-out;
+}
+@keyframes dazyCuteDance {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-5px) rotate(-4deg); }
+  75% { transform: translateY(-5px) rotate(4deg); }
+}
+
+.dazy-body-wrapper.emote-flip {
+  animation: dazyCuteHop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes dazyCuteHop {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px) scale(1.05); }
+}
+
+.dazy-body-wrapper.emote-sleep {
+  animation: dazyCuteSleep 4s ease-in-out infinite;
+  opacity: 0.85;
+}
+@keyframes dazyCuteSleep {
+  0%, 100% { transform: translateY(1px) rotate(-3deg); }
+  50% { transform: translateY(5px) rotate(-3deg); }
 }
 
 /* Telemetry Monitor Styles in Identity Pod */
@@ -3476,180 +3518,21 @@ textarea:focus, input[type="text"]:focus {
   margin-left: auto;
 }
 
-/* ========================================================
-   🐙 CUTE SKY BLUE OCTOPUS ANIMATIONS & EMOTES
-   Matching Reference Pic: 8 Curled Tentacles, Mint Suction Cups,
-   Vibrant Blue Dome with Highlight Shine & Big Kawaii Eyes
-   ======================================================== */
-
-.dazy-creature-stage {
-  pointer-events: auto;
-  position: relative;
-  width: 120px;
-  height: 120px;
-  cursor: grab;
-  user-select: none;
-  -webkit-user-select: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: filter 0.2s;
-}
-
-.dazy-octo-svg {
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-  filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.45)) drop-shadow(0 0 20px rgba(56, 189, 248, 0.65));
-}
-
-/* 1. Default Idle Float & Squishy Breathing */
-@keyframes dazyIdleFloat {
-  0%, 100% {
-    transform: translateY(0px) scale(1) rotate(0deg);
-  }
-  25% {
-    transform: translateY(-8px) scale(1.02, 0.98) rotate(-2deg);
-  }
-  75% {
-    transform: translateY(4px) scale(0.98, 1.02) rotate(2deg);
-  }
-}
-
-.dazy-shadow-aura {
-  animation: dazyAuraPulse 3.6s ease-in-out infinite;
-}
-
-@keyframes dazyAuraPulse {
-  0%, 100% { transform: scale(1); opacity: 0.35; }
-  50% { transform: scale(0.85); opacity: 0.16; }
-}
-
-/* 2. Kawaii Eyes Smooth Blink (Large Eyes with Specular Highlights) */
-.dazy-kawaii-eyes {
-  transform-origin: 75px 65px;
-  animation: dazyCuteBlink 4.5s ease-in-out infinite;
-}
-
-@keyframes dazyCuteBlink {
-  0%, 94%, 98%, 100% {
-    transform: scaleY(1);
-  }
-  96% {
-    transform: scaleY(0.08);
-  }
-}
-
-/* 3. Back Tentacles Floating Depth */
-.tentacles-back path {
-  transform-origin: 75px 95px;
-  animation: dazyBackTentacleFloat 3.2s ease-in-out infinite alternate;
-}
-
-@keyframes dazyBackTentacleFloat {
-  0% { transform: rotate(0deg) scale(1); }
-  100% { transform: rotate(4deg) scale(1.04); }
-}
-
-/* 4. Front 6 Curled Tentacles Swimming Wave Cycle */
-.tentacle-curl {
-  transform-origin: 75px 98px;
-  animation: dazyFrontTentacleWave 2.6s ease-in-out infinite alternate;
-}
-
-.t-left-1 { animation-delay: 0s; }
-.t-left-2 { animation-delay: 0.25s; }
-.t-center-1 { animation-delay: 0.5s; }
-.t-center-2 { animation-delay: 0.75s; }
-.t-right-2 { animation-delay: 0.35s; }
-.t-right-1 { animation-delay: 0.1s; }
-
-@keyframes dazyFrontTentacleWave {
-  0% {
-    transform: rotate(0deg) scaleY(1);
-  }
-  100% {
-    transform: rotate(6deg) scaleY(0.92);
-  }
-}
-
-/* 5. Emote: Squishy Octopus Dance */
-.dazy-body-wrapper.emote-dance {
-  animation: dazyOctoDance 0.55s ease-in-out infinite alternate !important;
-}
-
-@keyframes dazyOctoDance {
-  0% {
-    transform: translateY(-9px) scale(1.12, 0.88) rotate(-9deg);
-  }
-  100% {
-    transform: translateY(-9px) scale(0.9, 1.1) rotate(9deg);
-  }
-}
-
-/* 6. Emote: Octopus 360 Spin Flip */
-.dazy-body-wrapper.emote-flip {
-  animation: dazyOctoSpinFlip 0.9s cubic-bezier(0.2, 0.8, 0.3, 1) forwards !important;
-}
-
-@keyframes dazyOctoSpinFlip {
-  0% {
-    transform: translateY(0px) scale(1) rotate(0deg);
-  }
-  25% {
-    transform: translateY(8px) scale(1.2, 0.8) rotate(-45deg);
-  }
-  50% {
-    transform: translateY(-48px) scale(0.85, 1.15) rotate(-180deg);
-  }
-  75% {
-    transform: translateY(-18px) scale(1.1, 0.9) rotate(-315deg);
-  }
-  100% {
-    transform: translateY(0px) scale(1) rotate(-360deg);
-  }
-}
-
-/* 7. Emote: Petting Squish & Happy Wiggle */
-.dazy-body-wrapper.emote-pet {
-  animation: dazyOctoPet 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards !important;
-}
-
-@keyframes dazyOctoPet {
-  0% { transform: scale(0.88, 1.12); }
-  35% { transform: scale(1.24, 0.8) rotate(-6deg); }
-  70% { transform: scale(0.92, 1.08) rotate(6deg); }
-  100% { transform: scale(1) rotate(0deg); }
-}
-
-/* 8. Emote: Scared Shivering */
+/* Subtle Scared & Sad Emotes */
 .dazy-body-wrapper.emote-scared {
-  animation: dazyOctoShiver 0.14s ease-in-out infinite alternate !important;
+  animation: dazyCuteShiver 0.25s ease-in-out infinite alternate;
+}
+@keyframes dazyCuteShiver {
+  0% { transform: translateX(-2px) scale(0.96); }
+  100% { transform: translateX(2px) scale(0.96); }
 }
 
-@keyframes dazyOctoShiver {
-  0% { transform: translateY(-2px) translateX(-3px) rotate(-3deg); }
-  100% { transform: translateY(2px) translateX(3px) rotate(3deg); }
-}
-
-/* 9. Emote: Sad Droop */
 .dazy-body-wrapper.emote-sad {
-  animation: dazyOctoSad 3s ease-in-out infinite !important;
+  animation: dazyCuteSad 2.5s ease-in-out infinite;
 }
-
-@keyframes dazyOctoSad {
-  0%, 100% { transform: translateY(10px) rotate(-4deg) scale(0.94); }
-  50% { transform: translateY(14px) rotate(-6deg) scale(0.92); }
-}
-
-/* 10. Emote: Sleepy Snooze */
-.dazy-body-wrapper.emote-sleep {
-  animation: dazyOctoSnooze 4s ease-in-out infinite !important;
-}
-
-@keyframes dazyOctoSnooze {
-  0%, 100% { transform: translateY(12px) scale(0.96); }
-  50% { transform: translateY(16px) scale(0.94); }
+@keyframes dazyCuteSad {
+  0%, 100% { transform: translateY(4px) scale(0.95); opacity: 0.85; }
+  50% { transform: translateY(7px) scale(0.93); opacity: 0.8; }
 }
 
 /* Shield Barrier Aura */
@@ -3720,10 +3603,8 @@ textarea:focus, input[type="text"]:focus {
 
 @media (prefers-reduced-motion: reduce) {
   .dazy-body-wrapper,
-  .dazy-pupil-holder,
-  .dazy-octo-fin-left,
-  .dazy-octo-fin-right,
-  .dazy-octo-tentacles .tentacle {
+  .dazy-eyes,
+  .dazy-creature-stage {
     animation: none !important;
   }
 }
