@@ -9,7 +9,7 @@
 const state = {
   activeTeam: 'red', // 'red' or 'blue'
   currentScenario: 'cred-stuffing',
-  voiceEnabled: false,
+  voiceEnabled: true,
   riskScore: 75,
   hasPasswordLeak: true,
   hasRecentBreach: false,
@@ -107,6 +107,70 @@ class SoundEngine {
       osc.stop(this.ctx.currentTime + idx * 0.09 + 0.25);
     });
   }
+
+  playChirp() {
+    this.init();
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(880, this.ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(1320, this.ctx.currentTime + 0.08);
+    gain.gain.setValueAtTime(0.14, this.ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.12);
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+    osc.start();
+    osc.stop(this.ctx.currentTime + 0.12);
+  }
+
+  playDanceJingle() {
+    this.init();
+    const notes = [587.33, 659.25, 783.99, 880.00, 1046.50]; // D5, E5, G5, A5, C6
+    notes.forEach((freq, idx) => {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(freq, this.ctx.currentTime + idx * 0.07);
+      gain.gain.setValueAtTime(0.12, this.ctx.currentTime + idx * 0.07);
+      gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + idx * 0.07 + 0.14);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(this.ctx.currentTime + idx * 0.07);
+      osc.stop(this.ctx.currentTime + idx * 0.07 + 0.15);
+    });
+  }
+
+  playFlipChime() {
+    this.init();
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(523.25, this.ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(1567.98, this.ctx.currentTime + 0.35); // C5 to G6
+    gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.4);
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+    osc.start();
+    osc.stop(this.ctx.currentTime + 0.4);
+  }
+
+  playGiggle() {
+    this.init();
+    const freqs = [784, 880, 988, 1046];
+    freqs.forEach((freq, i) => {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, this.ctx.currentTime + i * 0.04);
+      gain.gain.setValueAtTime(0.1, this.ctx.currentTime + i * 0.04);
+      gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + i * 0.04 + 0.07);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(this.ctx.currentTime + i * 0.04);
+      osc.stop(this.ctx.currentTime + i * 0.04 + 0.08);
+    });
+  }
 }
 const sfx = new SoundEngine();
 
@@ -142,9 +206,9 @@ class DazyVoice {
     const cleanText = text.replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, '');
     const utter = new SpeechSynthesisUtterance(cleanText);
     if (this.voice) utter.voice = this.voice;
-    utter.pitch = 1.25; // Slightly cute and cheerful higher pitch
-    utter.rate = 1.0;
-    utter.volume = 0.9;
+    utter.pitch = 1.35; // Extra cute cheerful chibi pitch
+    utter.rate = 1.05;
+    utter.volume = 0.95;
     this.synth.speak(utter);
   }
 }
@@ -161,6 +225,11 @@ function setDazyMood(mood, dialogueText, speakNow = true) {
   if (speechText && dialogueText) {
     speechText.textContent = dialogueText;
     if (speakNow) dazyVoice.speak(dialogueText);
+  }
+
+  // Sync with floating Dazy creature if present
+  if (typeof updateFloatingDazyMood === 'function') {
+    updateFloatingDazyMood(mood, dialogueText, false); // already spoken above
   }
 
   if (!moodBadge || !avatarImg) return;
@@ -2046,4 +2115,543 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('btnCloseSecMd')?.addEventListener('click', () => {
     secMdModal?.classList.remove('active');
   });
+
+  // Initialize Dazy v3.75 Floating Companion & Guide
+  initFloatingDazy();
 });
+
+/* ========================================================
+   🌸 DAZY VERSION 3.75 — FLOATING COMPANION & GUIDE ENGINE
+   Pastel Mint / Aqua Creature, Blank Kawaii Eyes, Emote FX,
+   Random Dance/Flip Loop, Dragging Physics & Free AI Guide
+   ======================================================== */
+
+let floatingDazyState = {
+  x: null,
+  y: null,
+  isDragging: false,
+  dragStartX: 0,
+  dragStartY: 0,
+  currentSection: '',
+  lastActionTime: Date.now(),
+  isSleeping: false,
+  isActing: false,
+  idleTimer: null,
+  seenSections: new Set()
+};
+
+function initFloatingDazy() {
+  const container = document.getElementById('dazyFloatingCompanion');
+  const stage = document.getElementById('dazyCreatureStage');
+  const body = document.getElementById('dazyBodyWrapper');
+  const bubble = document.getElementById('dazyFloatingBubble');
+  const bubbleText = document.getElementById('dazyFloatingText');
+  const bubbleMood = document.getElementById('dazyFloatingMood');
+  const toggleBtn = document.getElementById('btnDazyBubbleToggle');
+  const aiDrawer = document.getElementById('dazyAiDrawer');
+  const aiInput = document.getElementById('dazyAiPromptInput');
+  const aiSendBtn = document.getElementById('btnDazyAiSend');
+
+  if (!container || !stage || !body) return;
+
+  // 1. Mouse & Touch Dragging Physics with Viewport Bounds
+  let hasMoved = false;
+  let clickStartTime = 0;
+
+  function onPointerDown(e) {
+    // Only drag on primary click or touch
+    if (e.button && e.button !== 0) return;
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+    const rect = container.getBoundingClientRect();
+    floatingDazyState.isDragging = true;
+    hasMoved = false;
+    clickStartTime = Date.now();
+    floatingDazyState.dragStartX = clientX - rect.left;
+    floatingDazyState.dragStartY = clientY - rect.top;
+    floatingDazyState.lastActionTime = Date.now();
+    wakeDazy();
+
+    window.addEventListener('mousemove', onPointerMove, { passive: false });
+    window.addEventListener('mouseup', onPointerUp);
+    window.addEventListener('touchmove', onPointerMove, { passive: false });
+    window.addEventListener('touchend', onPointerUp);
+  }
+
+  function onPointerMove(e) {
+    if (!floatingDazyState.isDragging) return;
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+    const newX = clientX - floatingDazyState.dragStartX;
+    const newY = clientY - floatingDazyState.dragStartY;
+
+    if (Math.abs(clientX - (floatingDazyState.dragStartX + container.offsetLeft)) > 5 ||
+        Math.abs(clientY - (floatingDazyState.dragStartY + container.offsetTop)) > 5) {
+      hasMoved = true;
+    }
+
+    // Clamp inside viewport
+    const maxX = window.innerWidth - container.offsetWidth - 10;
+    const maxY = window.innerHeight - container.offsetHeight - 10;
+    const clampedX = Math.max(10, Math.min(newX, maxX));
+    const clampedY = Math.max(10, Math.min(newY, maxY));
+
+    container.style.left = `${clampedX}px`;
+    container.style.top = `${clampedY}px`;
+    container.style.right = 'auto';
+    container.style.bottom = 'auto';
+
+    // Sparkle trail while flying
+    if (Math.random() < 0.25) {
+      dazySpawnParticle('✨', (Math.random() - 0.5) * 30);
+    }
+
+    e.preventDefault();
+  }
+
+  function onPointerUp(e) {
+    if (!floatingDazyState.isDragging) return;
+    floatingDazyState.isDragging = false;
+    window.removeEventListener('mousemove', onPointerMove);
+    window.removeEventListener('mouseup', onPointerUp);
+    window.removeEventListener('touchmove', onPointerMove);
+    window.removeEventListener('touchend', onPointerUp);
+
+    // If it was a quick click rather than drag:
+    if (!hasMoved && (Date.now() - clickStartTime < 350)) {
+      handleDazyClick();
+    }
+  }
+
+  stage.addEventListener('mousedown', onPointerDown);
+  stage.addEventListener('touchstart', onPointerDown, { passive: false });
+
+  // Double Click / Double Tap for Mega Hug & Flip
+  let lastTapTime = 0;
+  function handleDazyClick() {
+    const now = Date.now();
+    if (now - lastTapTime < 350) {
+      // Double tap / double click!
+      dazyDoFlip("Wheee! You gave Dazy a big hug! 360 flip! 🤸✨");
+    } else {
+      // Single pet!
+      dazyPet();
+    }
+    lastTapTime = now;
+  }
+
+  // 2. Bubble Toggle Button
+  toggleBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    sfx.playClick();
+    bubble.classList.toggle('minimized');
+    toggleBtn.textContent = bubble.classList.contains('minimized') ? '💬' : '─';
+  });
+
+  // 3. Emote Action Buttons
+  document.getElementById('btnFloatDance')?.addEventListener('click', () => {
+    wakeDazy();
+    dazyDoDance();
+  });
+
+  document.getElementById('btnFloatFlip')?.addEventListener('click', () => {
+    wakeDazy();
+    dazyDoFlip();
+  });
+
+  document.getElementById('btnFloatHug')?.addEventListener('click', () => {
+    wakeDazy();
+    dazyPet(true);
+  });
+
+  document.getElementById('btnFloatGuide')?.addEventListener('click', () => {
+    wakeDazy();
+    dazySpeakCurrentGuide();
+  });
+
+  document.getElementById('btnFloatAiAsk')?.addEventListener('click', () => {
+    wakeDazy();
+    sfx.playClick();
+    if (aiDrawer) {
+      const isHidden = aiDrawer.style.display === 'none';
+      aiDrawer.style.display = isHidden ? 'block' : 'none';
+      if (isHidden) aiInput?.focus();
+    }
+  });
+
+  // 4. Free AI Advice Prompt Engine
+  aiSendBtn?.addEventListener('click', () => handleAiQuery());
+  aiInput?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') handleAiQuery();
+  });
+
+  function handleAiQuery() {
+    const query = aiInput?.value.trim();
+    if (!query) return;
+    sfx.playClick();
+    dazySpawnParticle('✨', 0);
+    dazySpawnParticle('🤖', 20);
+
+    const responses = [
+      `Dazy AI: "Regarding '${query}', always combine strong passphrases with FIDO2 MFA! Attackers can't crack math with sheer brute force! 🛡️"`,
+      `Dazy AI: "Smart question about '${query}'! In Alex's cyber digital twin, closing breached password paths stops credential-stuffing instantly! ✨"`,
+      `Dazy AI: "Cyber analysis: '${query}' relates to identity resilience. Check the MITRE ATT&CK map above to see defense mitigations in action! 💡"`,
+      `Dazy AI: "Security Tip: '${query}' is a prime target for social engineering phishing. Never click urgent links before checking the domain! 🐾"`
+    ];
+
+    const pick = responses[Math.floor(Math.random() * responses.length)];
+    if (aiInput) aiInput.value = '';
+    if (bubbleText) bubbleText.textContent = pick;
+    dazyVoice.speak(pick);
+    dazySpawnParticle('💖', -15);
+  }
+
+  // 5. Wake up detector on user activity
+  ['mousemove', 'keydown', 'scroll', 'touchstart'].forEach(evt => {
+    window.addEventListener(evt, () => {
+      floatingDazyState.lastActionTime = Date.now();
+      if (floatingDazyState.isSleeping) {
+        wakeDazy();
+      }
+    }, { passive: true });
+  });
+
+  // 6. Section Guide Observer (IntersectionObserver)
+  setupGuideObserver();
+
+  // 7. Random Emotes & Cute Idle Loop (Every 9 to 13 seconds)
+  setInterval(runDazyIdleCycle, 11000);
+}
+
+// --- Spawn Floating Cute Particles ---
+function dazySpawnParticle(emoji = '✨', tx = 0) {
+  const fxLayer = document.getElementById('dazyCreatureFx');
+  if (!fxLayer) return;
+
+  const particle = document.createElement('span');
+  particle.className = 'dazy-particle';
+  particle.textContent = emoji;
+  particle.style.setProperty('--tx', `${tx}px`);
+  particle.style.left = `${45 + (Math.random() * 20 - 10)}px`;
+  particle.style.top = `${35 + (Math.random() * 20 - 10)}px`;
+  fxLayer.appendChild(particle);
+
+  setTimeout(() => {
+    particle.remove();
+  }, 1400);
+}
+
+// --- Cute Emote: Small Dance ---
+function dazyDoDance(customText) {
+  const body = document.getElementById('dazyBodyWrapper');
+  const bubbleText = document.getElementById('dazyFloatingText');
+  const moodBadge = document.getElementById('dazyFloatingMood');
+  if (!body) return;
+
+  body.classList.remove('emote-dance', 'emote-flip', 'emote-pet', 'emote-scared', 'emote-sad', 'emote-sleep');
+  void body.offsetWidth; // trigger reflow
+  body.classList.add('emote-dance');
+
+  sfx.playDanceJingle();
+  dazySpawnParticle('🎵', -20);
+  dazySpawnParticle('🎶', 20);
+  dazySpawnParticle('✨', 0);
+
+  if (moodBadge) moodBadge.textContent = '💃 Cute Dance!';
+  const text = customText || "Look at my happy little cyber shuffle! Doing a cute tap dance for you! 💃✨";
+  if (bubbleText) bubbleText.textContent = text;
+  dazyVoice.speak(text);
+
+  setTimeout(() => {
+    body.classList.remove('emote-dance');
+    if (moodBadge) moodBadge.textContent = '🌸 Happy';
+  }, 3200);
+}
+
+// --- Cute Emote: 360 Backflip ---
+function dazyDoFlip(customText) {
+  const body = document.getElementById('dazyBodyWrapper');
+  const bubbleText = document.getElementById('dazyFloatingText');
+  const moodBadge = document.getElementById('dazyFloatingMood');
+  if (!body) return;
+
+  body.classList.remove('emote-dance', 'emote-flip', 'emote-pet', 'emote-scared', 'emote-sad', 'emote-sleep');
+  void body.offsetWidth; // trigger reflow
+  body.classList.add('emote-flip');
+
+  sfx.playFlipChime();
+  dazySpawnParticle('⭐', -18);
+  dazySpawnParticle('💫', 18);
+  dazySpawnParticle('✨', 0);
+  dazySpawnParticle('💖', 5);
+
+  if (moodBadge) moodBadge.textContent = '🤸 Backflip!';
+  const text = customText || "Wheee! Dazy version 3.75 does a full 360 flip in the air! So much fun! 🤸💫";
+  if (bubbleText) bubbleText.textContent = text;
+  dazyVoice.speak(text);
+
+  setTimeout(() => {
+    body.classList.remove('emote-flip');
+    if (moodBadge) moodBadge.textContent = '🌸 Happy';
+  }, 1200);
+}
+
+// --- Cute Emote: Petting & Affection ---
+function dazyPet(isBigHug = false) {
+  const body = document.getElementById('dazyBodyWrapper');
+  const bubbleText = document.getElementById('dazyFloatingText');
+  const moodBadge = document.getElementById('dazyFloatingMood');
+  if (!body) return;
+
+  body.classList.remove('emote-dance', 'emote-flip', 'emote-pet', 'emote-scared', 'emote-sad', 'emote-sleep');
+  void body.offsetWidth;
+  body.classList.add('emote-pet');
+
+  if (isBigHug) {
+    sfx.playFanfare();
+    dazySpawnParticle('💖', -25);
+    dazySpawnParticle('💕', 25);
+    dazySpawnParticle('⭐', 0);
+    dazySpawnParticle('🎉', 15);
+    if (moodBadge) moodBadge.textContent = '💖 Warm Hug!';
+    const hugLines = [
+      "Aww, thank you for the big hug! You're the best cyber teammate ever! 💖",
+      "Yay! Super warm digital twin hug! All systems safe and cozy! 🐾✨",
+      "Hehe! Big hugs make Dazy's core processor sparkle with joy! 💖"
+    ];
+    const pick = hugLines[Math.floor(Math.random() * hugLines.length)];
+    if (bubbleText) bubbleText.textContent = pick;
+    dazyVoice.speak(pick);
+  } else {
+    sfx.playGiggle();
+    sfx.playChirp();
+    dazySpawnParticle('💖', -15);
+    dazySpawnParticle('✨', 15);
+    if (moodBadge) moodBadge.textContent = '🥰 Loved!';
+    const petLines = [
+      "Hehe, that tickles! Thank you for petting Dazy! 🥰",
+      "Purr... Dazy feels so happy! Let's protect this digital twin together! ✨",
+      "Aww, sweet pats! Dazy's cheeks are blushing so bright! 🌸",
+      "Boop! I'm Dazy version 3.75, your cutest cyber guardian! 🐾"
+    ];
+    const pick = petLines[Math.floor(Math.random() * petLines.length)];
+    if (bubbleText) bubbleText.textContent = pick;
+    dazyVoice.speak(pick);
+  }
+
+  setTimeout(() => {
+    body.classList.remove('emote-pet');
+    if (moodBadge) moodBadge.textContent = '🌸 Happy';
+  }, 1000);
+}
+
+// --- Cute Emote: Wink & Chirp ---
+function dazyDoWink() {
+  const leftEye = document.getElementById('dazyEyeLeft');
+  if (leftEye) {
+    leftEye.style.transformOrigin = '42px 58px';
+    leftEye.style.transform = 'scaleY(0.1)';
+    sfx.playChirp();
+    dazySpawnParticle('✨', 10);
+    setTimeout(() => {
+      leftEye.style.transform = '';
+    }, 450);
+  }
+}
+
+// --- Sleep / Nap and Wake Logic ---
+function enterDazySleep() {
+  const body = document.getElementById('dazyBodyWrapper');
+  const bubbleText = document.getElementById('dazyFloatingText');
+  const moodBadge = document.getElementById('dazyFloatingMood');
+  if (!body || floatingDazyState.isSleeping) return;
+
+  floatingDazyState.isSleeping = true;
+  body.classList.add('emote-sleep');
+  if (moodBadge) moodBadge.textContent = '😴 Zzz...';
+  if (bubbleText) bubbleText.textContent = "Zzz... Dazy is taking a cute little catnap. Move your mouse or click me to wake me up! 💤";
+
+  dazySpawnParticle('💤', -10);
+  setTimeout(() => {
+    if (floatingDazyState.isSleeping) dazySpawnParticle('💤', 10);
+  }, 1500);
+}
+
+function wakeDazy() {
+  if (!floatingDazyState.isSleeping) return;
+  floatingDazyState.isSleeping = false;
+  const body = document.getElementById('dazyBodyWrapper');
+  const bubbleText = document.getElementById('dazyFloatingText');
+  const moodBadge = document.getElementById('dazyFloatingMood');
+  if (!body) return;
+
+  body.classList.remove('emote-sleep');
+  sfx.playChirp();
+  dazySpawnParticle('✨', 0);
+  dazySpawnParticle('🌸', 15);
+  if (moodBadge) moodBadge.textContent = '🌸 Awake!';
+  if (bubbleText) bubbleText.textContent = "I'm awake! Dazy is ready to explore more cybersecurity with you! ✨";
+}
+
+// --- Random Idle Cycle Engine ---
+function runDazyIdleCycle() {
+  if (floatingDazyState.isDragging) return;
+  const idleMs = Date.now() - floatingDazyState.lastActionTime;
+
+  // If idle for over 50 seconds, sleep!
+  if (idleMs > 50000) {
+    enterDazySleep();
+    return;
+  }
+
+  if (floatingDazyState.isSleeping) return;
+
+  // Random cute spontaneous action!
+  const roll = Math.random();
+  if (roll < 0.28) {
+    // Random cute little dance
+    dazyDoDance("Dazy got excited and started dancing! Look at those moves! 💃🎶");
+  } else if (roll < 0.52) {
+    // Random 360 backflip
+    dazyDoFlip("Whoosh! Spontaneous 360 backflip by Dazy v3.75! 🤸⭐");
+  } else if (roll < 0.74) {
+    // Playful wink and sparkle
+    dazyDoWink();
+    dazySpawnParticle('✨', (Math.random() - 0.5) * 30);
+  } else if (roll < 0.90) {
+    // Cute chirp & bounce
+    sfx.playChirp();
+    dazySpawnParticle('💖', (Math.random() - 0.5) * 20);
+  }
+}
+
+// --- Synchronize Floating Dazy with Global State Moods ---
+function updateFloatingDazyMood(mood, dialogueText, speakNow = false) {
+  const body = document.getElementById('dazyBodyWrapper');
+  const stage = document.getElementById('dazyCreatureStage');
+  const bubbleText = document.getElementById('dazyFloatingText');
+  const moodBadge = document.getElementById('dazyFloatingMood');
+  if (!body) return;
+
+  body.classList.remove('emote-dance', 'emote-flip', 'emote-pet', 'emote-scared', 'emote-sad', 'emote-sleep');
+  stage?.classList.remove('shield-active');
+
+  if (dialogueText && bubbleText) {
+    bubbleText.textContent = dialogueText;
+    if (speakNow) dazyVoice.speak(dialogueText);
+  }
+
+  switch (mood) {
+    case 'scared':
+      body.classList.add('emote-scared');
+      if (moodBadge) moodBadge.textContent = '😱 Scared!';
+      dazySpawnParticle('💧', 15);
+      dazySpawnParticle('⚠️', -15);
+      break;
+    case 'shielded':
+      stage?.classList.add('shield-active');
+      if (moodBadge) moodBadge.textContent = '🛡️ Shield On!';
+      dazySpawnParticle('🛡️', 0);
+      dazySpawnParticle('✨', 20);
+      break;
+    case 'celebrate':
+      dazyDoFlip(dialogueText);
+      break;
+    default:
+      if (moodBadge) moodBadge.textContent = '🌸 Happy';
+      break;
+  }
+}
+
+// --- Floating Website Guide (IntersectionObserver) ---
+const sectionGuideTips = {
+  heroScanner: {
+    mood: '🌸 Happy',
+    text: "Type any email or click the 'Judge Mode: Alex' demo preset! I'll query public breach data with zero PII retention! ✨"
+  },
+  dazyPodCard: {
+    mood: '🥰 Loving',
+    text: "That's my twin pod in the left column, and I'm Dazy version 3.75 floating with you! Pet me or ask for advice! 💖"
+  },
+  terminalCard: {
+    mood: '😱 Alert',
+    text: "Adversary terminal! Watch how attackers execute credential stuffing and chain leaked passwords in real time! ⚡"
+  },
+  mitreGraphCard: {
+    mood: '🔍 Analyzing',
+    text: "This is the interactive MITRE ATT&CK chain! Click any node or toggle defenses to see the hack broken! 🛡️"
+  },
+  formulaSection: {
+    mood: '📐 Smart',
+    text: "Risk Posture Formula: Calculated deterministically with exact mathematical weights, not fake static numbers! 🧠"
+  },
+  toolsSection: {
+    mood: '🔬 Forensics',
+    text: "Deep-dive Labs: Analyze raw email headers, inspect typosquatting URLs, and calculate password crack time! 💻"
+  },
+  questsSection: {
+    mood: '🐾 Quests',
+    text: "Complete these fix-it security quests to level up Alex's digital twin, deploy shields, and keep me safe! 🌟"
+  },
+  quizSection: {
+    mood: '🎮 Showdown',
+    text: "Human vs AI Phishing Showdown: 8 real-world email scenarios. Can you outsmart our neural classification model? 🏆"
+  }
+};
+
+function setupGuideObserver() {
+  const sections = [
+    { id: 'heroScanner', elem: document.querySelector('.scanner-hero') },
+    { id: 'dazyPodCard', elem: document.getElementById('dazyPodCard') },
+    { id: 'terminalCard', elem: document.getElementById('terminalCard') },
+    { id: 'mitreGraphCard', elem: document.getElementById('attackGraphCard') },
+    { id: 'formulaSection', elem: document.querySelector('.formula-breakdown-card') },
+    { id: 'toolsSection', elem: document.querySelector('.deep-dive-tools-section') },
+    { id: 'questsSection', elem: document.getElementById('questsCard') },
+    { id: 'quizSection', elem: document.getElementById('quizShowdown') }
+  ];
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && entry.intersectionRatio > 0.45) {
+        const secId = entry.target.dataset.guideId;
+        if (secId && !floatingDazyState.seenSections.has(secId)) {
+          floatingDazyState.seenSections.add(secId);
+          floatingDazyState.currentSection = secId;
+          const tip = sectionGuideTips[secId];
+          if (tip) {
+            const bubble = document.getElementById('dazyFloatingBubble');
+            const bubbleText = document.getElementById('dazyFloatingText');
+            const moodBadge = document.getElementById('dazyFloatingMood');
+            if (bubble) bubble.classList.remove('minimized');
+            if (bubbleText) bubbleText.textContent = tip.text;
+            if (moodBadge) moodBadge.textContent = tip.mood;
+            dazySpawnParticle('✨', 0);
+            dazyVoice.speak(tip.text);
+          }
+        }
+      }
+    });
+  }, { threshold: [0.45] });
+
+  sections.forEach(s => {
+    if (s.elem) {
+      s.elem.dataset.guideId = s.id;
+      observer.observe(s.elem);
+    }
+  });
+}
+
+function dazySpeakCurrentGuide() {
+  const secId = floatingDazyState.currentSection || 'heroScanner';
+  const tip = sectionGuideTips[secId] || sectionGuideTips.heroScanner;
+  const bubbleText = document.getElementById('dazyFloatingText');
+  const moodBadge = document.getElementById('dazyFloatingMood');
+  if (bubbleText) bubbleText.textContent = tip.text;
+  if (moodBadge) moodBadge.textContent = tip.mood;
+  sfx.playChirp();
+  dazySpawnParticle('💡', 0);
+  dazyVoice.speak(tip.text);
+}

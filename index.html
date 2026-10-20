@@ -59,9 +59,9 @@
           <span class="team-label blue-team-label" id="blueTeamText">🔵 Blue Team</span>
         </div>
 
-        <button class="btn-voice-toggle" id="btnVoiceToggle" title="Toggle Dazy's Voice Voice Lines (Cute Synth Voice)">
-          <span class="voice-icon" id="voiceIcon">🔇</span>
-          <span class="voice-label" id="voiceLabel">Dazy Voice: OFF</span>
+        <button class="btn-voice-toggle" id="btnVoiceToggle" title="Toggle Dazy's Voice Lines (Cute Synth Voice)">
+          <span class="voice-icon" id="voiceIcon">🔊</span>
+          <span class="voice-label" id="voiceLabel">Dazy Voice: ON</span>
         </button>
       </div>
 
@@ -198,7 +198,7 @@
           <div class="pod-header">
             <div class="pod-title-row">
               <span class="pod-badge">AI CYBER COMPANION</span>
-              <h2 class="pod-title">Baby Dazy ✨</h2>
+              <h2 class="pod-title">Dazy <span class="dazy-version-badge">v3.75</span> ✨</h2>
             </div>
             <span class="persona-tag" id="currentPersonaTag">Twin of: <strong id="currentPersonaEmail">alex.chen@cyber-demo.org</strong></span>
           </div>
@@ -957,6 +957,144 @@ Subject: Urgent: Verify Account Immediately"></textarea>
       </div>
     </div>
   </div>
+
+  <!-- ========================================================
+       DAZY VERSION 3.75 - FLOATING COMPANION & GUIDE CREATURE
+       ======================================================== -->
+  <aside id="dazyFloatingCompanion" class="dazy-floating-container" aria-label="Dazy Version 3.75 Floating Companion">
+    <!-- Floating Speech & Guide Dialog Bubble -->
+    <div class="dazy-floating-bubble" id="dazyFloatingBubble">
+      <div class="dazy-bubble-header">
+        <div class="dazy-bubble-brand">
+          <span class="dazy-bubble-avatar-mini">✨</span>
+          <span class="dazy-bubble-name">Dazy <span class="dazy-bubble-version">v3.75</span></span>
+        </div>
+        <div class="dazy-bubble-status">
+          <span class="dazy-bubble-mood" id="dazyFloatingMood">🌸 Happy</span>
+          <button class="btn-dazy-bubble-toggle" id="btnDazyBubbleToggle" title="Minimize / Open Speech Bubble">─</button>
+        </div>
+      </div>
+      <p class="dazy-bubble-text" id="dazyFloatingText">
+        "Hi darling! I'm Dazy version 3.75! I float with you to guide you through CyberTwin. Click me to pet, or watch me do flips and dances! ✨"
+      </p>
+      
+      <!-- Quick Interactive Actions Bar -->
+      <div class="dazy-bubble-actions">
+        <button class="dazy-mini-btn" id="btnFloatDance" title="Watch Dazy do a cute little dance!">💃 Dance</button>
+        <button class="dazy-mini-btn" id="btnFloatFlip" title="Watch Dazy do a cute 360 backflip!">🤸 Backflip</button>
+        <button class="dazy-mini-btn" id="btnFloatHug" title="Give Dazy a warm hug!">💖 Hug</button>
+        <button class="dazy-mini-btn" id="btnFloatGuide" title="Ask Dazy to guide you on this section!">💡 Guide</button>
+        <button class="dazy-mini-btn btn-ai-sparkle" id="btnFloatAiAsk" title="Ask Free Gemini AI with Dazy!">🤖 AI Advice</button>
+      </div>
+
+      <!-- Quick AI Security Advice Drawer (Toggleable) -->
+      <div class="dazy-ai-drawer" id="dazyAiDrawer" style="display: none;">
+        <div class="dazy-ai-input-row">
+          <input type="text" id="dazyAiPromptInput" class="dazy-ai-input" placeholder="Ask Dazy anything (e.g. 'Is my password safe?')">
+          <button class="btn-dazy-ai-send" id="btnDazyAiSend">Ask ✨</button>
+        </div>
+        <div class="dazy-ai-key-hint">
+          <span>Powered by Free Gemini AI &amp; Zero-Latency Browser Engine</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dazy Body Stage (Kawaii SVG Creature: Pastel Mint/Aqua, Blank Eyes, Interactive) -->
+    <div class="dazy-creature-stage" id="dazyCreatureStage" role="button" tabindex="0" title="Click to pet Dazy! Double-click for hug! Drag me anywhere on screen!">
+      <!-- Emote FX Particle Layer (Hearts, Stars, Music Notes, Sweat Drops, Zzz) -->
+      <div class="dazy-creature-fx" id="dazyCreatureFx"></div>
+
+      <!-- Creature Vector Model -->
+      <div class="dazy-body-wrapper" id="dazyBodyWrapper">
+        <svg class="dazy-creature-svg" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <!-- Body Gradient: Dreamy Pastel Mint, Aqua & Turquoise (NOT PINK!) -->
+            <linearGradient id="dazyBodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#5eead4" />
+              <stop offset="45%" stop-color="#2dd4bf" />
+              <stop offset="85%" stop-color="#38bdf8" />
+              <stop offset="100%" stop-color="#60a5fa" />
+            </linearGradient>
+
+            <!-- Glow Halo -->
+            <filter id="dazyMintGlow" x="-25%" y="-25%" width="150%" height="150%">
+              <feDropShadow dx="0" dy="4" stdDeviation="7" flood-color="#2dd4bf" flood-opacity="0.55"/>
+            </filter>
+
+            <!-- Cheeks Rosy Blush Gradient -->
+            <radialGradient id="dazyCheekBlush" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#ff7b90" stop-opacity="0.85"/>
+              <stop offset="70%" stop-color="#ff9baa" stop-opacity="0.3"/>
+              <stop offset="100%" stop-color="#ff9baa" stop-opacity="0"/>
+            </radialGradient>
+
+            <!-- Specular Eye Gradient for Cute Blank Eyes -->
+            <radialGradient id="dazyPupilGrad" cx="35%" cy="30%" r="70%">
+              <stop offset="0%" stop-color="#1e293b" />
+              <stop offset="80%" stop-color="#0f172a" />
+              <stop offset="100%" stop-color="#020617" />
+            </radialGradient>
+          </defs>
+
+          <!-- Little Soft Ears / Horn Nubs -->
+          <ellipse cx="40" cy="22" rx="7.5" ry="13" fill="url(#dazyBodyGrad)" transform="rotate(-18 40 22)" class="dazy-ear dazy-ear-left" />
+          <ellipse cx="40" cy="22" rx="3.8" ry="7.5" fill="#cffafe" transform="rotate(-18 40 22)" opacity="0.85"/>
+
+          <ellipse cx="80" cy="22" rx="7.5" ry="13" fill="url(#dazyBodyGrad)" transform="rotate(18 80 22)" class="dazy-ear dazy-ear-right" />
+          <ellipse cx="80" cy="22" rx="3.8" ry="7.5" fill="#cffafe" transform="rotate(18 80 22)" opacity="0.85"/>
+
+          <!-- Floaty Aura Shadow beneath Creature -->
+          <ellipse cx="60" cy="110" rx="30" ry="6" fill="#2dd4bf" opacity="0.3" class="dazy-shadow-aura" />
+
+          <!-- Main Kawaii Round Droplet Creature Body -->
+          <path class="dazy-body-path" d="M 60,20 C 90,20 108,40 108,68 C 108,96 88,106 60,106 C 32,106 12,96 12,68 C 12,40 30,20 60,20 Z" fill="url(#dazyBodyGrad)" filter="url(#dazyMintGlow)" />
+
+          <!-- Soft Mint-Cream Luminous Belly Patch -->
+          <ellipse cx="60" cy="74" rx="25" ry="20" fill="#f0fdfa" opacity="0.45" class="dazy-belly-patch" />
+
+          <!-- Rosy Blushing Cheeks -->
+          <circle cx="33" cy="70" r="9.5" fill="url(#dazyCheekBlush)" class="dazy-blush dazy-blush-left" />
+          <circle cx="87" cy="70" r="9.5" fill="url(#dazyCheekBlush)" class="dazy-blush dazy-blush-right" />
+
+          <!-- Big Round Cute Blank Eyes (● ●) -->
+          <g class="dazy-eyes-container" id="dazyEyes">
+            <!-- Left Eye -->
+            <g class="dazy-eye dazy-eye-left" id="dazyEyeLeft">
+              <ellipse cx="42" cy="58" rx="8" ry="9" fill="url(#dazyPupilGrad)" class="dazy-pupil" />
+              <!-- Cute Glossy Reflections -->
+              <circle cx="39" cy="54.5" r="3" fill="#ffffff" class="dazy-shine-major" />
+              <circle cx="44.5" cy="61.5" r="1.3" fill="#ffffff" opacity="0.85" />
+            </g>
+
+            <!-- Right Eye -->
+            <g class="dazy-eye dazy-eye-right" id="dazyEyeRight">
+              <ellipse cx="78" cy="58" rx="8" ry="9" fill="url(#dazyPupilGrad)" class="dazy-pupil" />
+              <!-- Cute Glossy Reflections -->
+              <circle cx="75" cy="54.5" r="3" fill="#ffffff" class="dazy-shine-major" />
+              <circle cx="80.5" cy="61.5" r="1.3" fill="#ffffff" opacity="0.85" />
+            </g>
+          </g>
+
+          <!-- Cute Sweet Mouth (Smooth morphable curve) -->
+          <path id="dazyMouth" class="dazy-mouth" d="M 55,68 Q 60,74 65,68" fill="none" stroke="#0f172a" stroke-width="2.4" stroke-linecap="round" />
+
+          <!-- Cute Stubby Little Flippers/Paws -->
+          <ellipse cx="20" cy="74" rx="6.5" ry="10" fill="url(#dazyBodyGrad)" transform="rotate(22 20 74)" class="dazy-flipper dazy-flipper-left" />
+          <ellipse cx="100" cy="74" rx="6.5" ry="10" fill="url(#dazyBodyGrad)" transform="rotate(-22 100 74)" class="dazy-flipper dazy-flipper-right" />
+
+          <!-- Floating Cyber Tiara Sparkle on head -->
+          <polygon points="60,11 63,18 70,18 64,22 66,28 60,24 54,28 56,22 50,18 57,18" fill="#fde047" class="dazy-star-tiara" opacity="0.95" />
+        </svg>
+
+        <!-- Compact Floating Pill Namebadge -->
+        <div class="dazy-name-tag" id="dazyNameTag">
+          <span class="tag-sparkle">✨</span>
+          <span class="tag-label">Dazy</span>
+          <span class="tag-ver">v3.75</span>
+        </div>
+      </div>
+    </div>
+  </aside>
 
   <script src="app.js?v=4.0"></script>
 </body>

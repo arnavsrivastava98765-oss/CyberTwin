@@ -3080,4 +3080,559 @@ textarea:focus, input[type="text"]:focus {
   }
 }
 
+/* ========================================================
+   🌸 DAZY VERSION 3.75 — FLOATING COMPANION & GUIDE STYLES
+   Pastel Mint / Aqua Body, Blank Eyes, Emotes & Flip/Dance FX
+   ======================================================== */
+
+.dazy-version-badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #2dd4bf;
+  background: rgba(45, 212, 191, 0.15);
+  border: 1px solid rgba(45, 212, 191, 0.4);
+  padding: 2px 7px;
+  border-radius: 999px;
+  vertical-align: middle;
+  margin-left: 4px;
+}
+
+/* Floating Container (Fixed on viewport) */
+.dazy-floating-container {
+  position: fixed;
+  bottom: 24px;
+  right: 28px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+  pointer-events: none; /* children enable pointer events */
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  will-change: transform;
+}
+
+/* Floating Speech & Guide Bubble */
+.dazy-floating-bubble {
+  pointer-events: auto;
+  max-width: 320px;
+  background: rgba(13, 20, 36, 0.92);
+  border: 1.5px solid rgba(45, 212, 191, 0.5);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 20px;
+  padding: 12px 14px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55), 0 0 25px rgba(45, 212, 191, 0.25);
+  animation: dazyBubbleEntrance 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform-origin: bottom right;
+  position: relative;
+  transition: all 0.25s ease;
+}
+
+.dazy-floating-bubble.minimized {
+  max-width: 170px;
+  padding: 8px 12px;
+}
+
+.dazy-floating-bubble.minimized .dazy-bubble-text,
+.dazy-floating-bubble.minimized .dazy-bubble-actions,
+.dazy-floating-bubble.minimized .dazy-ai-drawer {
+  display: none !important;
+}
+
+@keyframes dazyBubbleEntrance {
+  from {
+    opacity: 0;
+    transform: scale(0.8) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.dazy-bubble-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 5px;
+}
+
+.dazy-bubble-brand {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dazy-bubble-avatar-mini {
+  font-size: 0.95rem;
+  animation: dazySparkleSpin 3s linear infinite;
+}
+
+@keyframes dazySparkleSpin {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(1.15); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+.dazy-bubble-name {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 0.88rem;
+  color: #fff;
+  letter-spacing: 0.3px;
+}
+
+.dazy-bubble-version {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #5eead4;
+  background: rgba(94, 234, 212, 0.16);
+  border: 1px solid rgba(94, 234, 212, 0.4);
+  padding: 1px 6px;
+  border-radius: 999px;
+  margin-left: 4px;
+}
+
+.dazy-bubble-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dazy-bubble-mood {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(45, 212, 191, 0.15);
+  border: 1px solid rgba(45, 212, 191, 0.35);
+  color: #5eead4;
+}
+
+.btn-dazy-bubble-toggle {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+  border-radius: 4px;
+  transition: color 0.15s, background 0.15s;
+}
+
+.btn-dazy-bubble-toggle:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.dazy-bubble-text {
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: #e2e8f0;
+  margin: 6px 0 10px 0;
+  transition: color 0.2s;
+}
+
+/* Action Chips inside Bubble */
+.dazy-bubble-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.dazy-mini-btn {
+  background: rgba(45, 212, 191, 0.12);
+  border: 1px solid rgba(45, 212, 191, 0.35);
+  color: #e2e8f0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 4px 9px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.dazy-mini-btn:hover {
+  background: rgba(45, 212, 191, 0.3);
+  border-color: #5eead4;
+  color: #fff;
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 4px 12px rgba(45, 212, 191, 0.35);
+}
+
+.dazy-mini-btn:active {
+  transform: scale(0.95);
+}
+
+.btn-ai-sparkle {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(168, 85, 247, 0.2));
+  border-color: rgba(168, 85, 247, 0.5);
+  color: #d8b4fe;
+}
+
+.btn-ai-sparkle:hover {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.35), rgba(168, 85, 247, 0.4));
+  border-color: #c084fc;
+  box-shadow: 0 4px 12px rgba(168, 85, 247, 0.4);
+}
+
+/* AI Security Advice Drawer */
+.dazy-ai-drawer {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.12);
+}
+
+.dazy-ai-input-row {
+  display: flex;
+  gap: 6px;
+}
+
+.dazy-ai-input {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(45, 212, 191, 0.4);
+  border-radius: 8px;
+  padding: 6px 9px;
+  font-size: 0.76rem;
+  color: #fff;
+  outline: none;
+}
+
+.dazy-ai-input:focus {
+  border-color: #5eead4;
+  box-shadow: 0 0 10px rgba(94, 234, 212, 0.4);
+}
+
+.btn-dazy-ai-send {
+  background: linear-gradient(135deg, #2dd4bf, #38bdf8);
+  border: none;
+  color: #0b1120;
+  font-weight: 800;
+  font-size: 0.74rem;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.btn-dazy-ai-send:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 12px rgba(45, 212, 191, 0.6);
+}
+
+.dazy-ai-key-hint {
+  margin-top: 4px;
+  font-size: 0.65rem;
+  color: #94a3b8;
+  text-align: right;
+}
+
+/* Creature Stage & Body */
+.dazy-creature-stage {
+  pointer-events: auto;
+  position: relative;
+  width: 105px;
+  height: 105px;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: filter 0.2s;
+}
+
+.dazy-creature-stage:active {
+  cursor: grabbing;
+}
+
+.dazy-creature-stage:focus-visible {
+  outline: 2px solid #5eead4;
+  outline-offset: 4px;
+  border-radius: 50%;
+}
+
+.dazy-body-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: dazyIdleFloat 3.6s ease-in-out infinite;
+  will-change: transform;
+}
+
+.dazy-creature-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.45));
+}
+
+/* Name Tag underneath */
+.dazy-name-tag {
+  position: absolute;
+  bottom: -4px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  background: rgba(11, 19, 36, 0.88);
+  border: 1px solid rgba(45, 212, 191, 0.5);
+  backdrop-filter: blur(8px);
+  padding: 2px 7px;
+  border-radius: 999px;
+  font-size: 0.66rem;
+  font-weight: 800;
+  color: #f8fafc;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), 0 0 10px rgba(45, 212, 191, 0.35);
+  pointer-events: none;
+}
+
+.dazy-name-tag .tag-ver {
+  color: #2dd4bf;
+  font-size: 0.6rem;
+}
+
+/* ========================================================
+   KAWAII CREATURE ANIMATIONS & EMOTE STATES
+   ======================================================== */
+
+/* 1. Default Idle Bobbing & Gentle Breath */
+@keyframes dazyIdleFloat {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-7px) rotate(-2deg);
+  }
+  75% {
+    transform: translateY(3px) rotate(2deg);
+  }
+}
+
+.dazy-shadow-aura {
+  animation: dazyAuraPulse 3.6s ease-in-out infinite;
+}
+
+@keyframes dazyAuraPulse {
+  0%, 100% { transform: scale(1); opacity: 0.3; }
+  50% { transform: scale(0.85); opacity: 0.18; }
+}
+
+/* Blank Eyes Cute Kawaii Blink */
+.dazy-eyes-container {
+  transform-origin: 60px 58px;
+  animation: dazyCuteBlink 4.5s ease-in-out infinite;
+}
+
+@keyframes dazyCuteBlink {
+  0%, 94%, 98%, 100% {
+    transform: scaleY(1);
+  }
+  96% {
+    transform: scaleY(0.08);
+  }
+}
+
+/* Ears & Flippers Micro-wiggle */
+.dazy-ear-left {
+  transform-origin: 40px 22px;
+  animation: dazyEarWiggleLeft 4s ease-in-out infinite;
+}
+.dazy-ear-right {
+  transform-origin: 80px 22px;
+  animation: dazyEarWiggleRight 4s ease-in-out infinite;
+}
+
+@keyframes dazyEarWiggleLeft {
+  0%, 100% { transform: rotate(-18deg); }
+  50% { transform: rotate(-24deg); }
+}
+@keyframes dazyEarWiggleRight {
+  0%, 100% { transform: rotate(18deg); }
+  50% { transform: rotate(24deg); }
+}
+
+.dazy-flipper-left {
+  transform-origin: 20px 74px;
+  animation: dazyFlipperLeft 3s ease-in-out infinite;
+}
+.dazy-flipper-right {
+  transform-origin: 100px 74px;
+  animation: dazyFlipperRight 3s ease-in-out infinite;
+}
+
+@keyframes dazyFlipperLeft {
+  0%, 100% { transform: rotate(22deg); }
+  50% { transform: rotate(10deg); }
+}
+@keyframes dazyFlipperRight {
+  0%, 100% { transform: rotate(-22deg); }
+  50% { transform: rotate(-10deg); }
+}
+
+/* 2. Emote: Small Cute Dance */
+.dazy-body-wrapper.emote-dance {
+  animation: dazyDanceMotion 0.6s ease-in-out infinite alternate !important;
+}
+
+@keyframes dazyDanceMotion {
+  0% {
+    transform: translateY(-4px) translateX(-6px) rotate(-9deg) scale(1.04);
+  }
+  100% {
+    transform: translateY(-4px) translateX(6px) rotate(9deg) scale(1.04);
+  }
+}
+
+/* 3. Emote: Cute Backflip (Full 360 Spin) */
+.dazy-body-wrapper.emote-flip {
+  animation: dazyBackflipSpin 0.85s cubic-bezier(0.2, 0.8, 0.3, 1) forwards !important;
+}
+
+@keyframes dazyBackflipSpin {
+  0% {
+    transform: translateY(0px) scale(1) rotate(0deg);
+  }
+  25% {
+    transform: translateY(6px) scale(1.15, 0.85) rotate(-30deg);
+  }
+  50% {
+    transform: translateY(-38px) scale(0.9, 1.1) rotate(-180deg);
+  }
+  75% {
+    transform: translateY(-15px) scale(1.05, 0.95) rotate(-300deg);
+  }
+  100% {
+    transform: translateY(0px) scale(1) rotate(-360deg);
+  }
+}
+
+/* 4. Emote: Petting Squish & Happy Hearts */
+.dazy-body-wrapper.emote-pet {
+  animation: dazyPetWiggle 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards !important;
+}
+
+@keyframes dazyPetWiggle {
+  0% { transform: scale(0.9, 1.1); }
+  40% { transform: scale(1.18, 0.85) rotate(-5deg); }
+  70% { transform: scale(0.95, 1.05) rotate(5deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+/* 5. Emote: Scared Shivering */
+.dazy-body-wrapper.emote-scared {
+  animation: dazyShiver 0.15s ease-in-out infinite alternate !important;
+}
+
+@keyframes dazyShiver {
+  0% { transform: translateY(-2px) translateX(-2.5px) rotate(-2deg); }
+  100% { transform: translateY(2px) translateX(2.5px) rotate(2deg); }
+}
+
+/* 6. Emote: Sad Droop */
+.dazy-body-wrapper.emote-sad {
+  animation: dazySadFloat 3s ease-in-out infinite !important;
+}
+
+@keyframes dazySadFloat {
+  0%, 100% { transform: translateY(8px) rotate(-4deg) scale(0.96); }
+  50% { transform: translateY(12px) rotate(-6deg) scale(0.94); }
+}
+
+/* 7. Emote: Sleepy Snooze */
+.dazy-body-wrapper.emote-sleep {
+  animation: dazySnoozeFloat 4s ease-in-out infinite !important;
+}
+
+@keyframes dazySnoozeFloat {
+  0%, 100% { transform: translateY(10px) rotate(3deg) scale(0.97); }
+  50% { transform: translateY(15px) rotate(1deg) scale(0.95); }
+}
+
+/* 8. Emote: Shield Barrier Aura */
+.dazy-creature-stage.shield-active::after {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  border: 2px dashed #38bdf8;
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.7);
+  animation: dazyShieldOrbit 4s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes dazyShieldOrbit {
+  0% { transform: rotate(0deg); opacity: 0.8; }
+  50% { opacity: 0.4; }
+  100% { transform: rotate(360deg); opacity: 0.8; }
+}
+
+/* FX Particle Layer */
+.dazy-creature-fx {
+  position: absolute;
+  inset: -40px;
+  pointer-events: none;
+  overflow: visible;
+  z-index: 10;
+}
+
+.dazy-particle {
+  position: absolute;
+  font-size: 1.25rem;
+  pointer-events: none;
+  animation: dazyParticleRise 1.4s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
+}
+
+@keyframes dazyParticleRise {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.4);
+  }
+  20% {
+    opacity: 1;
+    transform: translate(var(--tx, 0), -15px) scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--tx, 0), -45px) scale(0.7);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .dazy-floating-container {
+    bottom: 16px;
+    right: 16px;
+  }
+  .dazy-floating-bubble {
+    max-width: 270px;
+    padding: 10px 12px;
+  }
+  .dazy-creature-stage {
+    width: 85px;
+    height: 85px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dazy-body-wrapper,
+  .dazy-eyes-container,
+  .dazy-flipper-left,
+  .dazy-flipper-right,
+  .dazy-ear-left,
+  .dazy-ear-right {
+    animation: none !important;
+  }
+}
+
+
 
