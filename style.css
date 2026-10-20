@@ -3137,6 +3137,7 @@ textarea:focus, input[type="text"]:focus {
 
 .dazy-floating-bubble.minimized .dazy-bubble-text,
 .dazy-floating-bubble.minimized .dazy-bubble-actions,
+.dazy-floating-bubble.minimized .dazy-explainer-drawer,
 .dazy-floating-bubble.minimized .dazy-ai-drawer {
   display: none !important;
 }
@@ -3267,6 +3268,159 @@ textarea:focus, input[type="text"]:focus {
 
 .dazy-mini-btn:active {
   transform: scale(0.95);
+}
+
+/* Dazy Explainer Tour Styles */
+.dazy-btn-tour {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(45, 212, 191, 0.25));
+  border: 1px solid #38bdf8;
+  color: #7dd3fc;
+  font-weight: 700;
+}
+
+.dazy-btn-tour:hover {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.35), rgba(45, 212, 191, 0.45));
+  border-color: #7dd3fc;
+  color: #ffffff;
+  box-shadow: 0 0 15px rgba(56, 189, 248, 0.45);
+}
+
+.dazy-floating-bubble.tour-active {
+  max-width: 380px;
+  width: 380px;
+  border-color: rgba(56, 189, 248, 0.6);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.7), 0 0 30px rgba(56, 189, 248, 0.3);
+}
+
+.dazy-floating-bubble.tour-active .dazy-bubble-text {
+  max-height: 220px;
+  overflow-y: auto;
+  padding-right: 4px;
+  font-size: 0.81rem;
+  line-height: 1.5;
+}
+
+.dazy-bubble-text::-webkit-scrollbar {
+  width: 4px;
+}
+.dazy-bubble-text::-webkit-scrollbar-thumb {
+  background: rgba(56, 189, 248, 0.4);
+  border-radius: 4px;
+}
+
+.dazy-tour-tip {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 0.74rem;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: 6px;
+  padding: 3px 6px;
+}
+
+.dazy-explainer-drawer {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed rgba(56, 189, 248, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  animation: dazyDrawerFadeIn 0.25s ease-out;
+}
+
+@keyframes dazyDrawerFadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.dazy-explainer-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: space-between;
+}
+
+.dazy-explainer-step-pill {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #0f172a;
+  background: #38bdf8;
+  padding: 2px 7px;
+  border-radius: 999px;
+  letter-spacing: 0.3px;
+  flex-shrink: 0;
+}
+
+.dazy-explainer-select {
+  flex: 1;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  color: #e2e8f0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 6px;
+  border-radius: 6px;
+  outline: none;
+  cursor: pointer;
+}
+
+.dazy-explainer-select:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
+}
+
+.dazy-explainer-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.dazy-btn-next {
+  background: linear-gradient(135deg, #0284c7, #06b6d4) !important;
+  color: #ffffff !important;
+  border: none !important;
+  font-weight: 700 !important;
+  padding: 4px 12px !important;
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.4);
+}
+
+.dazy-btn-next:hover {
+  transform: translateY(-2px) scale(1.05) !important;
+  box-shadow: 0 0 16px rgba(6, 182, 212, 0.7) !important;
+}
+
+.dazy-btn-close-tour {
+  background: rgba(239, 68, 68, 0.15) !important;
+  border-color: rgba(239, 68, 68, 0.35) !important;
+  color: #fca5a5 !important;
+}
+
+.dazy-btn-close-tour:hover {
+  background: rgba(239, 68, 68, 0.3) !important;
+  color: #ffffff !important;
+}
+
+/* Spotlight Highlight for current feature being explained */
+.dazy-spotlight-active {
+  position: relative;
+  outline: 2px solid #38bdf8 !important;
+  outline-offset: 6px !important;
+  box-shadow: 0 0 30px rgba(56, 189, 248, 0.6), 0 0 60px rgba(45, 212, 191, 0.3) !important;
+  transition: outline 0.3s ease, box-shadow 0.3s ease !important;
+  animation: dazySpotlightPulse 2.2s infinite ease-in-out !important;
+}
+
+@keyframes dazySpotlightPulse {
+  0%, 100% {
+    outline-color: #38bdf8;
+    box-shadow: 0 0 25px rgba(56, 189, 248, 0.5);
+  }
+  50% {
+    outline-color: #2dd4bf;
+    box-shadow: 0 0 45px rgba(45, 212, 191, 0.75);
+  }
 }
 
 .btn-ai-sparkle {

@@ -2107,8 +2107,190 @@ let floatingDazyState = {
   isSleeping: false,
   isActing: false,
   idleTimer: null,
-  seenSections: new Set()
+  seenSections: new Set(),
+  isExplaining: false,
+  currentTourStep: 0
 };
+
+// --- Dazy Interactive Explainer Tour for New Users ---
+const dazyTourSteps = [
+  {
+    step: 1,
+    title: "✨ Welcome to CyberTwin Max",
+    targetSelector: null,
+    speech: "Welcome to CyberTwin! I'm Dazy, your floating cyber companion! Unlike static breach checkers that only show scary lists, CyberTwin simulates how adversaries actually chain leaked credentials and phishing into full account takeovers — and teaches you how to break the chain with Defense-in-Depth!",
+    html: `<strong>✨ Welcome to CyberTwin Max!</strong><br>
+I'm <strong>Dazy</strong>, your floating cyber companion! 🌸<br><br>
+CyberTwin is an interactive cybersecurity digital twin. It models how adversaries chain disparate breach leaks into an attack path, maps every step to <strong>MITRE ATT&CK</strong>, and shows how <strong>Defense-in-Depth</strong> severs the chain.<br><br>
+<span class="dazy-tour-tip">💡 Tip: Use 'Next' or the dropdown above to learn about every feature!</span>`
+  },
+  {
+    step: 2,
+    title: "⚡ Top Controls & Judge Mode",
+    targetSelector: ".header-controls",
+    speech: "Up here in the top navigation are your primary controls! 'Judge Mode' is a one-click preset for competitions that instantly loads a realistic three-breach attack graph without typing personal data. You can also toggle between Red Team and Blue Team, and switch my cute voice on or off!",
+    html: `<strong>⚡ Navigation & Judge Controls:</strong><br>
+• <strong>Judge Mode (Alex Chen):</strong> 1-click evaluation preset that instantly loads Alex's preconfigured breach history and attack graph in under 2 seconds.<br>
+• <strong>🔴 Red / 🔵 Blue Switch:</strong> Flips the entire twin between attacker exploit scripts and SOC defensive telemetry.<br>
+• <strong>🔊 Dazy Voice:</strong> Toggles my synthesized cute voice lines on or off.<br>
+• <strong>Risk Score Circle:</strong> Live composite posture gauge (0–100).`
+  },
+  {
+    step: 3,
+    title: "📧 Universal Threat Scanner",
+    targetSelector: ".email-scanner-hero",
+    speech: "This is the Identity Threat Scanner! You can enter any email address or username to simulate exposures in real time. We use pure client-side k-anonymity with zero data logging, so no personal passwords or emails are ever saved. You can also click the quick presets for instant testing!",
+    html: `<strong>📧 Identity Threat Scanner:</strong><br>
+• <strong>Universal Search:</strong> Type any email address or ID to evaluate breach intelligence in real time.<br>
+• <strong>Zero-Trust Privacy:</strong> 100% ephemeral processing. Passwords and emails are NEVER stored or logged.<br>
+• <strong>Quick Presets:</strong> Test <em>Alex Chen</em> (3 leaks), <em>Sarah Dev</em> (clean / 0 leaks), or <em>CEO Target</em> (critical).<br>
+• <strong>Live Results Card:</strong> Displays compromised databases, leaked password hashes, and initial attack vectors.`
+  },
+  {
+    step: 4,
+    title: "💻 Attack Simulation Terminal",
+    targetSelector: ".terminal-card",
+    speech: "This animated terminal demonstrates real-world adversary execution! Click 'Run Simulation' to watch live command-line attacks. You can switch between Credential Stuffing, Phishing Takeover, and SIM-Swap. When in Blue Team mode, it displays SOC alerts, Sigma rules, and detection telemetry!",
+    html: `<strong>💻 Attack Simulator Terminal:</strong><br>
+• <strong>▶ Run Simulation:</strong> Animates an attacker executing credential spray attacks, port scans, and session hijacks.<br>
+• <strong>Scenario Switcher:</strong> Switch between 3 real attack vectors: <em>Credential Stuffing (T1110.004)</em>, <em>Phishing (T1566)</em>, and <em>SIM-Swap (T1111)</em>.<br>
+• <strong>Dual Mode Telemetry:</strong> In Red mode, see live exploit commands; in Blue mode, see SIEM detection logs and YARA/Sigma rules!`
+  },
+  {
+    step: 5,
+    title: "🛡️ MITRE ATT&CK Attack Graph",
+    targetSelector: ".attack-graph-card",
+    speech: "This is the heart of CyberTwin: the interactive MITRE ATT&CK attack graph! It maps how an attacker progresses step-by-step from initial phishing to credential access and full session takeover. Click on any node circle to inspect technical adversary details, detection logs, and remediations!",
+    html: `<strong>🛡️ MITRE ATT&CK Attack Graph:</strong><br>
+• <strong>Multi-Hop Attack Path:</strong> Shows how an adversary chains Initial Access (T1566 Phishing) ➔ Credential Access (T1078 Leaked Hashes) ➔ Lateral Movement (T1539 Session Hijack).<br>
+• <strong>Interactive Node Inspector:</strong> Click any circular node to view official MITRE ATT&CK technique IDs, detection telemetry, and mitigation guides.<br>
+• <strong>Visual Legend:</strong> Pink = Compromised, Green = Severed, Blue = Inactive.`
+  },
+  {
+    step: 6,
+    title: "⚔️ Defense-in-Depth Severance",
+    targetSelector: ".defense-toggle-grid",
+    speech: "These defense toggles show Defense-in-Depth in action! Turn on controls like Hardware MFA, a Password Manager, DMARC, or a Carrier PIN. Watch how turning any defense switch on physically breaks the glowing attack line in the graph and cuts off the adversary's attack path!",
+    html: `<strong>⚔️ Defense-in-Depth Toggles:</strong><br>
+• <strong>Hardware MFA / Passkeys:</strong> Breaks credential stuffing and automated bot logins.<br>
+• <strong>Password Manager:</strong> Eliminates dangerous credential reuse across services.<br>
+• <strong>Strict DMARC & SPF:</strong> Hardens the domain against spoofed spearphishing emails.<br>
+• <strong>Physical Severance:</strong> Check any box to watch the glowing SVG connection line shatter in real time and lower your risk!`
+  },
+  {
+    step: 7,
+    title: "📐 Transparent Risk Formula",
+    targetSelector: ".formula-card",
+    speech: "CyberTwin calculates risk posture using a completely transparent arithmetic formula, not an arbitrary black-box percentage! It weights leaked password hashes, breach recency, phishing vulnerability, and missing MFA, and immediately subtracts points for each defense you deploy!",
+    html: `<strong>📐 Transparent Risk Formula:</strong><br>
+• <strong>Exact Arithmetic:</strong> Calculated as: <code>(Leaked Hashes + Breach Recency + Phishing Vulnerability + Missing MFA) - Active Defenses</code>.<br>
+• <strong>Visible Weights:</strong> Plaintext/hash leaks (+30), recent breaches (+15), unmitigated phishing (+25), missing MFA (+20).<br>
+• <strong>Dynamic Recalculation:</strong> Drops automatically towards 0 as you activate defense-in-depth controls.`
+  },
+  {
+    step: 8,
+    title: "🔬 Defensive Forensic Labs",
+    targetSelector: ".tools-section",
+    speech: "Below the main twin are three deep-dive forensic labs! The Email Header Analyzer parses SPF, DKIM, and DMARC hops. The Lookalike Link Checker detects typosquatting and homoglyph attacks using Levenshtein distance. And the Password Lab tests entropy and checks breach leaks using safe k-anonymity SHA-1 prefixes!",
+    html: `<strong>🔬 Defensive Threat Labs:</strong><br>
+• <strong>Email Header Analyzer:</strong> Parses RFC 822 email headers for SPF, DKIM, and DMARC alignment, plus hop delivery delays.<br>
+• <strong>Lookalike Link Checker:</strong> Uses Levenshtein distance algorithms to spot typosquatting and phishing domains (e.g. <code>paypa1.com</code>).<br>
+• <strong>Password Lab:</strong> Evaluates Shannon entropy via zxcvbn, crack times, and queries HIBP via k-anonymity SHA-1 prefixes.<br>
+• <strong>Phishing Detector:</strong> Highlights urgency keywords and social engineering tactics in raw email text.`
+  },
+  {
+    step: 9,
+    title: "🎮 Quests & Phishing Showdown",
+    targetSelector: "#tab-quiz",
+    speech: "Ready to put your security skills to the test? Complete the gamified Fix-It Quests to level up your posture rank from Script Kiddie Bait to Hardened Guardian! Then challenge our neural classifier in the Human vs AI Phishing Showdown. When you're done, download a branded executive PDF pentest report!",
+    html: `<strong>🎮 Gamified Quests & Showdown:</strong><br>
+• <strong>Fix-It Quests:</strong> Guided remediation tasks that reward badges and advance your twin posture rank.<br>
+• <strong>Human vs AI Showdown:</strong> Test your social engineering detection against 8 authentic email scenarios.<br>
+• <strong>📄 PDF Report Export:</strong> Click 'Download Report' in the header to generate a printable executive security audit summary!<br><br>
+<span class="dazy-tour-tip">✨ You're all set! Drag me anywhere on your screen, click 'Pet Me' for love, or click 'Guide Tip' whenever you need help!</span>`
+  }
+];
+
+function dazyRunTourStep(stepIndex) {
+  if (stepIndex < 0 || stepIndex >= dazyTourSteps.length) stepIndex = 0;
+  floatingDazyState.currentTourStep = stepIndex;
+  floatingDazyState.isExplaining = true;
+  floatingDazyState.lastActionTime = Date.now();
+  wakeDazy();
+
+  const step = dazyTourSteps[stepIndex];
+  const bubble = document.getElementById('dazyFloatingBubble');
+  const bubbleText = document.getElementById('dazyFloatingText');
+  const drawer = document.getElementById('dazyExplainerDrawer');
+  const stepPill = document.getElementById('dazyExplainerStep');
+  const topicSelect = document.getElementById('dazyExplainerTopicSelect');
+  const body = document.getElementById('dazyBodyWrapper');
+
+  if (bubble) {
+    bubble.classList.remove('minimized');
+    bubble.classList.add('tour-active');
+  }
+  if (drawer) drawer.style.display = 'flex';
+  if (stepPill) stepPill.textContent = `Step ${step.step}/${dazyTourSteps.length}`;
+  if (topicSelect) topicSelect.value = String(stepIndex);
+  if (bubbleText) bubbleText.innerHTML = step.html;
+
+  // Clear previous spotlights
+  document.querySelectorAll('.dazy-spotlight-active').forEach(el => el.classList.remove('dazy-spotlight-active'));
+
+  // Target spotlight and smooth scroll
+  if (step.targetSelector) {
+    if (step.step === 8) {
+      document.querySelector('.tab-btn[data-tab="tab-header"]')?.click();
+    } else if (step.step === 9) {
+      document.querySelector('.tab-btn[data-tab="tab-quiz"]')?.click();
+    }
+
+    setTimeout(() => {
+      const targetEl = document.querySelector(step.targetSelector);
+      if (targetEl) {
+        targetEl.classList.add('dazy-spotlight-active');
+        targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 60);
+  } else {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Audio and cute sound effect
+  sfx.playChirp();
+  dazyVoice.speak(step.speech);
+
+  // Sparkles & gentle float reaction
+  dazySpawnParticle('✨', (Math.random() - 0.5) * 20);
+  dazySpawnParticle('🌸', (Math.random() - 0.5) * 25);
+
+  if (body) {
+    body.classList.remove('emote-pet', 'emote-flip', 'emote-dance');
+    void body.offsetWidth;
+    body.classList.add('emote-dance');
+    setTimeout(() => body.classList.remove('emote-dance'), 1600);
+  }
+}
+
+function dazyExitTour(restoreDefaultText = true) {
+  floatingDazyState.isExplaining = false;
+  document.querySelectorAll('.dazy-spotlight-active').forEach(el => el.classList.remove('dazy-spotlight-active'));
+
+  const bubble = document.getElementById('dazyFloatingBubble');
+  const drawer = document.getElementById('dazyExplainerDrawer');
+  const bubbleText = document.getElementById('dazyFloatingText');
+
+  if (bubble) bubble.classList.remove('tour-active');
+  if (drawer) drawer.style.display = 'none';
+
+  if (restoreDefaultText && bubbleText) {
+    bubbleText.textContent = "I'm always floating here to help! Click '🎓 Explain Everything' anytime for a full tour! ✨";
+  }
+
+  sfx.playClick();
+  dazySpawnParticle('💖', 0);
+}
 
 function initFloatingDazy() {
   const container = document.getElementById('dazyFloatingCompanion');
@@ -2220,7 +2402,6 @@ function initFloatingDazy() {
     toggleBtn.textContent = bubble.classList.contains('minimized') ? '💬' : '─';
   });
 
-  // 3. Emote Action Buttons (Minimal & Clean)
   document.getElementById('btnFloatPet')?.addEventListener('click', () => {
     wakeDazy();
     dazyPet();
@@ -2229,6 +2410,36 @@ function initFloatingDazy() {
   document.getElementById('btnFloatGuide')?.addEventListener('click', () => {
     wakeDazy();
     dazySpeakCurrentGuide();
+  });
+
+  // Explain Everything Tour Trigger
+  document.getElementById('btnFloatExplain')?.addEventListener('click', () => {
+    wakeDazy();
+    dazyRunTourStep(0);
+  });
+
+  // Tour Stepper Controls
+  document.getElementById('btnExplainerNext')?.addEventListener('click', () => {
+    wakeDazy();
+    const nextIdx = (floatingDazyState.currentTourStep + 1) % dazyTourSteps.length;
+    dazyRunTourStep(nextIdx);
+  });
+
+  document.getElementById('btnExplainerPrev')?.addEventListener('click', () => {
+    wakeDazy();
+    const prevIdx = (floatingDazyState.currentTourStep - 1 + dazyTourSteps.length) % dazyTourSteps.length;
+    dazyRunTourStep(prevIdx);
+  });
+
+  document.getElementById('btnExplainerClose')?.addEventListener('click', () => {
+    wakeDazy();
+    dazyExitTour();
+  });
+
+  document.getElementById('dazyExplainerTopicSelect')?.addEventListener('change', (e) => {
+    wakeDazy();
+    const selectedIdx = parseInt(e.target.value, 10);
+    dazyRunTourStep(selectedIdx);
   });
 
   document.getElementById('btnFloatDance')?.addEventListener('click', () => {
@@ -2514,7 +2725,7 @@ function wakeDazy() {
 
 // --- Calm Idle Cycle (Unobtrusive & Gentle) ---
 function runDazyIdleCycle() {
-  if (floatingDazyState.isDragging) return;
+  if (floatingDazyState.isDragging || floatingDazyState.isExplaining) return;
   const idleMs = Date.now() - floatingDazyState.lastActionTime;
 
   // Sleep peacefully if user is idle for over 60 seconds
@@ -2623,6 +2834,7 @@ function setupGuideObserver() {
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting && entry.intersectionRatio > 0.45) {
+        if (floatingDazyState.isExplaining) return;
         const secId = entry.target.dataset.guideId;
         if (secId && !floatingDazyState.seenSections.has(secId)) {
           floatingDazyState.seenSections.add(secId);
@@ -2652,6 +2864,9 @@ function setupGuideObserver() {
 }
 
 function dazySpeakCurrentGuide() {
+  if (floatingDazyState.isExplaining) {
+    dazyExitTour(false);
+  }
   const secId = floatingDazyState.currentSection || 'heroScanner';
   const tip = sectionGuideTips[secId] || sectionGuideTips.heroScanner;
   const bubbleText = document.getElementById('dazyFloatingText');

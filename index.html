@@ -967,13 +967,37 @@ Subject: Urgent: Verify Account Immediately"></textarea>
         </div>
       </div>
       <p class="dazy-bubble-text" id="dazyFloatingText">
-        "Hi! I'm Dazy. I'm floating with you to guide you through CyberTwin. Click me anytime to pet me! ✨"
+        "Hi! I'm Dazy. I'm floating with you to guide you through CyberTwin! New here? Click '🎓 Explain Everything' to see how every feature works! ✨"
       </p>
       
       <!-- Clean Minimal Action Row -->
       <div class="dazy-bubble-actions">
         <button class="dazy-mini-btn" id="btnFloatPet" title="Pet Dazy!">💖 Pet Me</button>
         <button class="dazy-mini-btn" id="btnFloatGuide" title="Ask Dazy about this section!">💡 Guide Tip</button>
+        <button class="dazy-mini-btn dazy-btn-tour" id="btnFloatExplain" title="Let Dazy gently float and explain every function and feature!">🎓 Explain Everything</button>
+      </div>
+
+      <!-- Dazy Interactive Explainer Tour Drawer for New Users -->
+      <div class="dazy-explainer-drawer" id="dazyExplainerDrawer" style="display: none;">
+        <div class="dazy-explainer-header">
+          <span class="dazy-explainer-step-pill" id="dazyExplainerStep">Step 1/9</span>
+          <select class="dazy-explainer-select" id="dazyExplainerTopicSelect" title="Jump to any function">
+            <option value="0">1. Welcome to CyberTwin</option>
+            <option value="1">2. Top Controls & Judge Mode</option>
+            <option value="2">3. Universal Threat Scanner</option>
+            <option value="3">4. Attack Terminal (Red/Blue)</option>
+            <option value="4">5. MITRE ATT&CK Graph</option>
+            <option value="5">6. Defense-in-Depth Toggles</option>
+            <option value="6">7. Transparent Risk Formula</option>
+            <option value="7">8. Defensive Forensic Labs</option>
+            <option value="8">9. Quests & Phishing Showdown</option>
+          </select>
+        </div>
+        <div class="dazy-explainer-controls">
+          <button class="dazy-mini-btn" id="btnExplainerPrev" title="Previous Function">❮ Prev</button>
+          <button class="dazy-mini-btn dazy-btn-next" id="btnExplainerNext" title="Next Function">Next ❯</button>
+          <button class="dazy-mini-btn dazy-btn-close-tour" id="btnExplainerClose" title="Close Explainer">✕ Close</button>
+        </div>
       </div>
     </div>
 
