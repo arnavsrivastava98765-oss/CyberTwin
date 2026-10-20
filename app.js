@@ -214,74 +214,44 @@ class DazyVoice {
 }
 const dazyVoice = new DazyVoice();
 
-// --- Dazy Dialogue & Mood Manager (Baby Chibi with Animated Moods & Pop-ons) ---
+// --- Dazy Dialogue & Mood Manager ---
 function setDazyMood(mood, dialogueText, speakNow = true) {
   state.dazyMood = mood;
   const moodBadge = document.getElementById('dazyMoodBadge');
   const speechText = document.getElementById('dazySpeechText');
-  const avatarImg = document.getElementById('dazyImg');
-  const poponsLayer = document.getElementById('dazyPoponsLayer');
 
   if (speechText && dialogueText) {
     speechText.textContent = dialogueText;
     if (speakNow) dazyVoice.speak(dialogueText);
   }
 
-  // Sync with floating Dazy creature if present
+  // Sync with floating Dazy creature
   if (typeof updateFloatingDazyMood === 'function') {
-    updateFloatingDazyMood(mood, dialogueText, false); // already spoken above
+    updateFloatingDazyMood(mood, dialogueText, false);
   }
 
-  if (!moodBadge || !avatarImg) return;
-
-  switch (mood) {
-    case 'scared':
-      avatarImg.src = 'assets/dazy_chibi_scared.jpg';
-      moodBadge.textContent = '😱 Baby Dazy is Scared!';
-      moodBadge.style.color = '#ff4757';
-      moodBadge.style.borderColor = '#ff4757';
-      avatarImg.style.borderColor = '#ff4757';
-      avatarImg.style.boxShadow = '0 0 25px rgba(255, 71, 87, 0.7)';
-      if (poponsLayer) {
-        poponsLayer.innerHTML = '<span class="popon-item popon-sweat">💧</span><span class="popon-item popon-heart">⚠️</span>';
-      }
-      sfx.playAlert();
-      break;
-    case 'shielded':
-      avatarImg.src = 'assets/dazy_chibi_shield.jpg';
-      moodBadge.textContent = '🛡️ Tiny Guardian Battle Mode!';
-      moodBadge.style.color = 'var(--cyber-mint)';
-      moodBadge.style.borderColor = 'var(--cyber-mint)';
-      avatarImg.style.borderColor = 'var(--cyber-mint)';
-      avatarImg.style.boxShadow = '0 0 25px rgba(0, 255, 179, 0.7)';
-      if (poponsLayer) {
-        poponsLayer.innerHTML = '<span class="popon-item popon-shield">🛡️</span><span class="popon-item popon-star">✨</span>';
-      }
-      sfx.playShieldDeflect();
-      break;
-    case 'celebrate':
-      avatarImg.src = 'assets/dazy_chibi.jpg';
-      moodBadge.textContent = '🎉 Level Up! Baby Dazy is Cheering!';
-      moodBadge.style.color = 'var(--cyber-amber)';
-      moodBadge.style.borderColor = 'var(--cyber-amber)';
-      avatarImg.style.borderColor = 'var(--cyber-amber)';
-      avatarImg.style.boxShadow = '0 0 30px rgba(255, 209, 102, 0.8)';
-      if (poponsLayer) {
-        poponsLayer.innerHTML = '<span class="popon-item popon-heart">💖</span><span class="popon-item popon-star">🎉</span>';
-      }
-      sfx.playFanfare();
-      break;
-    default:
-      avatarImg.src = 'assets/dazy_chibi.jpg';
-      moodBadge.textContent = '🌸 Happy Baby Twin';
-      moodBadge.style.color = 'var(--cyber-pink-soft)';
-      moodBadge.style.borderColor = 'var(--cyber-pink-soft)';
-      avatarImg.style.borderColor = 'var(--cyber-pink-soft)';
-      avatarImg.style.boxShadow = '0 0 20px var(--cyber-pink-glow)';
-      if (poponsLayer) {
-        poponsLayer.innerHTML = '<span class="popon-item popon-heart">💖</span><span class="popon-item popon-star">✨</span>';
-      }
-      break;
+  if (moodBadge) {
+    switch (mood) {
+      case 'scared':
+        moodBadge.textContent = '😱 Red Team Alert!';
+        moodBadge.style.color = '#ff4757';
+        sfx.playAlert();
+        break;
+      case 'shielded':
+        moodBadge.textContent = '🛡️ Active & Shielded';
+        moodBadge.style.color = '#2dd4bf';
+        sfx.playShieldDeflect();
+        break;
+      case 'celebrate':
+        moodBadge.textContent = '🎉 Defenses Active!';
+        moodBadge.style.color = '#fde047';
+        sfx.playFanfare();
+        break;
+      default:
+        moodBadge.textContent = '🛡️ Active & Guarded';
+        moodBadge.style.color = '#2dd4bf';
+        break;
+    }
   }
 }
 
@@ -2271,6 +2241,11 @@ function initFloatingDazy() {
     dazySpeakCurrentGuide();
   });
 
+  document.getElementById('btnFloatWander')?.addEventListener('click', () => {
+    wakeDazy();
+    dazyStartWander();
+  });
+
   document.getElementById('btnFloatAiAsk')?.addEventListener('click', () => {
     wakeDazy();
     sfx.playClick();
@@ -2280,6 +2255,26 @@ function initFloatingDazy() {
       if (isHidden) aiInput?.focus();
     }
   });
+
+  // Interactive Big Googly Eyes cursor tracker
+  window.addEventListener('mousemove', (e) => {
+    const pupilLeft = document.getElementById('dazyPupilLeft');
+    const pupilRight = document.getElementById('dazyPupilRight');
+    if (!pupilLeft || !pupilRight || floatingDazyState.isSleeping || floatingDazyState.isDragging) return;
+
+    const rect = stage.getBoundingClientRect();
+    const eyeCenterX = rect.left + rect.width / 2;
+    const eyeCenterY = rect.top + rect.height / 2;
+    const dx = e.clientX - eyeCenterX;
+    const dy = e.clientY - eyeCenterY;
+    const dist = Math.hypot(dx, dy) || 1;
+    const maxOffset = 5.5;
+    const offsetX = (dx / dist) * Math.min(dist / 40, maxOffset);
+    const offsetY = (dy / dist) * Math.min(dist / 40, maxOffset);
+
+    pupilLeft.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+    pupilRight.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+  }, { passive: true });
 
   // 4. Free AI Advice Prompt Engine
   aiSendBtn?.addEventListener('click', () => handleAiQuery());
@@ -2292,13 +2287,13 @@ function initFloatingDazy() {
     if (!query) return;
     sfx.playClick();
     dazySpawnParticle('✨', 0);
-    dazySpawnParticle('🤖', 20);
+    dazySpawnParticle('🐙', 20);
 
     const responses = [
-      `Dazy AI: "Regarding '${query}', always combine strong passphrases with FIDO2 MFA! Attackers can't crack math with sheer brute force! 🛡️"`,
-      `Dazy AI: "Smart question about '${query}'! In Alex's cyber digital twin, closing breached password paths stops credential-stuffing instantly! ✨"`,
-      `Dazy AI: "Cyber analysis: '${query}' relates to identity resilience. Check the MITRE ATT&CK map above to see defense mitigations in action! 💡"`,
-      `Dazy AI: "Security Tip: '${query}' is a prime target for social engineering phishing. Never click urgent links before checking the domain! 🐾"`
+      `Dazy: "Regarding '${query}', always combine strong passphrases with FIDO2 MFA! Attackers can't crack math with sheer brute force! 🛡️"`,
+      `Dazy: "Smart question about '${query}'! In Alex's cyber digital twin, closing breached password paths stops credential-stuffing instantly! ✨"`,
+      `Dazy: "Cyber analysis: '${query}' relates to identity resilience. Check the MITRE ATT&CK map to see defense mitigations in action! 💡"`,
+      `Dazy: "Security Tip: '${query}' is a prime target for social engineering phishing. Never click urgent links before checking the domain! 🫧"`
     ];
 
     const pick = responses[Math.floor(Math.random() * responses.length)];
@@ -2343,7 +2338,57 @@ function dazySpawnParticle(emoji = '✨', tx = 0) {
   }, 1400);
 }
 
-// --- Cute Emote: Small Dance ---
+// --- Float Everywhere / Wander Mode ---
+let wanderInterval = null;
+function dazyStartWander() {
+  const container = document.getElementById('dazyFloatingCompanion');
+  const bubbleText = document.getElementById('dazyFloatingText');
+  const moodBadge = document.getElementById('dazyFloatingMood');
+  if (!container) return;
+
+  const positions = [
+    { x: window.innerWidth - container.offsetWidth - 30, y: 30, desc: "Floating to the top of the page! Watch Alex's posture score! 🌊" },
+    { x: 30, y: Math.max(100, Math.floor(window.innerHeight / 2 - 100)), desc: "Cruising over to the Adversary Terminal on the left! 🐙" },
+    { x: Math.max(30, Math.floor(window.innerWidth / 2 - 120)), y: Math.max(80, window.innerHeight - 220), desc: "Hovering right above our deep-dive forensics labs! 🫧✨" },
+    { x: window.innerWidth - container.offsetWidth - 30, y: window.innerHeight - container.offsetHeight - 30, desc: "Back in my cozy corner! Click 'Float Around' anytime to send me flying again! 💖" }
+  ];
+
+  let step = 0;
+  if (moodBadge) moodBadge.textContent = '🌊 Floating Everywhere!';
+  if (bubbleText) bubbleText.textContent = "Wheee! I'm a cute white octopus floating across your entire website! 🐙🫧";
+  dazyVoice.speak("Wheee! I'm a cute white octopus floating across your entire website!");
+  sfx.playFlipChime();
+  dazySpawnParticle('🫧', -15);
+  dazySpawnParticle('✨', 15);
+
+  container.style.transition = 'left 1.4s cubic-bezier(0.25, 1, 0.5, 1), top 1.4s cubic-bezier(0.25, 1, 0.5, 1)';
+
+  if (wanderInterval) clearInterval(wanderInterval);
+
+  wanderInterval = setInterval(() => {
+    if (step >= positions.length) {
+      clearInterval(wanderInterval);
+      wanderInterval = null;
+      container.style.transition = '';
+      if (moodBadge) moodBadge.textContent = '🌸 Happy';
+      return;
+    }
+
+    const pos = positions[step];
+    container.style.left = `${pos.x}px`;
+    container.style.top = `${pos.y}px`;
+    container.style.right = 'auto';
+    container.style.bottom = 'auto';
+
+    dazySpawnParticle('🫧', (Math.random() - 0.5) * 30);
+    dazySpawnParticle('✨', (Math.random() - 0.5) * 30);
+    if (bubbleText) bubbleText.textContent = pos.desc;
+    dazyVoice.speak(pos.desc);
+    step++;
+  }, 2800);
+}
+
+// --- Cute Emote: Small Octopus Dance ---
 function dazyDoDance(customText) {
   const body = document.getElementById('dazyBodyWrapper');
   const bubbleText = document.getElementById('dazyFloatingText');
@@ -2357,10 +2402,10 @@ function dazyDoDance(customText) {
   sfx.playDanceJingle();
   dazySpawnParticle('🎵', -20);
   dazySpawnParticle('🎶', 20);
-  dazySpawnParticle('✨', 0);
+  dazySpawnParticle('🫧', 0);
 
-  if (moodBadge) moodBadge.textContent = '💃 Cute Dance!';
-  const text = customText || "Look at my happy little cyber shuffle! Doing a cute tap dance for you! 💃✨";
+  if (moodBadge) moodBadge.textContent = '💃 Octopus Dance!';
+  const text = customText || "Squishy tentacle dance! Wiggling all 6 tentacles to the cyber beat! 💃🫧";
   if (bubbleText) bubbleText.textContent = text;
   dazyVoice.speak(text);
 
@@ -2370,7 +2415,7 @@ function dazyDoDance(customText) {
   }, 3200);
 }
 
-// --- Cute Emote: 360 Backflip ---
+// --- Cute Emote: 360 Octopus Backflip ---
 function dazyDoFlip(customText) {
   const body = document.getElementById('dazyBodyWrapper');
   const bubbleText = document.getElementById('dazyFloatingText');
@@ -2384,11 +2429,11 @@ function dazyDoFlip(customText) {
   sfx.playFlipChime();
   dazySpawnParticle('⭐', -18);
   dazySpawnParticle('💫', 18);
-  dazySpawnParticle('✨', 0);
+  dazySpawnParticle('🫧', 0);
   dazySpawnParticle('💖', 5);
 
-  if (moodBadge) moodBadge.textContent = '🤸 Backflip!';
-  const text = customText || "Wheee! Dazy version 3.75 does a full 360 flip in the air! So much fun! 🤸💫";
+  if (moodBadge) moodBadge.textContent = '🤸 Octopus Flip!';
+  const text = customText || "Wheee! 360-degree octopus backflip in mid-air! Look at my googly eyes spin! 🤸⭐";
   if (bubbleText) bubbleText.textContent = text;
   dazyVoice.speak(text);
 
@@ -2413,13 +2458,13 @@ function dazyPet(isBigHug = false) {
     sfx.playFanfare();
     dazySpawnParticle('💖', -25);
     dazySpawnParticle('💕', 25);
-    dazySpawnParticle('⭐', 0);
+    dazySpawnParticle('🫧', 0);
     dazySpawnParticle('🎉', 15);
-    if (moodBadge) moodBadge.textContent = '💖 Warm Hug!';
+    if (moodBadge) moodBadge.textContent = '💖 Octopus Hug!';
     const hugLines = [
-      "Aww, thank you for the big hug! You're the best cyber teammate ever! 💖",
-      "Yay! Super warm digital twin hug! All systems safe and cozy! 🐾✨",
-      "Hehe! Big hugs make Dazy's core processor sparkle with joy! 💖"
+      "Aww! Warm 6-tentacle octopus hug! You're the best teammate ever! 💖",
+      "Squish! Cozy digital twin hug from Dazy! All systems safe! 🐙✨",
+      "Hehe! Big hugs make my white marshmallow core glow with joy! 💖"
     ];
     const pick = hugLines[Math.floor(Math.random() * hugLines.length)];
     if (bubbleText) bubbleText.textContent = pick;
@@ -2428,13 +2473,13 @@ function dazyPet(isBigHug = false) {
     sfx.playGiggle();
     sfx.playChirp();
     dazySpawnParticle('💖', -15);
-    dazySpawnParticle('✨', 15);
+    dazySpawnParticle('🫧', 15);
     if (moodBadge) moodBadge.textContent = '🥰 Loved!';
     const petLines = [
-      "Hehe, that tickles! Thank you for petting Dazy! 🥰",
-      "Purr... Dazy feels so happy! Let's protect this digital twin together! ✨",
-      "Aww, sweet pats! Dazy's cheeks are blushing so bright! 🌸",
-      "Boop! I'm Dazy version 3.75, your cutest cyber guardian! 🐾"
+      "Hehe, that tickles my tentacles! Thank you for petting Dazy! 🥰",
+      "Squish squish! Dazy feels so happy! My googly eyes are sparkling! 🐙✨",
+      "Aww, sweet pats! My little octopus cheeks are blushing! 🌸",
+      "Boop! I'm Dazy version 3.75, your white cyber octopus guardian! 🫧"
     ];
     const pick = petLines[Math.floor(Math.random() * petLines.length)];
     if (bubbleText) bubbleText.textContent = pick;

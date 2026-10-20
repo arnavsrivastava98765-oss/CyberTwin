@@ -29,7 +29,14 @@
     <header class="app-header">
       <div class="header-brand">
         <div class="brand-avatar-mini pulse-glow" id="miniDazyAvatar" title="Dazy is Online ✨">
-          <img src="assets/dazy.jpg" alt="Dazy Avatar">
+          <svg class="mini-octo-svg" viewBox="0 0 36 36" width="34" height="34" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="18" cy="18" rx="14" ry="13" fill="#ffffff" filter="drop-shadow(0 0 6px #38bdf8)"/>
+            <circle cx="13" cy="16" r="3.5" fill="#0f172a"/><circle cx="12" cy="15" r="1.3" fill="#ffffff"/>
+            <circle cx="23" cy="16" r="3.5" fill="#0f172a"/><circle cx="22" cy="15" r="1.3" fill="#ffffff"/>
+            <circle cx="10" cy="20" r="2.2" fill="#ff7b90" opacity="0.8"/>
+            <circle cx="26" cy="20" r="2.2" fill="#ff7b90" opacity="0.8"/>
+            <path d="M 16,21 Q 18,23 20,21" stroke="#334155" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+          </svg>
           <span class="status-indicator online"></span>
         </div>
         <div class="brand-text">
@@ -193,49 +200,32 @@
       <!-- LEFT COLUMN: Dazy Persona & Threat Scenario Terminal -->
       <section class="grid-col col-left">
         
-        <!-- Dazy Digital Twin Pod (Baby Chibi with Animated Moods & Pop-ons) -->
+        <!-- Digital Twin Persona & Threat Telemetry Pod -->
         <div class="card dazy-pod-card glass-panel" id="dazyPodCard">
           <div class="pod-header">
             <div class="pod-title-row">
-              <span class="pod-badge">AI CYBER COMPANION</span>
-              <h2 class="pod-title">Dazy <span class="dazy-version-badge">v3.75</span> ✨</h2>
+              <span class="pod-badge">IDENTITY TWIN TELEMETRY</span>
+              <h2 class="pod-title">Digital Twin Monitor ✨</h2>
             </div>
             <span class="persona-tag" id="currentPersonaTag">Twin of: <strong id="currentPersonaEmail">alex.chen@cyber-demo.org</strong></span>
           </div>
 
-          <div class="dazy-hero-stage">
-            <div class="dazy-portrait-container" id="dazyPortraitContainer" title="Click or tap Dazy to pet her! 🐾">
-              <img src="assets/dazy_chibi.jpg" alt="Dazy Cyber Chibi" class="dazy-avatar-img chibi-mode" id="dazyImg">
-              
-              <!-- Cute Dynamic Pop-ons Layer -->
-              <div class="dazy-popons-layer" id="dazyPoponsLayer">
-                <span class="popon-item popon-heart">💖</span>
-                <span class="popon-item popon-star">✨</span>
-              </div>
-
-              <div class="mood-badge" id="dazyMoodBadge">🌸 Happy Baby Twin</div>
-              <button class="btn-dazy-voice-trigger" id="btnDazyVoiceTrigger" title="Hear Dazy Speak with cute voice">
-                🎙️ Baby Voice: Say Hi!
-              </button>
+          <!-- Digital Twin Telemetry Badges -->
+          <div class="twin-telemetry-row">
+            <div class="telemetry-chip">
+              <span class="chip-dot dot-green"></span>
+              <span class="chip-label">Twin Status:</span>
+              <strong class="chip-val" id="dazyMoodBadge">🛡️ Active &amp; Guarded</strong>
             </div>
-
-            <!-- Dazy Interactive Speech Bubble -->
-            <div class="dazy-dialog-box" id="dazyDialogBox">
-              <div class="dialog-tail"></div>
-              <div class="dialog-header">
-                <span class="dialog-speaker">DAZY SAYS:</span>
-                <span class="dialog-status-dot pulse"></span>
-              </div>
-              <p class="dialog-content" id="dazySpeechText">
-                "Hey there, darling! I'm Dazy, your cyber digital twin. An attacker is trying to chain Alex's breached passwords and phishing weakness to take over her accounts! Watch the terminal or turn on Blue Team shields to protect me!"
-              </p>
-              <div class="dialog-actions">
-                <button class="btn-chip" id="btnTipMfa">💡 How does MFA help?</button>
-                <button class="btn-chip" id="btnTipMitre">🔍 What is MITRE?</button>
-                <button class="btn-chip" id="btnCheerDazy">💖 Give Dazy a Hug</button>
-              </div>
+            <div class="telemetry-chip">
+              <span class="chip-icon">🐙</span>
+              <span class="chip-label">Companion:</span>
+              <strong class="chip-val text-cyan">Dazy v3.75 (White Octopus)</strong>
             </div>
           </div>
+
+          <!-- Hidden bridge element to preserve any legacy JS calls -->
+          <p id="dazySpeechText" style="display: none;">Dazy version 3.75 is actively monitoring Alex's cyber digital twin!</p>
 
           <!-- Quick Persona Info Drawer -->
           <div class="persona-mini-specs">
@@ -249,7 +239,7 @@
             </div>
             <div class="spec-item">
               <span class="spec-label">Exposed Credentials:</span>
-              <span class="spec-value highlight-red" id="personaLeakedPw">Password Hashes (Adobe 3DES & LinkedIn SHA-1)</span>
+              <span class="spec-value highlight-red" id="personaLeakedPw">Password Hashes (Adobe 3DES &amp; LinkedIn SHA-1)</span>
             </div>
           </div>
         </div>
@@ -980,9 +970,10 @@ Subject: Urgent: Verify Account Immediately"></textarea>
       
       <!-- Quick Interactive Actions Bar -->
       <div class="dazy-bubble-actions">
-        <button class="dazy-mini-btn" id="btnFloatDance" title="Watch Dazy do a cute little dance!">💃 Dance</button>
-        <button class="dazy-mini-btn" id="btnFloatFlip" title="Watch Dazy do a cute 360 backflip!">🤸 Backflip</button>
-        <button class="dazy-mini-btn" id="btnFloatHug" title="Give Dazy a warm hug!">💖 Hug</button>
+        <button class="dazy-mini-btn" id="btnFloatDance" title="Watch Dazy do a cute squishy octopus dance!">💃 Dance</button>
+        <button class="dazy-mini-btn" id="btnFloatFlip" title="Watch Dazy do a cute 360 octopus backflip!">🤸 Backflip</button>
+        <button class="dazy-mini-btn btn-float-wander" id="btnFloatWander" title="Make Dazy float everywhere across your website!">🌊 Float Around</button>
+        <button class="dazy-mini-btn" id="btnFloatHug" title="Give Dazy an octopus hug!">💖 Hug</button>
         <button class="dazy-mini-btn" id="btnFloatGuide" title="Ask Dazy to guide you on this section!">💡 Guide</button>
         <button class="dazy-mini-btn btn-ai-sparkle" id="btnFloatAiAsk" title="Ask Free Gemini AI with Dazy!">🤖 AI Advice</button>
       </div>
@@ -999,96 +990,119 @@ Subject: Urgent: Verify Account Immediately"></textarea>
       </div>
     </div>
 
-    <!-- Dazy Body Stage (Kawaii SVG Creature: Pastel Mint/Aqua, Blank Eyes, Interactive) -->
+    <!-- Dazy Body Stage (White Cute Squishy Octopus with Big Googly Eyes) -->
     <div class="dazy-creature-stage" id="dazyCreatureStage" role="button" tabindex="0" title="Click to pet Dazy! Double-click for hug! Drag me anywhere on screen!">
-      <!-- Emote FX Particle Layer (Hearts, Stars, Music Notes, Sweat Drops, Zzz) -->
+      <!-- Emote FX Particle Layer (Hearts, Stars, Bubbles, Music Notes, Sweat Drops, Zzz) -->
       <div class="dazy-creature-fx" id="dazyCreatureFx"></div>
 
       <!-- Creature Vector Model -->
       <div class="dazy-body-wrapper" id="dazyBodyWrapper">
-        <svg class="dazy-creature-svg" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+        <svg class="dazy-creature-svg dazy-octo-svg" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
           <defs>
-            <!-- Body Gradient: Dreamy Pastel Mint, Aqua & Turquoise (NOT PINK!) -->
-            <linearGradient id="dazyBodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#5eead4" />
-              <stop offset="45%" stop-color="#2dd4bf" />
-              <stop offset="85%" stop-color="#38bdf8" />
-              <stop offset="100%" stop-color="#60a5fa" />
+            <!-- Pure Marshmallow White Shading (NOT PINK!) -->
+            <linearGradient id="dazyOctoWhiteGrad" x1="20%" y1="0%" x2="80%" y2="100%">
+              <stop offset="0%" stop-color="#ffffff" />
+              <stop offset="60%" stop-color="#f8fafc" />
+              <stop offset="100%" stop-color="#e2e8f0" />
             </linearGradient>
 
-            <!-- Glow Halo -->
-            <filter id="dazyMintGlow" x="-25%" y="-25%" width="150%" height="150%">
-              <feDropShadow dx="0" dy="4" stdDeviation="7" flood-color="#2dd4bf" flood-opacity="0.55"/>
+            <!-- Celestial White & Soft Cyan Glow Filter -->
+            <filter id="dazyOctoGlow" x="-30%" y="-30%" width="160%" height="160%">
+              <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#38bdf8" flood-opacity="0.38"/>
+              <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#ffffff" flood-opacity="0.9"/>
             </filter>
 
-            <!-- Cheeks Rosy Blush Gradient -->
-            <radialGradient id="dazyCheekBlush" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stop-color="#ff7b90" stop-opacity="0.85"/>
-              <stop offset="70%" stop-color="#ff9baa" stop-opacity="0.3"/>
-              <stop offset="100%" stop-color="#ff9baa" stop-opacity="0"/>
+            <!-- Googly Eye 3D Sclera Gradient -->
+            <radialGradient id="dazyGooglySclera" cx="35%" cy="30%" r="70%">
+              <stop offset="0%" stop-color="#ffffff" />
+              <stop offset="80%" stop-color="#f1f5f9" />
+              <stop offset="100%" stop-color="#cbd5e1" />
             </radialGradient>
 
-            <!-- Specular Eye Gradient for Cute Blank Eyes -->
-            <radialGradient id="dazyPupilGrad" cx="35%" cy="30%" r="70%">
-              <stop offset="0%" stop-color="#1e293b" />
-              <stop offset="80%" stop-color="#0f172a" />
+            <!-- Big Googly Pupil Gradient -->
+            <radialGradient id="dazyGooglyPupil" cx="30%" cy="30%" r="70%">
+              <stop offset="0%" stop-color="#334155" />
+              <stop offset="75%" stop-color="#0f172a" />
               <stop offset="100%" stop-color="#020617" />
+            </radialGradient>
+
+            <!-- Cute Rosy Cheek Blush -->
+            <radialGradient id="dazyOctoBlush" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#ff7b90" stop-opacity="0.8" />
+              <stop offset="70%" stop-color="#ff7b90" stop-opacity="0.25" />
+              <stop offset="100%" stop-color="#ff7b90" stop-opacity="0" />
             </radialGradient>
           </defs>
 
-          <!-- Little Soft Ears / Horn Nubs -->
-          <ellipse cx="40" cy="22" rx="7.5" ry="13" fill="url(#dazyBodyGrad)" transform="rotate(-18 40 22)" class="dazy-ear dazy-ear-left" />
-          <ellipse cx="40" cy="22" rx="3.8" ry="7.5" fill="#cffafe" transform="rotate(-18 40 22)" opacity="0.85"/>
+          <!-- Cute Flapjack Dumbo Ear-Fins (Flutter when swimming) -->
+          <path class="dazy-octo-fin dazy-octo-fin-left" d="M 32,45 C 14,35 10,49 24,56 C 28,58 32,56 34,52 Z" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.8" />
+          <path class="dazy-octo-fin dazy-octo-fin-right" d="M 108,45 C 126,35 130,49 116,56 C 112,58 108,56 106,52 Z" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.8" />
 
-          <ellipse cx="80" cy="22" rx="7.5" ry="13" fill="url(#dazyBodyGrad)" transform="rotate(18 80 22)" class="dazy-ear dazy-ear-right" />
-          <ellipse cx="80" cy="22" rx="3.8" ry="7.5" fill="#cffafe" transform="rotate(18 80 22)" opacity="0.85"/>
+          <!-- Floaty Ocean Aura Shadow beneath Octopus -->
+          <ellipse cx="70" cy="132" rx="34" ry="7" fill="#38bdf8" opacity="0.35" class="dazy-shadow-aura" />
 
-          <!-- Floaty Aura Shadow beneath Creature -->
-          <ellipse cx="60" cy="110" rx="30" ry="6" fill="#2dd4bf" opacity="0.3" class="dazy-shadow-aura" />
+          <!-- Main Round Squishy Octopus Dome Body (Pure White Creature) -->
+          <path class="dazy-octo-head" d="M 70,22 C 105,22 122,44 122,78 C 122,96 108,103 70,103 C 32,103 18,96 18,78 C 18,44 35,22 70,22 Z" fill="url(#dazyOctoWhiteGrad)" filter="url(#dazyOctoGlow)" stroke="#f1f5f9" stroke-width="2.2" />
 
-          <!-- Main Kawaii Round Droplet Creature Body -->
-          <path class="dazy-body-path" d="M 60,20 C 90,20 108,40 108,68 C 108,96 88,106 60,106 C 32,106 12,96 12,68 C 12,40 30,20 60,20 Z" fill="url(#dazyBodyGrad)" filter="url(#dazyMintGlow)" />
+          <!-- Soft Rosy Cheek Blushes -->
+          <circle cx="34" cy="85" r="10" fill="url(#dazyOctoBlush)" class="dazy-blush dazy-blush-left" />
+          <circle cx="106" cy="85" r="10" fill="url(#dazyOctoBlush)" class="dazy-blush dazy-blush-right" />
 
-          <!-- Soft Mint-Cream Luminous Belly Patch -->
-          <ellipse cx="60" cy="74" rx="25" ry="20" fill="#f0fdfa" opacity="0.45" class="dazy-belly-patch" />
-
-          <!-- Rosy Blushing Cheeks -->
-          <circle cx="33" cy="70" r="9.5" fill="url(#dazyCheekBlush)" class="dazy-blush dazy-blush-left" />
-          <circle cx="87" cy="70" r="9.5" fill="url(#dazyCheekBlush)" class="dazy-blush dazy-blush-right" />
-
-          <!-- Big Round Cute Blank Eyes (● ●) -->
-          <g class="dazy-eyes-container" id="dazyEyes">
-            <!-- Left Eye -->
-            <g class="dazy-eye dazy-eye-left" id="dazyEyeLeft">
-              <ellipse cx="42" cy="58" rx="8" ry="9" fill="url(#dazyPupilGrad)" class="dazy-pupil" />
-              <!-- Cute Glossy Reflections -->
-              <circle cx="39" cy="54.5" r="3" fill="#ffffff" class="dazy-shine-major" />
-              <circle cx="44.5" cy="61.5" r="1.3" fill="#ffffff" opacity="0.85" />
+          <!-- BIG GOOGLY EYES (Cute Large Googly Eyes with wobbling glossy pupils) -->
+          <g class="dazy-googly-eyes-group" id="dazyGooglyEyes">
+            <!-- Left Googly Eye -->
+            <g class="dazy-googly-eye dazy-googly-left" id="dazyEyeLeft">
+              <!-- Eyeball Base with 3D Depth border -->
+              <circle cx="48" cy="66" r="17.5" fill="url(#dazyGooglySclera)" stroke="#cbd5e1" stroke-width="2.5" class="dazy-sclera" />
+              <!-- Wobbling Googly Pupil -->
+              <g class="dazy-pupil-holder" id="dazyPupilLeft">
+                <circle cx="48" cy="67" r="10" fill="url(#dazyGooglyPupil)" class="dazy-googly-pupil" />
+                <!-- Big Specular Shine -->
+                <circle cx="44" cy="62.5" r="3.8" fill="#ffffff" class="dazy-shine-major" />
+                <circle cx="51.5" cy="71" r="1.6" fill="#ffffff" opacity="0.9" />
+              </g>
             </g>
 
-            <!-- Right Eye -->
-            <g class="dazy-eye dazy-eye-right" id="dazyEyeRight">
-              <ellipse cx="78" cy="58" rx="8" ry="9" fill="url(#dazyPupilGrad)" class="dazy-pupil" />
-              <!-- Cute Glossy Reflections -->
-              <circle cx="75" cy="54.5" r="3" fill="#ffffff" class="dazy-shine-major" />
-              <circle cx="80.5" cy="61.5" r="1.3" fill="#ffffff" opacity="0.85" />
+            <!-- Right Googly Eye -->
+            <g class="dazy-googly-eye dazy-googly-right" id="dazyEyeRight">
+              <!-- Eyeball Base with 3D Depth border -->
+              <circle cx="92" cy="66" r="17.5" fill="url(#dazyGooglySclera)" stroke="#cbd5e1" stroke-width="2.5" class="dazy-sclera" />
+              <!-- Wobbling Googly Pupil -->
+              <g class="dazy-pupil-holder" id="dazyPupilRight">
+                <circle cx="92" cy="67" r="10" fill="url(#dazyGooglyPupil)" class="dazy-googly-pupil" />
+                <!-- Big Specular Shine -->
+                <circle cx="88" cy="62.5" r="3.8" fill="#ffffff" class="dazy-shine-major" />
+                <circle cx="95.5" cy="71" r="1.6" fill="#ffffff" opacity="0.9" />
+              </g>
             </g>
           </g>
 
-          <!-- Cute Sweet Mouth (Smooth morphable curve) -->
-          <path id="dazyMouth" class="dazy-mouth" d="M 55,68 Q 60,74 65,68" fill="none" stroke="#0f172a" stroke-width="2.4" stroke-linecap="round" />
+          <!-- Cute Tiny Little Mouth (Smiles or Opens with expressions) -->
+          <path id="dazyMouth" class="dazy-octo-mouth" d="M 64,84 Q 70,90 76,84" fill="none" stroke="#334155" stroke-width="2.6" stroke-linecap="round" />
 
-          <!-- Cute Stubby Little Flippers/Paws -->
-          <ellipse cx="20" cy="74" rx="6.5" ry="10" fill="url(#dazyBodyGrad)" transform="rotate(22 20 74)" class="dazy-flipper dazy-flipper-left" />
-          <ellipse cx="100" cy="74" rx="6.5" ry="10" fill="url(#dazyBodyGrad)" transform="rotate(-22 100 74)" class="dazy-flipper dazy-flipper-right" />
+          <!-- 6 ADORABLE WIGGLY TENTACLES at bottom -->
+          <g class="dazy-octo-tentacles" id="dazyTentacles">
+            <!-- Tentacle 1 (Far Left) -->
+            <path class="tentacle t1" d="M 26,98 C 20,113 18,124 28,128 C 36,130 36,117 34,101" fill="url(#dazyOctoWhiteGrad)" stroke="#e2e8f0" stroke-width="1.8" />
+            <!-- Tentacle 2 -->
+            <path class="tentacle t2" d="M 40,100 C 36,116 35,127 45,129 C 53,130 52,117 48,102" fill="url(#dazyOctoWhiteGrad)" stroke="#e2e8f0" stroke-width="1.8" />
+            <!-- Tentacle 3 (Middle-Left) -->
+            <path class="tentacle t3" d="M 55,102 C 53,118 55,128 63,128 C 70,128 68,116 62,102" fill="url(#dazyOctoWhiteGrad)" stroke="#e2e8f0" stroke-width="1.8" />
+            <!-- Tentacle 4 (Middle-Right) -->
+            <path class="tentacle t4" d="M 78,102 C 74,116 72,128 79,128 C 87,128 88,118 84,102" fill="url(#dazyOctoWhiteGrad)" stroke="#e2e8f0" stroke-width="1.8" />
+            <!-- Tentacle 5 -->
+            <path class="tentacle t5" d="M 92,100 C 90,116 90,129 98,128 C 106,126 104,116 100,100" fill="url(#dazyOctoWhiteGrad)" stroke="#e2e8f0" stroke-width="1.8" />
+            <!-- Tentacle 6 (Far Right) -->
+            <path class="tentacle t6" d="M 107,101 C 105,117 106,129 114,127 C 124,123 120,113 114,98" fill="url(#dazyOctoWhiteGrad)" stroke="#e2e8f0" stroke-width="1.8" />
+          </g>
 
-          <!-- Floating Cyber Tiara Sparkle on head -->
-          <polygon points="60,11 63,18 70,18 64,22 66,28 60,24 54,28 56,22 50,18 57,18" fill="#fde047" class="dazy-star-tiara" opacity="0.95" />
+          <!-- Floating Cyber Crown Star atop octopus head -->
+          <polygon points="70,13 73,19 80,19 75,23 77,29 70,25 63,29 65,23 60,19 67,19" fill="#fde047" opacity="0.95" />
         </svg>
 
         <!-- Compact Floating Pill Namebadge -->
         <div class="dazy-name-tag" id="dazyNameTag">
-          <span class="tag-sparkle">✨</span>
+          <span class="tag-sparkle">🐙</span>
           <span class="tag-label">Dazy</span>
           <span class="tag-ver">v3.75</span>
         </div>
