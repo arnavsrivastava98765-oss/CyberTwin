@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>CyberTwin Max ✨ | AI-Powered Cyber Digital Twin & Threat Simulator</title>
+  <meta name="description" content="CyberTwin models how adversaries chain leaked data and phishing weakness into account takeover, maps it to MITRE ATT&CK, and shows how defenses break the chain.">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#FF2A85">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="CyberTwin">
+  <link rel="apple-touch-icon" href="assets/dazy_chibi.jpg">
+  <link rel="icon" type="image/jpeg" href="assets/dazy_chibi.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="theme-red-attack">
+  <!-- Cyber Background Particles -->
+  <div class="cyber-stars" id="cyberStars"></div>
+  <div class="cyber-grid-overlay"></div>
+
+  <!-- Main Application Wrapper -->
+  <div class="app-container">
+
+    <!-- Top Navigation Header -->
+    <header class="app-header">
+      <div class="header-brand">
+        <div class="brand-avatar-mini pulse-glow" id="miniDazyAvatar" title="Dazy is Online ✨">
+          <img src="assets/dazy.jpg" alt="Dazy Avatar">
+          <span class="status-indicator online"></span>
+        </div>
+        <div class="brand-text">
+          <div class="logo-row">
+            <span class="logo-cyber">CYBER</span><span class="logo-twin">TWIN</span>
+            <span class="badge-max">MAX</span>
+          </div>
+          <p class="tagline">"Most tools say you're at risk. CyberTwin shows you the hack, then helps you stop it."</p>
+        </div>
+      </div>
+
+
+      <!-- Center Actions: Judge Demo & Red/Blue Switch -->
+      <div class="header-controls">
+        <button class="btn-judge-demo" id="btnJudgeDemo" title="Preload demo persona 'Alex' without entering real data">
+          <span class="sparkle-icon">✨</span>
+          <span class="btn-text">Judge Mode: Demo as <strong>Alex</strong></span>
+          <span class="hotkey-pill">1-Click</span>
+        </button>
+
+        <div class="team-switcher-wrapper">
+          <span class="team-label red-team-label active-team" id="redTeamText">🔴 Red Team</span>
+          <label class="switch-pill">
+            <input type="checkbox" id="teamToggleCheckbox">
+            <span class="slider-round"></span>
+          </label>
+          <span class="team-label blue-team-label" id="blueTeamText">🔵 Blue Team</span>
+        </div>
+
+        <button class="btn-voice-toggle" id="btnVoiceToggle" title="Toggle Dazy's Voice Voice Lines (Cute Synth Voice)">
+          <span class="voice-icon" id="voiceIcon">🔇</span>
+          <span class="voice-label" id="voiceLabel">Dazy Voice: OFF</span>
+        </button>
+      </div>
+
+      <!-- Right Posture Score & Rank -->
+      <div class="header-posture">
+        <div class="posture-card" id="headerPostureCard">
+          <div class="score-circle-wrapper">
+            <svg class="score-svg" viewBox="0 0 36 36">
+              <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+              <path class="circle-fill" id="scoreCirclePath" stroke-dasharray="75, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+            </svg>
+            <span class="score-number" id="headerScoreNumber">75</span>
+          </div>
+          <div class="posture-meta">
+            <span class="posture-title">RISK SCORE</span>
+            <span class="posture-rank-badge danger" id="headerRankBadge">🚨 High Exposure</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Universal Live Email Scanner Hero (Works for ANY email) -->
+    <section class="email-scanner-hero glass-panel">
+      <div class="scanner-top-row">
+        <div class="scanner-title-group">
+          <span class="cute-tag">⚡ LIVE IDENTITY THREAT SCANNER</span>
+          <h2 class="scanner-title">Build Your Cyber Digital Twin for ANY Email</h2>
+          <p class="scanner-subtitle">Enter ANY email or account ID to uncover real-time breach history, simulate chained attacks, and test defenses!</p>
+          <div class="consent-notice-pill">⚠️ Notice: CyberTwin is an educational security simulator. Check only your own email address or authorized demo accounts.</div>
+        </div>
+        <div class="quick-presets-group">
+          <span class="preset-label">Quick Presets:</span>
+          <button type="button" class="btn-preset-chip active" data-email="alex.chen@cyber-demo.org">Alex Chen (3 Leaks)</button>
+          <button type="button" class="btn-preset-chip" data-email="sarah.dev@clean-mail.com">Sarah Dev (Clean / 0 Leaks)</button>
+          <button type="button" class="btn-preset-chip" data-email="ceo.finance@corp-target.net">CEO Target (Critical)</button>
+        </div>
+      </div>
+
+      <form class="scanner-search-bar" id="emailScanForm">
+        <div class="scanner-input-wrapper">
+          <span class="scanner-prefix-icon">📧</span>
+          <input type="text" id="targetEmailInput" class="code-font scanner-input" placeholder="Type ANY email address or username ID (e.g. arnav@gmail.com, student@domain.com, or ID)..." value="alex.chen@cyber-demo.org" required>
+          <button type="button" class="btn-clear-email" id="btnClearEmailInput" title="Clear input">✕</button>
+        </div>
+        <button type="submit" class="btn-scan-trigger" id="btnScanEmail">
+          <span class="sparkle">✨</span>
+          <span id="btnScanText">Generate Digital Twin</span>
+        </button>
+      </form>
+
+      <div class="scanner-status-strip" id="scannerStatusStrip">
+        <span class="status-pill status-ready" id="scannerStatusPill">● Status: Ready (Click 'Generate Digital Twin' or a Preset)</span>
+        <span class="scan-meta-info" id="scanMetaInfo">Target: <strong>alex.chen@cyber-demo.org</strong></span>
+      </div>
+
+      <!-- Live Breach Results Card (Populates Dynamically for ANY Email) -->
+      <div class="live-breach-results-card" id="liveBreachResultsCard" style="display: none;">
+        <div class="results-card-header">
+          <div class="results-header-left">
+            <span class="breach-status-badge danger" id="resultsStatusBadge">🚨 3 BREACHES FOUND</span>
+            <h3 class="results-email-title code-font" id="resultsEmailTitle">alex.chen@cyber-demo.org</h3>
+          </div>
+          <div class="results-risk-score-pill" id="resultsRiskPill">
+            Composite Risk Score: <strong id="resultsRiskScore">75/100</strong>
+          </div>
+        </div>
+
+        <div class="results-grid">
+          <div class="result-box">
+            <span class="result-box-title">📂 Compromised Database Sources:</span>
+            <div class="breach-badges-list" id="resultsBreachBadges">
+              <span class="badge-chip red">LinkedIn (2012)</span>
+              <span class="badge-chip red">Adobe (2013)</span>
+              <span class="badge-chip red">Canva (2019)</span>
+            </div>
+          </div>
+          <div class="result-box">
+            <span class="result-box-title">🔑 Leaked Credentials & Vectors:</span>
+            <div class="leaked-assets-info" id="resultsLeakedAssets">
+              <div class="asset-row">
+                <span class="asset-label">Exposed Credentials:</span>
+                <code class="highlight-leak" id="resultsLeakedPassword">Password Hashes (Adobe 3DES / LinkedIn SHA-1)</code>
+              </div>
+              <div class="asset-row">
+                <span class="asset-label">Primary Attack Vector:</span>
+                <span class="highlight-vector" id="resultsAttackVector">Automated Credential Stuffing (MITRE T1110.004)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI Security Advice (3 Actionable Steps) -->
+        <div class="results-advice-box" id="resultsAdviceBox">
+          <div class="advice-header-row">
+            <span class="advice-badge" id="adviceBadge">🤖 AI DEFENSE RECOMMENDATIONS</span>
+            <span class="advice-sub" id="adviceSub">Live Threat Analysis Engine</span>
+          </div>
+          <div class="ai-live-narrative-box" id="aiNarrativeBox" style="display: none; padding: 0.8rem 1rem; margin-bottom: 0.8rem; background: rgba(255, 42, 133, 0.08); border-left: 3px solid var(--cyber-pink); border-radius: 8px; font-size: 0.86rem; line-height: 1.5; color: var(--text-main);">
+            <strong style="color: var(--cyber-pink-soft);">🧠 Adversary Exploit Narrative:</strong>
+            <p id="adviceNarrative" style="margin-top: 0.3rem; margin-bottom: 0;"></p>
+          </div>
+          <div class="advice-tips-list" id="adviceTipsList">
+            <div class="advice-tip-item">
+              <span class="tip-num">1</span>
+              <span class="tip-text" id="adviceTip1">Deploy Hardware Passkey / WebAuthn MFA immediately to invalidate stolen passwords.</span>
+            </div>
+            <div class="advice-tip-item">
+              <span class="tip-num">2</span>
+              <span class="tip-text" id="adviceTip2">Rotate reused credentials across any accounts sharing this leaked password.</span>
+            </div>
+            <div class="advice-tip-item">
+              <span class="tip-num">3</span>
+              <span class="tip-text" id="adviceTip3">Audit active device sessions and invalidate persistent cookies on high-value portals.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="results-action-strip">
+          <span class="action-tip">🛡️ Baby Dazy mapped this exact leaked chain to the MITRE attack graph below:</span>
+          <button type="button" class="btn-scroll-to-graph" id="btnScrollToGraph">View Chained MITRE Attack Path ↓</button>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- Main Workspace Grid -->
+    <main class="main-grid">
+
+      <!-- LEFT COLUMN: Dazy Persona & Threat Scenario Terminal -->
+      <section class="grid-col col-left">
+        
+        <!-- Dazy Digital Twin Pod (Baby Chibi with Animated Moods & Pop-ons) -->
+        <div class="card dazy-pod-card glass-panel" id="dazyPodCard">
+          <div class="pod-header">
+            <div class="pod-title-row">
+              <span class="pod-badge">AI CYBER COMPANION</span>
+              <h2 class="pod-title">Baby Dazy ✨</h2>
+            </div>
+            <span class="persona-tag" id="currentPersonaTag">Twin of: <strong id="currentPersonaEmail">alex.chen@cyber-demo.org</strong></span>
+          </div>
+
+          <div class="dazy-hero-stage">
+            <div class="dazy-portrait-container" id="dazyPortraitContainer" title="Click or tap Dazy to pet her! 🐾">
+              <img src="assets/dazy_chibi.jpg" alt="Dazy Cyber Chibi" class="dazy-avatar-img chibi-mode" id="dazyImg">
+              
+              <!-- Cute Dynamic Pop-ons Layer -->
+              <div class="dazy-popons-layer" id="dazyPoponsLayer">
+                <span class="popon-item popon-heart">💖</span>
+                <span class="popon-item popon-star">✨</span>
+              </div>
+
+              <div class="mood-badge" id="dazyMoodBadge">🌸 Happy Baby Twin</div>
+              <button class="btn-dazy-voice-trigger" id="btnDazyVoiceTrigger" title="Hear Dazy Speak with cute voice">
+                🎙️ Baby Voice: Say Hi!
+              </button>
+            </div>
+
+            <!-- Dazy Interactive Speech Bubble -->
+            <div class="dazy-dialog-box" id="dazyDialogBox">
+              <div class="dialog-tail"></div>
+              <div class="dialog-header">
+                <span class="dialog-speaker">DAZY SAYS:</span>
+                <span class="dialog-status-dot pulse"></span>
+              </div>
+              <p class="dialog-content" id="dazySpeechText">
+                "Hey there, darling! I'm Dazy, your cyber digital twin. An attacker is trying to chain Alex's breached passwords and phishing weakness to take over her accounts! Watch the terminal or turn on Blue Team shields to protect me!"
+              </p>
+              <div class="dialog-actions">
+                <button class="btn-chip" id="btnTipMfa">💡 How does MFA help?</button>
+                <button class="btn-chip" id="btnTipMitre">🔍 What is MITRE?</button>
+                <button class="btn-chip" id="btnCheerDazy">💖 Give Dazy a Hug</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Persona Info Drawer -->
+          <div class="persona-mini-specs">
+            <div class="spec-item">
+              <span class="spec-label">Target Email:</span>
+              <span class="spec-value code-font" id="personaEmail">alex.chen@cyber-demo.org</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Breach Count:</span>
+              <span class="spec-value highlight-red" id="personaBreachCount">3 Breaches (LinkedIn, Adobe, Canva)</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Exposed Credentials:</span>
+              <span class="spec-value highlight-red" id="personaLeakedPw">Password Hashes (Adobe 3DES & LinkedIn SHA-1)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Attack Scenario Selector & Live Cyber Terminal -->
+        <div class="card terminal-card glass-panel">
+          <div class="terminal-header">
+            <div class="mac-buttons">
+              <span class="mac-btn close"></span>
+              <span class="mac-btn minimize"></span>
+              <span class="mac-btn maximize"></span>
+            </div>
+            <div class="terminal-title" id="terminalTitle">
+              <span class="terminal-mode-icon">⚡</span>
+              <span class="terminal-mode-text">SIMULATED ADVERSARY TERMINAL — RED TEAM</span>
+            </div>
+            <div class="terminal-controls">
+              <button class="btn-terminal-action" id="btnSimulateAttack">▶ Run Simulation</button>
+              <button class="btn-terminal-action" id="btnClearTerminal">Clear</button>
+            </div>
+          </div>
+
+          <!-- Scenario Tabs -->
+          <div class="scenario-selector-bar">
+            <span class="scenario-label">Scenario:</span>
+            <button class="btn-scenario active" data-scenario="cred-stuffing">
+              1. Credential Stuffing (T1110.004)
+            </button>
+            <button class="btn-scenario" data-scenario="phishing-takeover">
+              2. Phishing Takeover (T1566.002)
+            </button>
+            <button class="btn-scenario" data-scenario="sim-swap">
+              3. SIM-Swap / SMS Intercept (T1111)
+            </button>
+          </div>
+
+          <!-- Animated Terminal Window -->
+          <div class="terminal-body code-font" id="terminalBody">
+            <div class="terminal-line comment"># CyberTwin Adversary Emulation Engine v1.0</div>
+            <div class="terminal-line comment"># Target: alex.chen@cyber-demo.org | Scenario: Credential Stuffing</div>
+            <div class="terminal-line info"><span class="prompt">guest@cybertwin:~$</span> Ready. Click "Run Simulation" or switch scenarios above.</div>
+          </div>
+
+          <div class="terminal-footer">
+            <span class="status-feed"><span class="blink-dot">●</span> Adversary Engine: Standby</span>
+            <span class="defense-status" id="terminalDefenseIndicator">Active Defenses: 0/4</span>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- RIGHT COLUMN: MITRE Attack Graph & Defense-in-Depth Severance -->
+      <section class="grid-col col-right">
+
+        <!-- Interactive MITRE ATT&CK Graph Card -->
+        <div class="card attack-graph-card glass-panel">
+          <div class="graph-card-header">
+            <div>
+              <div class="card-badge-row">
+                <span class="pod-badge">ATTACK CHAIN MODELING</span>
+                <span class="badge-framework">MITRE ATT&CK® Enterprise</span>
+              </div>
+              <h2 class="card-title">Chained Adversary Attack Path & Defense Severance</h2>
+            </div>
+            <div class="graph-legend">
+              <span class="legend-item"><span class="legend-dot red"></span> Compromised Step</span>
+              <span class="legend-item"><span class="legend-dot green"></span> Severed by Defense</span>
+              <span class="legend-item"><span class="legend-dot blue"></span> Inactive Step</span>
+            </div>
+          </div>
+
+          <p class="graph-instruction">
+            Adversaries chain small exposures into complete takeover. Click on any node to view MITRE technique intelligence or toggle defenses below to sever the attack chain!
+          </p>
+
+          <!-- SVG Attack Graph Canvas -->
+          <div class="graph-canvas-container" id="graphContainer">
+            <svg class="attack-graph-svg" id="attackGraphSvg" viewBox="0 0 880 340">
+              <defs>
+                <linearGradient id="edgeGradientRed" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#ff3388" />
+                  <stop offset="100%" stop-color="#ff66c4" />
+                </linearGradient>
+                <linearGradient id="edgeGradientGreen" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#00ffb3" />
+                  <stop offset="100%" stop-color="#00e5ff" />
+                </linearGradient>
+                <filter id="glowFilter" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="4" result="blur" />
+                  <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                </filter>
+              </defs>
+
+              <!-- Dynamic Edge Lines & Nodes will be drawn by app.js -->
+              <g id="graphEdgesGroup"></g>
+              <g id="graphNodesGroup"></g>
+              <g id="graphShieldsGroup"></g>
+            </svg>
+          </div>
+
+          <!-- Defense In Depth Controls Bar -->
+          <div class="defense-controls-panel">
+            <div class="defense-panel-header">
+              <span class="defense-panel-title">🛡️ Defense-in-Depth Toggles (Click to Sever Attack Step):</span>
+              <span class="defense-tip">Watch how controls break the chain!</span>
+            </div>
+            <div class="defense-toggle-grid">
+              <label class="defense-toggle-item" id="defMfaWrapper">
+                <input type="checkbox" id="toggleMfa">
+                <span class="defense-custom-checkbox"></span>
+                <div class="defense-info">
+                  <span class="defense-name">FIDO2 / Hardware Passkey MFA</span>
+                  <span class="defense-breaks">Breaks: Credential Stuffing (T1110.004)</span>
+                </div>
+              </label>
+
+              <label class="defense-toggle-item" id="defPassWrapper">
+                <input type="checkbox" id="togglePassManager">
+                <span class="defense-custom-checkbox"></span>
+                <div class="defense-info">
+                  <span class="defense-name">Password Manager & Unique Passwords</span>
+                  <span class="defense-breaks">Breaks: Leaked Credential Reuse (T1078)</span>
+                </div>
+              </label>
+
+              <label class="defense-toggle-item" id="defDmarcWrapper">
+                <input type="checkbox" id="toggleDmarc">
+                <span class="defense-custom-checkbox"></span>
+                <div class="defense-info">
+                  <span class="defense-name">Strict DMARC & Email Filtering</span>
+                  <span class="defense-breaks">Breaks: Spearphishing Link (T1566.002)</span>
+                </div>
+              </label>
+
+              <label class="defense-toggle-item" id="defSimPinWrapper">
+                <input type="checkbox" id="toggleSimPin">
+                <span class="defense-custom-checkbox"></span>
+                <div class="defense-info">
+                  <span class="defense-name">Carrier Port-Out PIN Lock</span>
+                  <span class="defense-breaks">Breaks: MFA Interception (T1111)</span>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Selected Node Details Drawer -->
+          <div class="node-inspector-drawer" id="nodeInspectorDrawer">
+            <div class="inspector-header">
+              <span class="inspector-badge" id="inspectorId">MITRE T1110.004</span>
+              <h3 class="inspector-title" id="inspectorName">Credential Stuffing</h3>
+              <button class="btn-close-inspector" id="btnCloseInspector">✕</button>
+            </div>
+            <p class="inspector-desc" id="inspectorDesc">
+              Adversaries search breach dumps for email/password pairs and automate login attempts across thousands of services.
+            </p>
+            <div class="inspector-meta-row">
+              <div class="meta-block">
+                <span class="meta-label">Detection Telemetry:</span>
+                <span class="meta-val" id="inspectorDetection">Surge of 401s from distributed residential proxy IPs.</span>
+              </div>
+              <div class="meta-block">
+                <span class="meta-label">Severed By Control:</span>
+                <span class="meta-val highlight-green" id="inspectorMitigation">Phishing-resistant MFA (WebAuthn / Passkeys).</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Transparent Risk Formula Card -->
+        <div class="card formula-card glass-panel">
+          <div class="formula-header">
+            <div>
+              <span class="pod-badge">EXPLAINABLE RISK METRICS</span>
+              <h3 class="card-title">Transparent Risk Formula (Exact Arithmetic)</h3>
+            </div>
+            <div class="formula-score-tag">
+              Calculated Score: <strong id="formulaCalculatedScore">75/100</strong>
+            </div>
+          </div>
+          <div class="formula-pills-row">
+            <div class="formula-pill item-leak" id="pillLeak">
+              <span class="fp-title">Password Hashes Leaked</span>
+              <span class="fp-weight" id="fpWeightLeak">+30 pts</span>
+            </div>
+            <div class="formula-pill item-recent" id="pillRecent">
+              <span class="fp-title">Breach Under 2 Years</span>
+              <span class="fp-weight" id="fpWeightRecent">+0 pts</span>
+            </div>
+            <div class="formula-pill item-phish" id="pillPhish">
+              <span class="fp-title">Phishing Vulnerability</span>
+              <span class="fp-weight" id="fpWeightPhish">+25 pts</span>
+            </div>
+            <div class="formula-pill item-nomfa" id="pillNoMfa">
+              <span class="fp-title">No MFA Deployed</span>
+              <span class="fp-weight" id="fpWeightNoMfa">+20 pts</span>
+            </div>
+            <div class="formula-pill item-mitigation" id="pillMitigation">
+              <span class="fp-title">Active Defenses</span>
+              <span class="fp-weight green" id="pillMitigationWeight">-0 pts</span>
+            </div>
+          </div>
+        </div>
+
+      </section>
+    </main>
+
+    <!-- Interactive Threat Analysis Tools (Tier 2 Labs) -->
+    <section class="tools-section">
+      <div class="section-title-row">
+        <div>
+          <span class="pod-badge">TIER 2 SECURITY DEPTH</span>
+          <h2 class="section-heading">Defensive Threat Analysis Labs</h2>
+        </div>
+        <div class="tools-tab-buttons">
+          <button class="tab-btn active" data-tab="tab-header">📧 Email Header Forensics</button>
+          <button class="tab-btn" data-tab="tab-links">🔗 Lookalike Link Checker</button>
+          <button class="tab-btn" data-tab="tab-password">🔐 Password Lab & k-Anonymity</button>
+          <button class="tab-btn" data-tab="tab-phish">🎣 Phishing Keyword Detector</button>
+          <button class="tab-btn" data-tab="tab-quiz">🎮 Quiz: Human vs AI (8 Emails)</button>
+          <button class="tab-btn" data-tab="tab-quests">🎯 Fix-it Quests & Time to Hack</button>
+        </div>
+      </div>
+
+
+      <!-- TAB 1: Email Header Analyzer -->
+      <div class="tab-content active" id="tab-header">
+        <div class="tool-grid-split">
+          <div class="tool-input-box">
+            <div class="box-header">
+              <label for="rawHeaderInput" class="input-label">Paste Raw Email RFC Headers:</label>
+              <div class="quick-link-samples">
+                <button class="btn-sample" id="btnLoadSpoofedHeader">Sample Spoofed Header</button>
+                <button class="btn-sample" id="btnLoadCleanHeader">Sample Clean Header</button>
+              </div>
+            </div>
+            <textarea id="rawHeaderInput" class="code-font" rows="9" placeholder="Delivered-To: alex.chen@cyber-demo.org
+Received: from mail.attacker-server.net (unknown [198.51.100.24])
+Authentication-Results: mx.corporate.com; spf=fail (sender IP is 198.51.100.24) smtp.mailfrom=attacker.com; dkim=fail; dmarc=fail (p=none; dis=none) header.from=secure-update-corp.com;
+From: IT Security Support <support@secure-update-corp.com>
+Reply-To: phish-collector@free-mail.ru
+Subject: Urgent: Verify Account Immediately"></textarea>
+            <div class="tool-btn-row">
+              <button class="btn-tool-action" id="btnAnalyzeHeaders">🔍 Parse & Analyze Headers</button>
+              <button class="btn-secondary" id="btnClearHeaders">Clear</button>
+            </div>
+          </div>
+
+          <div class="tool-results-box" id="headerResultsBox">
+            <h4 class="results-heading">Forensic Authentication Verdict:</h4>
+            <div class="auth-verdict-banner danger" id="authVerdictBanner">
+              <span class="verdict-icon">⚠️</span>
+              <div class="verdict-text">
+                <strong id="authVerdictTitle">SPOOFED EMAIL DETECTED</strong>
+                <p id="authVerdictSub">Authentication failed. SPF/DKIM failed alignment and domain DMARC policy is p=none (monitoring only), allowing spoofed message to arrive in inbox.</p>
+              </div>
+            </div>
+
+            <div class="auth-specs-grid">
+              <div class="auth-spec-item" id="specSpf">
+                <span class="spec-k">SPF Check</span>
+                <span class="spec-badge badge-fail" id="valSpf">FAIL</span>
+              </div>
+              <div class="auth-spec-item" id="specDkim">
+                <span class="spec-k">DKIM Signature</span>
+                <span class="spec-badge badge-fail" id="valDkim">FAIL / Missing</span>
+              </div>
+              <div class="auth-spec-item" id="specDmarc">
+                <span class="spec-k">DMARC Alignment</span>
+                <span class="spec-badge badge-fail" id="valDmarc">FAIL (p=none)</span>
+              </div>
+              <div class="auth-spec-item" id="specReplyTo">
+                <span class="spec-k">From vs Reply-To</span>
+                <span class="spec-badge badge-fail" id="valReplyTo">MISMATCH</span>
+              </div>
+            </div>
+
+            <div class="received-chain-box">
+              <span class="chain-title">Received Server Chain & Hops:</span>
+              <ol class="hop-list code-font" id="hopList">
+                <li>Hop 1: [198.51.100.24] (mail.attacker-server.net) ⚠️ External Origin</li>
+                <li>Hop 2: [172.16.0.4] (gateway.corporate-mx.com) Delivered to Inbox</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: Link Typosquatting Checker -->
+      <div class="tab-content" id="tab-links">
+        <div class="tool-grid-split">
+          <div class="tool-input-box">
+            <div class="box-header">
+              <label for="linkInput" class="input-label">Enter Suspicious URL to Inspect:</label>
+              <div class="quick-link-samples">
+                <button class="btn-sample-chip" data-url="https://paypa1.com">paypa1.com</button>
+                <button class="btn-sample-chip" data-url="http://192.168.1.100/session?id=alex">192.168.1.100</button>
+                <button class="btn-sample-chip" data-url="https://bit.ly/3xSecAlert">bit.ly/3xSecAlert</button>
+              </div>
+            </div>
+            <div class="input-with-button">
+              <input type="text" id="linkInput" class="code-font" placeholder="e.g. https://micros0ft-security.xyz" value="https://paypa1.com">
+              <button class="btn-tool-action" id="btnCheckLink">Check URL</button>
+            </div>
+            <p class="tool-note">
+              Runs pure client-side Levenshtein edit-distance calculation against legitimate domain dictionaries, flags lookalikes, raw IPs, and deceptive TLDs.
+            </p>
+          </div>
+
+          <div class="tool-results-box" id="linkResultsBox">
+            <h4 class="results-heading">Typosquatting & Risk Analysis:</h4>
+            <div class="link-verdict-card danger" id="linkVerdictCard">
+              <div class="lvc-header">
+                <span class="lvc-icon">🚨</span>
+                <div>
+                  <h4 id="linkTargetDomain">Target: paypa1.com</h4>
+                  <span class="lvc-badge" id="linkDangerBadge">HIGH RISK TYPOSQUAT</span>
+                </div>
+              </div>
+              <p class="lvc-desc" id="linkAnalysisDetail">
+                Lookalike match detected for legitimate brand <strong>PayPal.com</strong> (Levenshtein Distance = 1, substituted 'l' with numeral '1').
+              </p>
+              <ul class="link-flags-list" id="linkFlagsList">
+                <li>⚠️ <strong>Typosquatting Lookalike:</strong> Edit distance of 1 from authentic brand <strong>paypal.com</strong> (numeral '1' replaces letter 'l').</li>
+                <li>🛡️ <strong>Zero-Tracking Architecture:</strong> Evaluated purely in browser memory without sending URL to third-party tracking APIs.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: Password Lab -->
+      <div class="tab-content" id="tab-password">
+        <div class="tool-grid-split">
+          <div class="tool-input-box">
+            <div class="box-header">
+              <label for="pwdInput" class="input-label">Test Password Robustness & k-Anonymity Leak Check:</label>
+              <button class="btn-sample" id="btnLoadAlexPwd">Test Alex's Leaked Password</button>
+            </div>
+            <div class="pwd-input-wrapper">
+              <input type="text" id="pwdInput" class="code-font" placeholder="Enter test password (e.g., Winter2023!)" value="Winter2023!">
+              <button class="btn-pwd-generate" id="btnGeneratePassphrase">🎲 Generate Strong Passphrase</button>
+            </div>
+            <div class="entropy-bar-container">
+              <div class="entropy-bar-label">
+                <span>Calculated Entropy: <strong id="entropyBits">36 bits</strong></span>
+                <span id="entropyQuality">Weak / Common</span>
+              </div>
+              <div class="entropy-progress-track">
+                <div class="entropy-progress-bar weak" id="entropyProgressBar" style="width: 35%;"></div>
+              </div>
+            </div>
+            <p class="tool-note">
+              Uses zxcvbn entropy modeling + k-anonymity SHA-1 hash prefix simulation. Shows why <strong>length beats complexity</strong> every single time!
+            </p>
+          </div>
+
+          <div class="tool-results-box" id="pwdResultsBox">
+            <h4 class="results-heading">Crack Time & Breach Occurrences:</h4>
+            <div class="crack-time-display">
+              <span class="time-label">Estimated Attacker Cracking Time (RTX 4090 Hashcat):</span>
+              <span class="time-value" id="crackTimeValue">&lt; 1 Second</span>
+            </div>
+
+            <div class="k-anonymity-card" id="kAnonymityCard">
+              <div class="ka-header">
+                <span class="ka-icon">🔎</span>
+                <div>
+                  <span class="ka-title">Pwned Passwords k-Anonymity Result:</span>
+                  <span class="ka-status" id="kaStatus">SHA-1 Prefix: <code>8C16F...</code> (Found 12,038 times in known breaches)</span>
+                </div>
+              </div>
+              <p class="ka-explanation">
+                <strong>Why Length Beats Complexity:</strong> Short complex passwords can be cracked via automated mask attacks in seconds. A multi-word random passphrase provides high entropy (44+ bits) requiring billions of online brute-force trials or centuries against offline cracking.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4: Phishing Detector -->
+      <div class="tab-content" id="tab-phish">
+        <div class="tool-grid-split">
+          <div class="tool-input-box">
+            <div class="box-header">
+              <label for="phishTextInput" class="input-label">Analyze Email Body for Social Engineering Triggers:</label>
+              <div class="quick-link-samples">
+                <button class="btn-sample" id="btnLoadPhishSample">Urgent CEO Fraud Sample</button>
+                <button class="btn-sample" id="btnLoadSafeSample">Clean Team Memo Sample</button>
+              </div>
+            </div>
+            <textarea id="phishTextInput" class="code-font" rows="7">URGENT: Your payroll account has been temporarily suspended due to suspicious activity. Please verify your credentials immediately within the next 2 hours or your access will be permanently terminated. Click here to confirm your wire transfer details.</textarea>
+            <div class="tool-btn-row">
+              <button class="btn-tool-action" id="btnAnalyzePhish">Analyze Phishing Cues</button>
+              <button class="btn-secondary" id="btnClearPhish">Clear</button>
+            </div>
+          </div>
+
+          <div class="tool-results-box" id="phishResultsBox">
+            <h4 class="results-heading">Social Engineering Diagnostic:</h4>
+            <div class="phish-score-badge-row">
+              <div class="phish-gauge">
+                <span class="phish-gauge-val" id="phishProbVal">94%</span>
+                <span class="phish-gauge-lbl">Phishing Probability</span>
+              </div>
+              <div class="phish-triggers-summary">
+                <span class="trigger-count" id="triggerCount">4 Coercive Cues Detected</span>
+                <p>High urgency and psychological pressure detected in language tokens.</p>
+              </div>
+            </div>
+
+            <div class="highlighted-text-preview" id="highlightedTextPreview">
+              <!-- Rendered with highlighted words -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: Human vs AI Phishing Quiz Showdown (8 Emails) -->
+      <div class="tab-content" id="tab-quiz">
+        <div class="quiz-container">
+          <div class="quiz-scoreboard glass-panel">
+            <div class="score-pill-box">
+              <span class="score-player">👤 HUMAN SCORE:</span>
+              <span class="score-count human" id="quizHumanScore">0 / 8</span>
+            </div>
+            <div class="quiz-round-indicator">
+              <span class="round-badge" id="quizRoundBadge">Email 1 of 8</span>
+              <span class="round-timer" id="quizStatusText">Classify this incoming email!</span>
+            </div>
+            <div class="score-pill-box">
+              <span class="score-player">🤖 AI MODEL SCORE:</span>
+              <span class="score-count ai" id="quizAiScore">0 / 8</span>
+            </div>
+          </div>
+
+          <div class="quiz-arena-grid">
+            <!-- Email Preview Card -->
+            <div class="quiz-email-card glass-panel">
+              <div class="email-card-header">
+                <div class="email-field"><span class="lbl">From:</span> <span class="val code-font" id="quizEmailFrom">Netflix Billing &lt;support@netfl1x-verify.com&gt;</span></div>
+                <div class="email-field"><span class="lbl">Subject:</span> <span class="val" id="quizEmailSubject">Urgent: Your subscription payment failed</span></div>
+                <div class="email-field"><span class="lbl">Date:</span> <span class="val" id="quizEmailDate">Today, 02:14 PM</span></div>
+              </div>
+              <div class="email-card-body code-font" id="quizEmailBody">
+                Dear Customer, we could not process your latest membership charge. Please click the link below within 24 hours to re-enter your billing information, or your streaming account will be deactivated permanently.
+              </div>
+              <div class="quiz-choice-buttons" id="quizChoiceButtons">
+                <button type="button" class="btn-quiz-choice phish" id="btnQuizPhish">🎣 FLAG AS PHISHING</button>
+                <button type="button" class="btn-quiz-choice safe" id="btnQuizSafe">✅ MARK AS SAFE</button>
+              </div>
+            </div>
+
+            <!-- Model Verdict & Explanation Box -->
+            <div class="quiz-model-card glass-panel" id="quizModelCard">
+              <h4 class="model-card-title">🤖 AI Phishing Detector Diagnostics:</h4>
+              <p class="model-note">Powered by TF-IDF token weighting + Logistic Regression decision rule heuristic.</p>
+              
+              <div class="ai-verdict-box" id="aiVerdictBox">
+                <span class="verdict-placeholder">Waiting for your verdict on this email...</span>
+              </div>
+
+              <div class="top-tokens-box" id="aiTokensBox" style="display:none;">
+                <span class="tokens-title">Key Decisive Words (Feature Weights):</span>
+                <div class="tokens-list" id="aiTokensList"></div>
+              </div>
+
+              <div class="quiz-next-row" id="quizNextRow" style="display:none;">
+                <button type="button" class="btn-quiz-next" id="btnQuizNext">Next Email (Round 2) →</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 5: Fix-It Quests & Time to Hack -->
+      <div class="tab-content" id="tab-quests">
+        <div class="quests-container">
+          <div class="rank-card-banner glass-panel">
+            <div class="rank-avatar-col">
+              <div class="rank-badge-icon" id="rankBadgeIcon">🦆</div>
+              <span class="rank-level-label">CURRENT RANK:</span>
+              <h3 class="rank-title" id="rankTitle">Sitting Duck</h3>
+            </div>
+            <div class="rank-details-col">
+              <div class="time-to-hack-box" id="timeToHackBox">
+                <div class="tth-header">
+                  <span class="tth-label">⏱️ ADVERSARY TIME TO HACK:</span>
+                  <span class="tth-value danger" id="timeToHackValue">45 Seconds</span>
+                </div>
+                <p class="tth-desc" id="timeToHackDesc">Automated credential stuffing against leaked plaintext passwords with zero MFA.</p>
+              </div>
+
+              <div class="rank-progress-header">
+                <span>Quests Completed: <strong id="questsCompletedCount">0 / 4</strong></span>
+                <span id="rankNextGoal">Next Rank: Easy Prey</span>
+              </div>
+              <div class="rank-progress-track">
+                <div class="rank-progress-fill" id="rankProgressFill" style="width: 10%;"></div>
+              </div>
+              <p class="rank-encouragement" id="rankEncouragement">
+                "Complete the fix-it quests below to level up your twin, sever attack paths, and protect Dazy!"
+              </p>
+            </div>
+          </div>
+
+
+          <div class="quests-grid">
+            <div class="quest-item" data-quest="mfa">
+              <div class="quest-checkbox-col">
+                <input type="checkbox" class="quest-cb" id="questCbMfa">
+              </div>
+              <div class="quest-info-col">
+                <h4 class="quest-title">Quest 1: Enforce Hardware FIDO2 / Passkey MFA</h4>
+                <p class="quest-desc">Eliminates automated credential stuffing by requiring a physical authenticator key or biometric passkey.</p>
+                <span class="quest-reward">-20 Risk Reduction • Breaks MITRE T1110.004</span>
+              </div>
+              <button class="btn-quest-apply" data-quest="mfa">Apply Fix</button>
+            </div>
+
+            <div class="quest-item" data-quest="passwords">
+              <div class="quest-checkbox-col">
+                <input type="checkbox" class="quest-cb" id="questCbPass">
+              </div>
+              <div class="quest-info-col">
+                <h4 class="quest-title">Quest 2: Password Manager & Unique Passphrases</h4>
+                <p class="quest-desc">Use a password manager (e.g. Bitwarden, Apple Keychain) to generate unique 16+ character passphrases, stopping credential reuse from historical breaches.</p>
+                <span class="quest-reward">-15 Risk Reduction • Breaks MITRE T1078</span>
+              </div>
+              <button class="btn-quest-apply" data-quest="passwords">Apply Fix</button>
+            </div>
+
+            <div class="quest-item" data-quest="dmarc">
+              <div class="quest-checkbox-col">
+                <input type="checkbox" class="quest-cb" id="questCbDmarc">
+              </div>
+              <div class="quest-info-col">
+                <h4 class="quest-title">Quest 3: Domain DMARC Enforcement / Authenticated Mail</h4>
+                <p class="quest-desc">Configure DMARC p=reject on organizational domains, or switch personal mail to providers enforcing strict SPF/DKIM anti-spoofing validation.</p>
+                <span class="quest-reward">-15 Risk Reduction • Breaks MITRE T1566.002</span>
+              </div>
+              <button class="btn-quest-apply" data-quest="dmarc">Apply Fix</button>
+            </div>
+
+            <div class="quest-item" data-quest="sim">
+              <div class="quest-checkbox-col">
+                <input type="checkbox" class="quest-cb" id="questCbSim">
+              </div>
+              <div class="quest-info-col">
+                <h4 class="quest-title">Quest 4: Configure Cellular Carrier Port Freeze</h4>
+                <p class="quest-desc">Protects SMS authentication codes against fraudulent unauthorized SIM-swap transfers.</p>
+                <span class="quest-reward">-15 Risk Reduction • Breaks MITRE T1111</span>
+              </div>
+              <button class="btn-quest-apply" data-quest="sim">Apply Fix</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <div class="footer-left">
+        <span>CyberTwin Max © 2026 • Product Owner: <strong>Arnav Srivastava</strong></span>
+        <span class="footer-sub">Privacy-First Architecture • In-Memory Zero Storage • MITRE ATT&CK Aligned</span>
+      </div>
+      <div class="footer-right">
+        <button class="btn-footer-link" id="btnThreatModelModal">STRIDE Threat Model</button>
+        <button class="btn-footer-link" id="btnSecurityMdModal">SECURITY.md</button>
+        <button class="btn-footer-link" id="btnExportPdfBottom">📄 Download Pentest PDF</button>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Modal: Printable Pentest Report -->
+  <div class="modal-backdrop" id="reportModal">
+    <div class="modal-card print-report-card">
+      <div class="modal-header">
+        <div class="report-brand">
+          <span class="logo-cyber">CYBER</span><span class="logo-twin">TWIN</span> MAX SIMULATED RISK REPORT
+        </div>
+        <div class="modal-actions">
+          <button class="btn-print" id="btnPrintReport">🖨️ Print / Save as PDF</button>
+          <button class="btn-close-modal" id="btnCloseReport">✕</button>
+        </div>
+      </div>
+      <div class="report-body" id="reportPrintArea">
+        <div class="report-meta-header">
+          <div>
+            <h2>SIMULATED IDENTITY THREAT & RISK ASSESSMENT</h2>
+            <p>Target Identity: <strong id="reportTarget">alex.chen@cyber-demo.org</strong> | Date: 2026-10-20</p>
+          </div>
+          <div class="report-score-box">
+            <span>COMPOSITE RISK SCORE</span>
+            <h1 id="reportScore">75/100</h1>
+            <span class="badge-danger" id="reportPosture">HIGH RISK EXPOSURE</span>
+          </div>
+        </div>
+
+        <hr class="report-divider">
+
+        <h3>1. Executive Summary</h3>
+        <p>
+          CyberTwin Max simulated multi-hop adversary attack paths chaining open-source breach intelligence and social engineering vulnerabilities. Without hardware-based MFA and domain authentication, the target identity is vulnerable to total account takeover across corporate and personal assets.
+        </p>
+
+        <h3>2. Identified MITRE ATT&CK Attack Paths</h3>
+        <table class="report-table">
+          <thead>
+            <tr>
+              <th>Technique ID</th>
+              <th>Adversary Tactic</th>
+              <th>Observed Evidence</th>
+              <th>Severing Control</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>T1110.004</code></td>
+              <td>Credential Stuffing</td>
+              <td>Password hashes identified in 3 historical breach records</td>
+              <td>FIDO2 / WebAuthn Hardware MFA</td>
+            </tr>
+            <tr>
+              <td><code>T1566.002</code></td>
+              <td>Spearphishing Link</td>
+              <td>Unauthenticated sender spoofing + missing DMARC enforcement</td>
+              <td>DMARC p=reject policy + Anti-Phishing Training</td>
+            </tr>
+            <tr>
+              <td><code>T1078</code></td>
+              <td>Valid Accounts</td>
+              <td>Credential reuse across personal/cloud accounts</td>
+              <td>Unique 16+ Char Passphrases</td>
+            </tr>
+            <tr>
+              <td><code>T1111</code></td>
+              <td>MFA Interception</td>
+              <td>SMS fallback interception on recovery phone number</td>
+              <td>Carrier Port-Out PIN Freeze</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>3. Prioritized Remediation Roadmap (All 4 Defenses)</h3>
+        <ol class="report-remediation-list">
+          <li><strong>Immediate (24 hrs):</strong> Deploy hardware security keys (FIDO2) or biometric passkeys across core identity providers.</li>
+          <li><strong>Short-Term (7 days):</strong> Force password rotation using an enterprise/personal password manager with unique 16+ character passphrases.</li>
+          <li><strong>Medium-Term (30 days):</strong> Configure DMARC <code>p=reject</code> with DKIM signing to protect organizational sender reputation.</li>
+          <li><strong>Proactive Cellular:</strong> Enable carrier account Port-Out Freeze PIN to prevent fraudulent SIM-swap SMS interception.</li>
+        </ol>
+
+        <div class="report-sign-off">
+          <div>Assessment Engine: <strong>CyberTwin Max Automated Diagnostic (Educational Simulation)</strong></div>
+          <div>Framework Verification: <strong>Mapped to MITRE ATT&CK® Enterprise Knowledge Base</strong></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: STRIDE Threat Model -->
+  <div class="modal-backdrop" id="strideModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>STRIDE Threat Model for CyberTwin Max</h3>
+        <button class="btn-close-modal" id="btnCloseStride">✕</button>
+      </div>
+      <div class="modal-body">
+        <p>As cybersecurity students, we secure our own tool by design:</p>
+        <table class="report-table">
+          <thead>
+            <tr><th>Threat</th><th>Risk</th><th>CyberTwin Max Countermeasure</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Spoofing</strong></td><td>Fake user claims</td><td>Client-side ephemeral evaluation; zero trust of raw headers.</td></tr>
+            <tr><td><strong>Tampering</strong></td><td>Input manipulation</td><td>DOM text escaping and strict input regex sanitization.</td></tr>
+            <tr><td><strong>Repudiation</strong></td><td>Disputed scans</td><td>Deterministic rules engine; client-side evaluation with zero persistent database logging.</td></tr>
+            <tr><td><strong>Info Disclosure</strong></td><td>PII leak</td><td>Zero disk/DB storage; k-anonymity SHA-1 prefixing only (never transmits full passwords or plain credentials).</td></tr>
+            <tr><td><strong>Denial of Service</strong></td><td>API exhaustion</td><td>Client-side throttled API calls (1.6s timeout with offline fallback).</td></tr>
+            <tr><td><strong>Elevation of Priv</strong></td><td>Code execution</td><td>Pure static client runtime; zero <code>eval()</code> or unsafe deserialization.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: SECURITY.md -->
+  <div class="modal-backdrop" id="secMdModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>SECURITY.md & Vulnerability Disclosure</h3>
+        <button class="btn-close-modal" id="btnCloseSecMd">✕</button>
+      </div>
+      <div class="modal-body">
+        <h4>Security Policy</h4>
+        <p>CyberTwin Max is built with a <strong>Zero-PII Storage Guarantee</strong>. Entered email addresses are queried against public breach datasets (XposedOrNot) and discarded from memory upon browser refresh. Passwords are never sent over the network—only the first 5 characters of SHA-1 hashes are queried using k-anonymity.</p>
+        <h4>Automated CI Scanners</h4>
+        <ul>
+          <li><code>bandit -r .</code> (Automated Python Static Application Security Testing)</li>
+          <li><code>pip-audit</code> (Software Composition Analysis for vulnerable packages)</li>
+          <li>Dependabot dependency alerts enabled on repository</li>
+        </ul>
+        <p>To report any security vulnerability in this demonstration application, please open an advisory on our GitHub repository issues tab.</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js?v=4.0"></script>
+</body>
+</html>
+

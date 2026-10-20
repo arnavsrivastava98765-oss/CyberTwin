@@ -1,0 +1,18 @@
+{
+  "name": "CyberTwin Max - AI Identity Threat Simulator",
+  "short_name": "CyberTwin",
+  "description": "Simulate and neutralize adversary attack chains using live breach intelligence and MITRE ATT&CK.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0B0F19",
+  "theme_color": "#FF2A85",
+  "icons": [
+    {
+      "src": "assets/dazy_chibi.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
+}
