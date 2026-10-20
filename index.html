@@ -990,114 +990,139 @@ Subject: Urgent: Verify Account Immediately"></textarea>
       </div>
     </div>
 
-    <!-- Dazy Body Stage (White Cute Squishy Octopus with Big Googly Eyes) -->
+    <!-- Dazy Body Stage (Cute Sky Blue Octopus Mascot matching Reference Pic) -->
     <div class="dazy-creature-stage" id="dazyCreatureStage" role="button" tabindex="0" title="Click to pet Dazy! Double-click for hug! Drag me anywhere on screen!">
       <!-- Emote FX Particle Layer (Hearts, Stars, Bubbles, Music Notes, Sweat Drops, Zzz) -->
       <div class="dazy-creature-fx" id="dazyCreatureFx"></div>
 
       <!-- Creature Vector Model -->
       <div class="dazy-body-wrapper" id="dazyBodyWrapper">
-        <svg class="dazy-creature-svg dazy-octo-svg" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+        <svg class="dazy-creature-svg dazy-octo-svg" viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg">
           <defs>
-            <!-- Pure Marshmallow White Shading (NOT PINK!) -->
-            <linearGradient id="dazyOctoWhiteGrad" x1="20%" y1="0%" x2="80%" y2="100%">
-              <stop offset="0%" stop-color="#ffffff" />
-              <stop offset="60%" stop-color="#f8fafc" />
-              <stop offset="100%" stop-color="#e2e8f0" />
+            <!-- Vibrant Sky Blue Gradient for Octopus Body -->
+            <radialGradient id="dazyOctoBlueGrad" cx="40%" cy="35%" r="65%">
+              <stop offset="0%" stop-color="#93c5fd" />
+              <stop offset="35%" stop-color="#60a5fa" />
+              <stop offset="75%" stop-color="#3b82f6" />
+              <stop offset="100%" stop-color="#1d4ed8" />
+            </radialGradient>
+
+            <!-- Lighter Blue for Tentacle Fronts -->
+            <linearGradient id="dazyTentacleGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#60a5fa" />
+              <stop offset="100%" stop-color="#2563eb" />
             </linearGradient>
 
-            <!-- Celestial White & Soft Cyan Glow Filter -->
-            <filter id="dazyOctoGlow" x="-30%" y="-30%" width="160%" height="160%">
-              <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#38bdf8" flood-opacity="0.38"/>
-              <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#ffffff" flood-opacity="0.9"/>
+            <!-- Pastel Mint/Cyan for Underside Suction Cups -->
+            <linearGradient id="dazySuckerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#a7f3d0" />
+              <stop offset="100%" stop-color="#5eead4" />
+            </linearGradient>
+
+            <!-- Soft Cyan/Blue Glow Halo -->
+            <filter id="dazyBlueOctoGlow" x="-25%" y="-25%" width="150%" height="150%">
+              <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#38bdf8" flood-opacity="0.5"/>
+              <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#60a5fa" flood-opacity="0.6"/>
             </filter>
 
-            <!-- Googly Eye 3D Sclera Gradient -->
-            <radialGradient id="dazyGooglySclera" cx="35%" cy="30%" r="70%">
-              <stop offset="0%" stop-color="#ffffff" />
-              <stop offset="80%" stop-color="#f1f5f9" />
-              <stop offset="100%" stop-color="#cbd5e1" />
-            </radialGradient>
-
-            <!-- Big Googly Pupil Gradient -->
-            <radialGradient id="dazyGooglyPupil" cx="30%" cy="30%" r="70%">
-              <stop offset="0%" stop-color="#334155" />
-              <stop offset="75%" stop-color="#0f172a" />
-              <stop offset="100%" stop-color="#020617" />
-            </radialGradient>
-
-            <!-- Cute Rosy Cheek Blush -->
-            <radialGradient id="dazyOctoBlush" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stop-color="#ff7b90" stop-opacity="0.8" />
-              <stop offset="70%" stop-color="#ff7b90" stop-opacity="0.25" />
-              <stop offset="100%" stop-color="#ff7b90" stop-opacity="0" />
+            <!-- Cheeks Coral Blush -->
+            <radialGradient id="dazyOctoCheek" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#fb7185" stop-opacity="0.85" />
+              <stop offset="80%" stop-color="#fb7185" stop-opacity="0.3" />
+              <stop offset="100%" stop-color="#fb7185" stop-opacity="0" />
             </radialGradient>
           </defs>
 
-          <!-- Cute Flapjack Dumbo Ear-Fins (Flutter when swimming) -->
-          <path class="dazy-octo-fin dazy-octo-fin-left" d="M 32,45 C 14,35 10,49 24,56 C 28,58 32,56 34,52 Z" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.8" />
-          <path class="dazy-octo-fin dazy-octo-fin-right" d="M 108,45 C 126,35 130,49 116,56 C 112,58 108,56 106,52 Z" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.8" />
+          <!-- Floating Shadow beneath Octopus -->
+          <ellipse cx="75" cy="140" rx="42" ry="8" fill="#38bdf8" opacity="0.3" class="dazy-shadow-aura" />
 
-          <!-- Floaty Ocean Aura Shadow beneath Octopus -->
-          <ellipse cx="70" cy="132" rx="34" ry="7" fill="#38bdf8" opacity="0.35" class="dazy-shadow-aura" />
+          <!-- Back Curled Tentacles (Left and Right for 3D depth) -->
+          <g class="tentacles-back" opacity="0.95">
+            <!-- Back Left Tentacle with Mint Suction Cups -->
+            <path d="M 42,95 C 18,92 10,75 18,65 C 24,58 32,66 28,78 C 26,85 35,92 46,96" fill="#1d4ed8" stroke="#1e40af" stroke-width="1.8" />
+            <circle cx="15" cy="72" r="3.2" fill="url(#dazySuckerGrad)" stroke="#2dd4bf" stroke-width="0.8"/>
+            <circle cx="17" cy="80" r="3.4" fill="url(#dazySuckerGrad)" stroke="#2dd4bf" stroke-width="0.8"/>
+            <circle cx="22" cy="87" r="3.5" fill="url(#dazySuckerGrad)" stroke="#2dd4bf" stroke-width="0.8"/>
 
-          <!-- Main Round Squishy Octopus Dome Body (Pure White Creature) -->
-          <path class="dazy-octo-head" d="M 70,22 C 105,22 122,44 122,78 C 122,96 108,103 70,103 C 32,103 18,96 18,78 C 18,44 35,22 70,22 Z" fill="url(#dazyOctoWhiteGrad)" filter="url(#dazyOctoGlow)" stroke="#f1f5f9" stroke-width="2.2" />
+            <!-- Back Right Tentacle with Mint Suction Cups -->
+            <path d="M 108,95 C 132,92 140,75 132,65 C 126,58 118,66 122,78 C 124,85 115,92 104,96" fill="#1d4ed8" stroke="#1e40af" stroke-width="1.8" />
+            <circle cx="135" cy="72" r="3.2" fill="url(#dazySuckerGrad)" stroke="#2dd4bf" stroke-width="0.8"/>
+            <circle cx="133" cy="80" r="3.4" fill="url(#dazySuckerGrad)" stroke="#2dd4bf" stroke-width="0.8"/>
+            <circle cx="128" cy="87" r="3.5" fill="url(#dazySuckerGrad)" stroke="#2dd4bf" stroke-width="0.8"/>
+          </g>
 
-          <!-- Soft Rosy Cheek Blushes -->
-          <circle cx="34" cy="85" r="10" fill="url(#dazyOctoBlush)" class="dazy-blush dazy-blush-left" />
-          <circle cx="106" cy="85" r="10" fill="url(#dazyOctoBlush)" class="dazy-blush dazy-blush-right" />
+          <!-- Main Round Bulbous Head / Dome -->
+          <ellipse cx="75" cy="58" rx="46" ry="46" fill="url(#dazyOctoBlueGrad)" filter="url(#dazyBlueOctoGlow)" stroke="#60a5fa" stroke-width="2.2" class="dazy-octo-head" />
 
-          <!-- BIG GOOGLY EYES (Cute Large Googly Eyes with wobbling glossy pupils) -->
-          <g class="dazy-googly-eyes-group" id="dazyGooglyEyes">
-            <!-- Left Googly Eye -->
-            <g class="dazy-googly-eye dazy-googly-left" id="dazyEyeLeft">
-              <!-- Eyeball Base with 3D Depth border -->
-              <circle cx="48" cy="66" r="17.5" fill="url(#dazyGooglySclera)" stroke="#cbd5e1" stroke-width="2.5" class="dazy-sclera" />
-              <!-- Wobbling Googly Pupil -->
-              <g class="dazy-pupil-holder" id="dazyPupilLeft">
-                <circle cx="48" cy="67" r="10" fill="url(#dazyGooglyPupil)" class="dazy-googly-pupil" />
-                <!-- Big Specular Shine -->
-                <circle cx="44" cy="62.5" r="3.8" fill="#ffffff" class="dazy-shine-major" />
-                <circle cx="51.5" cy="71" r="1.6" fill="#ffffff" opacity="0.9" />
-              </g>
+          <!-- Cute Dome Shine Highlight (Top-Left, matching reference pic) -->
+          <ellipse cx="50" cy="32" rx="13" ry="7" transform="rotate(-35 50 32)" fill="#ffffff" opacity="0.48" />
+          <circle cx="68" cy="24" r="3.5" fill="#ffffff" opacity="0.4" />
+
+          <!-- Cute Blue Freckle Spots (Top-Right, matching reference pic) -->
+          <ellipse cx="98" cy="30" rx="5" ry="4.5" fill="#1d4ed8" opacity="0.38" />
+          <ellipse cx="106" cy="38" rx="3.5" ry="3" fill="#1d4ed8" opacity="0.35" />
+          <ellipse cx="95" cy="40" rx="3" ry="2.5" fill="#1d4ed8" opacity="0.32" />
+
+          <!-- Front 6 Curled Tentacles with Mint Scalloped Suction Cups -->
+          <g class="tentacles-front" id="dazyFrontTentacles">
+            <!-- Front Tentacle 1 (Far Left Curled Upward) -->
+            <path class="tentacle-curl t-left-1" d="M 40,94 C 20,95 8,110 16,122 C 22,126 30,122 26,112 C 23,105 32,100 48,97" fill="url(#dazyTentacleGrad)" stroke="#1e40af" stroke-width="1.6" />
+            <circle cx="12" cy="114" r="3.6" fill="url(#dazySuckerGrad)" stroke="#2dd4bf" stroke-width="0.8"/>
+            <circle cx="18" cy="122" r="3.8" fill="url(#dazySuckerGrad)" stroke="#2dd4bf" stroke-width="0.8"/>
+            <circle cx="27" cy="120" r="3.8" fill="url(#dazySuckerGrad)" stroke="#2dd4bf" stroke-width="0.8"/>
+
+            <!-- Front Tentacle 2 (Mid-Left Loop) -->
+            <path class="tentacle-curl t-left-2" d="M 52,98 C 40,112 34,130 46,134 C 54,134 54,122 48,112 C 45,106 50,101 60,98" fill="url(#dazyTentacleGrad)" stroke="#1e40af" stroke-width="1.6" />
+            <circle cx="38" cy="126" r="3.8" fill="url(#dazySuckerGrad)" stroke="#2dd4bf" stroke-width="0.8"/>
+            <circle cx="46" cy="132" r="4" fill="url(#dazySuckerGrad)" stroke="#2dd4bf" stroke-width="0.8"/>
+
+            <!-- Front Tentacle 3 (Center Left) -->
+            <path class="tentacle-curl t-center-1" d="M 64,100 C 60,116 58,133 67,134 C 74,133 72,118 68,102" fill="url(#dazyTentacleGrad)" stroke="#1e40af" stroke-width="1.6" />
+            <circle cx="61" cy="132" r="3.8" fill="url(#dazySuckerGrad)" stroke="#2dd4bf" stroke-width="0.8"/>
+
+            <!-- Front Tentacle 4 (Center Right) -->
+            <path class="tentacle-curl t-center-2" d="M 86,100 C 90,116 92,133 83,134 C 76,133 78,118 82,102" fill="url(#dazyTentacleGrad)" stroke="#1e40af" stroke-width="1.6" />
+            <circle cx="89" cy="132" r="3.8" fill="url(#dazySuckerGrad)" stroke="#2dd4bf" stroke-width="0.8"/>
+
+            <!-- Front Tentacle 5 (Mid-Right Loop) -->
+            <path class="tentacle-curl t-right-2" d="M 98,98 C 110,112 116,130 104,134 C 96,134 96,122 102,112 C 105,106 100,101 90,98" fill="url(#dazyTentacleGrad)" stroke="#1e40af" stroke-width="1.6" />
+            <circle cx="112" cy="126" r="3.8" fill="url(#dazySuckerGrad)" stroke="#2dd4bf" stroke-width="0.8"/>
+            <circle cx="104" cy="132" r="4" fill="url(#dazySuckerGrad)" stroke="#2dd4bf" stroke-width="0.8"/>
+
+            <!-- Front Tentacle 6 (Far Right Curled Upward) -->
+            <path class="tentacle-curl t-right-1" d="M 110,94 C 130,95 142,110 134,122 C 128,126 120,122 124,112 C 127,105 118,100 102,97" fill="url(#dazyTentacleGrad)" stroke="#1e40af" stroke-width="1.6" />
+            <circle cx="138" cy="114" r="3.6" fill="url(#dazySuckerGrad)" stroke="#2dd4bf" stroke-width="0.8"/>
+            <circle cx="132" cy="122" r="3.8" fill="url(#dazySuckerGrad)" stroke="#2dd4bf" stroke-width="0.8"/>
+            <circle cx="123" cy="120" r="3.8" fill="url(#dazySuckerGrad)" stroke="#2dd4bf" stroke-width="0.8"/>
+          </g>
+
+          <!-- Cute Pill-Shaped Rosy Peach/Coral Blushing Cheeks -->
+          <ellipse cx="44" cy="74" rx="8.5" ry="4.5" fill="url(#dazyOctoCheek)" class="dazy-blush dazy-blush-left" />
+          <ellipse cx="106" cy="74" rx="8.5" ry="4.5" fill="url(#dazyOctoCheek)" class="dazy-blush dazy-blush-right" />
+
+          <!-- Big Adorable Kawaii Eyes (matching reference pic) -->
+          <g class="dazy-kawaii-eyes" id="dazyGooglyEyes">
+            <!-- Left Eye -->
+            <g class="dazy-eye dazy-eye-left" id="dazyEyeLeft">
+              <!-- Glossy Black Eyeball -->
+              <circle cx="56" cy="65" r="11" fill="#0b0f19" class="dazy-pupil" />
+              <!-- Specular Reflections (Big Upper-Left, Small Lower-Right) -->
+              <circle cx="53" cy="61.5" r="4" fill="#ffffff" class="dazy-shine-major" />
+              <circle cx="60.5" cy="69" r="1.8" fill="#ffffff" opacity="0.95" />
             </g>
 
-            <!-- Right Googly Eye -->
-            <g class="dazy-googly-eye dazy-googly-right" id="dazyEyeRight">
-              <!-- Eyeball Base with 3D Depth border -->
-              <circle cx="92" cy="66" r="17.5" fill="url(#dazyGooglySclera)" stroke="#cbd5e1" stroke-width="2.5" class="dazy-sclera" />
-              <!-- Wobbling Googly Pupil -->
-              <g class="dazy-pupil-holder" id="dazyPupilRight">
-                <circle cx="92" cy="67" r="10" fill="url(#dazyGooglyPupil)" class="dazy-googly-pupil" />
-                <!-- Big Specular Shine -->
-                <circle cx="88" cy="62.5" r="3.8" fill="#ffffff" class="dazy-shine-major" />
-                <circle cx="95.5" cy="71" r="1.6" fill="#ffffff" opacity="0.9" />
-              </g>
+            <!-- Right Eye -->
+            <g class="dazy-eye dazy-eye-right" id="dazyEyeRight">
+              <!-- Glossy Black Eyeball -->
+              <circle cx="94" cy="65" r="11" fill="#0b0f19" class="dazy-pupil" />
+              <!-- Specular Reflections (Big Upper-Left, Small Lower-Right) -->
+              <circle cx="91" cy="61.5" r="4" fill="#ffffff" class="dazy-shine-major" />
+              <circle cx="98.5" cy="69" r="1.8" fill="#ffffff" opacity="0.95" />
             </g>
           </g>
 
-          <!-- Cute Tiny Little Mouth (Smiles or Opens with expressions) -->
-          <path id="dazyMouth" class="dazy-octo-mouth" d="M 64,84 Q 70,90 76,84" fill="none" stroke="#334155" stroke-width="2.6" stroke-linecap="round" />
-
-          <!-- 6 ADORABLE WIGGLY TENTACLES at bottom -->
-          <g class="dazy-octo-tentacles" id="dazyTentacles">
-            <!-- Tentacle 1 (Far Left) -->
-            <path class="tentacle t1" d="M 26,98 C 20,113 18,124 28,128 C 36,130 36,117 34,101" fill="url(#dazyOctoWhiteGrad)" stroke="#e2e8f0" stroke-width="1.8" />
-            <!-- Tentacle 2 -->
-            <path class="tentacle t2" d="M 40,100 C 36,116 35,127 45,129 C 53,130 52,117 48,102" fill="url(#dazyOctoWhiteGrad)" stroke="#e2e8f0" stroke-width="1.8" />
-            <!-- Tentacle 3 (Middle-Left) -->
-            <path class="tentacle t3" d="M 55,102 C 53,118 55,128 63,128 C 70,128 68,116 62,102" fill="url(#dazyOctoWhiteGrad)" stroke="#e2e8f0" stroke-width="1.8" />
-            <!-- Tentacle 4 (Middle-Right) -->
-            <path class="tentacle t4" d="M 78,102 C 74,116 72,128 79,128 C 87,128 88,118 84,102" fill="url(#dazyOctoWhiteGrad)" stroke="#e2e8f0" stroke-width="1.8" />
-            <!-- Tentacle 5 -->
-            <path class="tentacle t5" d="M 92,100 C 90,116 90,129 98,128 C 106,126 104,116 100,100" fill="url(#dazyOctoWhiteGrad)" stroke="#e2e8f0" stroke-width="1.8" />
-            <!-- Tentacle 6 (Far Right) -->
-            <path class="tentacle t6" d="M 107,101 C 105,117 106,129 114,127 C 124,123 120,113 114,98" fill="url(#dazyOctoWhiteGrad)" stroke="#e2e8f0" stroke-width="1.8" />
-          </g>
-
-          <!-- Floating Cyber Crown Star atop octopus head -->
-          <polygon points="70,13 73,19 80,19 75,23 77,29 70,25 63,29 65,23 60,19 67,19" fill="#fde047" opacity="0.95" />
+          <!-- Cute Tiny Smiling Mouth right between the eyes (matching reference pic) -->
+          <path id="dazyMouth" class="dazy-octo-mouth" d="M 70,71 Q 75,76 80,71" fill="none" stroke="#0f172a" stroke-width="2.6" stroke-linecap="round" />
         </svg>
 
         <!-- Compact Floating Pill Namebadge -->

@@ -2256,10 +2256,10 @@ function initFloatingDazy() {
     }
   });
 
-  // Interactive Big Googly Eyes cursor tracker
+  // Interactive Big Kawaii Eyes cursor tracker
   window.addEventListener('mousemove', (e) => {
-    const pupilLeft = document.getElementById('dazyPupilLeft');
-    const pupilRight = document.getElementById('dazyPupilRight');
+    const pupilLeft = document.getElementById('dazyEyeLeft');
+    const pupilRight = document.getElementById('dazyEyeRight');
     if (!pupilLeft || !pupilRight || floatingDazyState.isSleeping || floatingDazyState.isDragging) return;
 
     const rect = stage.getBoundingClientRect();
@@ -2268,7 +2268,7 @@ function initFloatingDazy() {
     const dx = e.clientX - eyeCenterX;
     const dy = e.clientY - eyeCenterY;
     const dist = Math.hypot(dx, dy) || 1;
-    const maxOffset = 5.5;
+    const maxOffset = 4.5;
     const offsetX = (dx / dist) * Math.min(dist / 40, maxOffset);
     const offsetY = (dy / dist) * Math.min(dist / 40, maxOffset);
 
@@ -2355,8 +2355,8 @@ function dazyStartWander() {
 
   let step = 0;
   if (moodBadge) moodBadge.textContent = '🌊 Floating Everywhere!';
-  if (bubbleText) bubbleText.textContent = "Wheee! I'm a cute white octopus floating across your entire website! 🐙🫧";
-  dazyVoice.speak("Wheee! I'm a cute white octopus floating across your entire website!");
+  if (bubbleText) bubbleText.textContent = "Wheee! I'm a cute blue octopus floating across your entire website! 🐙🫧";
+  dazyVoice.speak("Wheee! I'm a cute blue octopus floating across your entire website!");
   sfx.playFlipChime();
   dazySpawnParticle('🫧', -15);
   dazySpawnParticle('✨', 15);
@@ -2477,9 +2477,9 @@ function dazyPet(isBigHug = false) {
     if (moodBadge) moodBadge.textContent = '🥰 Loved!';
     const petLines = [
       "Hehe, that tickles my tentacles! Thank you for petting Dazy! 🥰",
-      "Squish squish! Dazy feels so happy! My googly eyes are sparkling! 🐙✨",
-      "Aww, sweet pats! My little octopus cheeks are blushing! 🌸",
-      "Boop! I'm Dazy version 3.75, your white cyber octopus guardian! 🫧"
+      "Squish squish! Dazy feels so happy! My big kawaii eyes are sparkling! 🐙✨",
+      "Aww, sweet pats! My cute blue cheeks are blushing! 🌸",
+      "Boop! I'm Dazy version 3.75, your cute blue octopus guardian! 🫧"
     ];
     const pick = petLines[Math.floor(Math.random() * petLines.length)];
     if (bubbleText) bubbleText.textContent = pick;
@@ -2496,7 +2496,7 @@ function dazyPet(isBigHug = false) {
 function dazyDoWink() {
   const leftEye = document.getElementById('dazyEyeLeft');
   if (leftEye) {
-    leftEye.style.transformOrigin = '42px 58px';
+    leftEye.style.transformOrigin = '56px 65px';
     leftEye.style.transform = 'scaleY(0.1)';
     sfx.playChirp();
     dazySpawnParticle('✨', 10);
