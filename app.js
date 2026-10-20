@@ -9,7 +9,7 @@
 const state = {
   activeTeam: 'red', // 'red' or 'blue'
   currentScenario: 'cred-stuffing',
-  voiceEnabled: true,
+  voiceEnabled: false,
   riskScore: 75,
   hasPasswordLeak: true,
   hasRecentBreach: false,
@@ -174,7 +174,7 @@ class SoundEngine {
 }
 const sfx = new SoundEngine();
 
-// --- Dazy's Soft Cute Voice Engine (Web Speech API) ---
+// --- Dazy's Simple Natural AI Voice Engine ---
 class DazyVoice {
   constructor() {
     this.synth = window.speechSynthesis;
@@ -188,12 +188,16 @@ class DazyVoice {
   loadVoices() {
     if (!this.synth) return;
     const voices = this.synth.getVoices();
-    // Prefer pleasant female voices
+    if (!voices || voices.length === 0) return;
+
+    // Standard natural AI voice (clean, friendly English assistant)
     this.voice = voices.find(v => 
+      v.name.includes('Natural') || 
+      v.name.includes('Google US English') ||
       v.name.includes('Google UK English Female') || 
       v.name.includes('Samantha') || 
-      v.name.includes('Zira') || 
-      v.name.includes('Victoria') ||
+      v.name.includes('Jenny') ||
+      v.name.includes('Aria') ||
       (v.name.toLowerCase().includes('female') && v.lang.startsWith('en'))
     ) || voices.find(v => v.lang.startsWith('en')) || voices[0];
   }
@@ -202,13 +206,20 @@ class DazyVoice {
     if (!state.voiceEnabled || !this.synth) return;
     this.synth.cancel(); // Stop any pending speech
 
-    // Clean emojis & formatting for clear cute voice
-    const cleanText = text.replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, '');
+    // Clean HTML tags, emojis & formatting for clear speech
+    const cleanText = text
+      .replace(/<[^>]*>/g, '')
+      .replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, '')
+      .trim();
+
     const utter = new SpeechSynthesisUtterance(cleanText);
     if (this.voice) utter.voice = this.voice;
-    utter.pitch = 1.35; // Extra cute cheerful chibi pitch
-    utter.rate = 1.05;
-    utter.volume = 0.95;
+
+    // Simple natural AI voice (standard pitch 1.0, standard rate 1.0)
+    utter.pitch = 1.0; 
+    utter.rate = 1.0;
+    utter.volume = 1.0;
+
     this.synth.speak(utter);
   }
 }
