@@ -9,11 +9,14 @@
 const state = {
   activeTeam: 'red', // 'red' or 'blue'
   currentScenario: 'cred-stuffing',
+  targetEmail: 'alex.chen@cyber-demo.org',
   voiceEnabled: false,
   riskScore: 75,
   hasPasswordLeak: true,
   hasRecentBreach: false,
+  hasPhoneLeak: false,
   isCleanTarget: false,
+  currentBreaches: ['LinkedIn (2012)', 'Adobe (2013)', 'Canva (2019)'],
   defenses: {
     mfa: false,
     passManager: false,
@@ -29,6 +32,7 @@ const state = {
   dazyMood: 'idle', // 'idle', 'scared', 'shielded', 'celebrate'
   terminalRunning: false
 };
+
 
 // --- Web Audio Synth Sound FX Engine (100% Zero-Dependency) ---
 class SoundEngine {
@@ -303,27 +307,11 @@ function petBabyDazy() {
 }
 
 
-// --- MITRE ATT&CK Graph Nodes & Data ---
-const graphNodes = [
-  { id: 'n1', mitre: 'T1566.002', name: 'Spearphishing Link', tactic: 'Initial Access', x: 70, y: 150, brokenBy: 'dmarc' },
-  { id: 'n2', mitre: 'T1110.004', name: 'Credential Stuffing', tactic: 'Credential Access', x: 260, y: 70, brokenBy: 'mfa' },
-  { id: 'n3', mitre: 'T1111', name: 'MFA Intercept (SIM-Swap)', tactic: 'Credential Access', x: 260, y: 230, brokenBy: 'simPin' },
-  { id: 'n4', mitre: 'T1078', name: 'Valid Accounts Reuse', tactic: 'Persistence', x: 500, y: 150, brokenBy: 'passManager' },
-  { id: 'n5', mitre: 'T1098', name: 'Account Takeover', tactic: 'Impact', x: 740, y: 150, brokenBy: null }
-];
-
-const graphEdges = [
-  { from: 'n1', to: 'n2', id: 'e1' },
-  { from: 'n1', to: 'n3', id: 'e2' },
-  { from: 'n2', to: 'n4', id: 'e3' },
-  { from: 'n3', to: 'n4', id: 'e4' },
-  { from: 'n4', to: 'n5', id: 'e5' }
-];
-
+// --- MITRE ATT&CK Dynamic Intelligence Dictionary ---
 const mitreIntelligence = {
   'T1566.002': {
     title: 'Phishing: Spearphishing Link (T1566.002)',
-    desc: 'Adversaries send targeted emails containing links to credential-harvesting lookalike sites.',
+    desc: 'Adversaries send targeted emails containing links to credential-harvesting lookalike sites or malicious downloads.',
     detection: 'Monitor DMARC/SPF/DKIM failures, newly registered domain clicks, and anomalous external redirects.',
     mitigation: 'Implement strict DMARC p=reject policy and DNS-level protective filtering.'
   },
@@ -356,10 +344,145 @@ const mitreIntelligence = {
     desc: 'Final stage: Attacker adds backup recovery emails, rogue MFA devices, and revokes victim sessions.',
     detection: 'Audit logs showing new security keys registered followed by immediate email forwarding rule creation.',
     mitigation: 'Out-of-band administrative verification and re-authentication on security setting changes.'
+  },
+  'T1566': {
+    title: 'Email Gateway Defenses (T1566)',
+    desc: 'Email security gateway with cryptographic domain authentication verifying inbound sender authenticity.',
+    detection: 'DMARC alignment check passing (DKIM 2048-bit RSA + SPF valid).',
+    mitigation: 'Strict RFC-compliant email authentication and automated quarantine.'
+  },
+  'T1110': {
+    title: 'Credential Vault Protection (T1110)',
+    desc: 'Clean identity record with no publicly exposed passwords or compromised database dumps.',
+    detection: 'Zero matches in global breach telemetry and credential exposure indexes.',
+    mitigation: 'Continuous dark web monitoring and proactive credential rotation.'
   }
 };
 
-// --- Render SVG Attack Graph ---
+// --- Dynamic MITRE ATT&CK Graph Engine (Reconstructs based on real breach data) ---
+function getDynamicGraphData() {
+  const email = state.targetEmail || 'alex.chen@cyber-demo.org';
+  const isClean = state.isCleanTarget === true;
+  const hasPhone = state.hasPhoneLeak === true || state.currentScenario === 'sim-swap';
+  const hasRecent = state.hasRecentBreach === true || state.currentScenario === 'phishing-takeover';
+  const breaches = (state.currentBreaches && state.currentBreaches.length > 0)
+    ? state.currentBreaches
+    : (email.includes('alex') ? ['LinkedIn (2012)', 'Adobe (2013)', 'Canva (2019)'] : []);
+  const topBreach = breaches.length > 0 ? breaches[0].replace(/\s*\(\d+\)/, '') : 'Breach Dumps';
+
+  // SCENARIO 1: Clean Target (0 Breaches)
+  if (isClean) {
+    const nodes = [
+      { id: 'n1', mitre: 'T1566', name: 'Email Gateway', tactic: 'DMARC Guarded', x: 40, y: 135, brokenBy: 'dmarc', isCleanSecure: true },
+      { id: 'n2', mitre: 'T1110', name: 'Credential Vault', tactic: '0 Leaks Found', x: 250, y: 55, brokenBy: 'mfa', isCleanSecure: true },
+      { id: 'n3', mitre: 'T1111', name: 'Carrier Channel', tactic: 'Unexposed Mobile', x: 250, y: 215, brokenBy: 'simPin', isCleanSecure: true },
+      { id: 'n4', mitre: 'T1078', name: 'Identity Provider', tactic: 'Strong Auth Active', x: 470, y: 135, brokenBy: 'passManager', isCleanSecure: true },
+      { id: 'n5', mitre: 'T1098', name: 'Account Posture', tactic: 'Access Secured', x: 690, y: 135, brokenBy: null, isFinalTarget: true, isCleanSecure: true }
+    ];
+    const edges = [
+      { from: 'n1', to: 'n2', id: 'e1' },
+      { from: 'n1', to: 'n3', id: 'e2' },
+      { from: 'n2', to: 'n4', id: 'e3' },
+      { from: 'n3', to: 'n4', id: 'e4' },
+      { from: 'n4', to: 'n5', id: 'e5' }
+    ];
+    return { nodes, edges, scenarioType: 'clean' };
+  }
+
+  // SCENARIO 2: Phone / SIM-Swap Leak Target
+  if (hasPhone) {
+    const nodes = [
+      { id: 'n1', mitre: 'T1566.002', name: 'Carrier Intel Harvest', tactic: 'Initial Access', x: 40, y: 135, brokenBy: 'dmarc' },
+      { id: 'n2', mitre: 'T1111', name: 'Carrier Support Spoof', tactic: 'SIM-Swap / Port-Out', x: 250, y: 55, brokenBy: 'simPin' },
+      { id: 'n3', mitre: 'T1111', name: 'SMS 2FA Intercept', tactic: 'Reset OTP Harvest', x: 250, y: 215, brokenBy: 'mfa' },
+      { id: 'n4', mitre: 'T1078', name: 'Password Reset Override', tactic: 'Persistence', x: 470, y: 135, brokenBy: 'passManager' },
+      { id: 'n5', mitre: 'T1098', name: 'Account Takeover', tactic: 'Impact', x: 690, y: 135, brokenBy: null, isFinalTarget: true }
+    ];
+    const edges = [
+      { from: 'n1', to: 'n2', id: 'e1' },
+      { from: 'n1', to: 'n3', id: 'e2' },
+      { from: 'n2', to: 'n4', id: 'e3' },
+      { from: 'n3', to: 'n4', id: 'e4' },
+      { from: 'n4', to: 'n5', id: 'e5' }
+    ];
+    return { nodes, edges, scenarioType: 'sim-swap' };
+  }
+
+  // SCENARIO 3: Targeted Phishing / Lookalike Domain
+  if (hasRecent) {
+    const nodes = [
+      { id: 'n1', mitre: 'T1566.002', name: 'Lookalike Link (Spoof)', tactic: 'Initial Access', x: 40, y: 135, brokenBy: 'dmarc' },
+      { id: 'n2', mitre: 'T1539', name: 'AiTM Reverse Proxy', tactic: 'Steal Session Token', x: 250, y: 55, brokenBy: 'mfa' },
+      { id: 'n3', mitre: 'T1110.004', name: `${topBreach} Hash Spray`, tactic: 'Credential Access', x: 250, y: 215, brokenBy: 'mfa' },
+      { id: 'n4', mitre: 'T1078', name: 'Corporate SSO Hijack', tactic: 'Persistence', x: 470, y: 135, brokenBy: 'passManager' },
+      { id: 'n5', mitre: 'T1098', name: 'Account Takeover', tactic: 'Impact', x: 690, y: 135, brokenBy: null, isFinalTarget: true }
+    ];
+    const edges = [
+      { from: 'n1', to: 'n2', id: 'e1' },
+      { from: 'n1', to: 'n3', id: 'e2' },
+      { from: 'n2', to: 'n4', id: 'e3' },
+      { from: 'n3', to: 'n4', id: 'e4' },
+      { from: 'n4', to: 'n5', id: 'e5' }
+    ];
+    return { nodes, edges, scenarioType: 'phishing' };
+  }
+
+  // SCENARIO 4: Standard Credential Stuffing with REAL Breach Database Names!
+  const breachLabel = topBreach !== 'Breach Dumps' ? `${topBreach} Dump` : 'Breach Database';
+  const nodes = [
+    { id: 'n1', mitre: 'T1566.002', name: 'Spearphishing Recon', tactic: 'Initial Access', x: 40, y: 135, brokenBy: 'dmarc' },
+    { id: 'n2', mitre: 'T1110.004', name: `${breachLabel} Spray`, tactic: 'Credential Access', x: 250, y: 55, brokenBy: 'mfa' },
+    { id: 'n3', mitre: 'T1111', name: 'MFA Intercept (SIM-Swap)', tactic: 'Credential Access', x: 250, y: 215, brokenBy: 'simPin' },
+    { id: 'n4', mitre: 'T1078', name: 'Valid Accounts Reuse', tactic: 'Persistence', x: 470, y: 135, brokenBy: 'passManager' },
+    { id: 'n5', mitre: 'T1098', name: 'Account Takeover', tactic: 'Impact', x: 690, y: 135, brokenBy: null, isFinalTarget: true }
+  ];
+  const edges = [
+    { from: 'n1', to: 'n2', id: 'e1' },
+    { from: 'n1', to: 'n3', id: 'e2' },
+    { from: 'n2', to: 'n4', id: 'e3' },
+    { from: 'n3', to: 'n4', id: 'e4' },
+    { from: 'n4', to: 'n5', id: 'e5' }
+  ];
+  return { nodes, edges, scenarioType: 'cred-stuffing' };
+}
+
+// Compute dynamic severance & path reachability
+function computeSeverance(nodes, edges) {
+  const nodeSevered = {};
+  nodes.forEach(n => {
+    if (n.isCleanSecure) {
+      nodeSevered[n.id] = true;
+      return;
+    }
+    nodeSevered[n.id] = Boolean(n.brokenBy && state.defenses[n.brokenBy]);
+  });
+
+  const edgeSevered = {};
+  edges.forEach(e => {
+    edgeSevered[e.id] = Boolean(nodeSevered[e.from] || nodeSevered[e.to]);
+  });
+
+  // Downstream path logic:
+  // n4 is severed if passManager is enabled OR if both incoming paths (n2 and n3) are severed!
+  const n2Blocked = nodeSevered['n2'];
+  const n3Blocked = nodeSevered['n3'];
+  if (state.defenses.passManager || (n2Blocked && n3Blocked)) {
+    nodeSevered['n4'] = true;
+  }
+
+  if (edgeSevered['e5'] !== undefined) {
+    edgeSevered['e5'] = Boolean(nodeSevered['n4']);
+  }
+
+  // n5 (Account Takeover) is completely neutralized if n4 is severed!
+  if (nodeSevered['n4']) {
+    nodeSevered['n5'] = true;
+  }
+
+  return { nodeSevered, edgeSevered, isTakeoverBlocked: Boolean(nodeSevered['n5']) };
+}
+
+// Render SVG Attack Graph
 function renderAttackGraph() {
   const edgesGroup = document.getElementById('graphEdgesGroup');
   const nodesGroup = document.getElementById('graphNodesGroup');
@@ -368,19 +491,18 @@ function renderAttackGraph() {
   edgesGroup.innerHTML = '';
   nodesGroup.innerHTML = '';
 
-  // Draw Edges
-  graphEdges.forEach(edge => {
-    const fromNode = graphNodes.find(n => n.id === edge.from);
-    const toNode = graphNodes.find(n => n.id === edge.to);
+  const { nodes, edges, scenarioType } = getDynamicGraphData();
+  const { nodeSevered, edgeSevered, isTakeoverBlocked } = computeSeverance(nodes, edges);
+
+  // 1. Draw Edges with Clean Geometry
+  edges.forEach(edge => {
+    const fromNode = nodes.find(n => n.id === edge.from);
+    const toNode = nodes.find(n => n.id === edge.to);
     if (!fromNode || !toNode) return;
 
-    // Check if edge is severed by either node's defense
-    const isFromSevered = fromNode.brokenBy && state.defenses[fromNode.brokenBy];
-    const isToSevered = toNode.brokenBy && state.defenses[toNode.brokenBy];
-    const isSevered = isFromSevered || isToSevered;
-
+    const isSevered = edgeSevered[edge.id];
     const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    const startX = fromNode.x + 85;
+    const startX = fromNode.x + 170;
     const startY = fromNode.y + 35;
     const endX = toNode.x;
     const endY = toNode.y + 35;
@@ -393,21 +515,32 @@ function renderAttackGraph() {
     edgesGroup.appendChild(path);
   });
 
-  // Draw Nodes
-  graphNodes.forEach(node => {
-    const isSevered = node.brokenBy && state.defenses[node.brokenBy];
-    const isCompromised = !isSevered;
+  // 2. Draw Nodes
+  nodes.forEach(node => {
+    const isSevered = nodeSevered[node.id];
+    const isFinal = node.isFinalTarget;
+    const isClean = node.isCleanSecure;
 
     const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
     g.setAttribute('class', 'graph-node');
     g.setAttribute('transform', `translate(${node.x}, ${node.y})`);
     g.onclick = () => showNodeInspector(node.mitre);
 
-    // Node Box
+    let boxClass = 'node-box';
+    if (isClean) {
+      boxClass += ' clean-secure';
+    } else if (isFinal && isSevered) {
+      boxClass += ' severed neutralized-glow';
+    } else if (isSevered) {
+      boxClass += ' severed';
+    } else {
+      boxClass += ' compromised';
+    }
+
     const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
     rect.setAttribute('width', '170');
     rect.setAttribute('height', '70');
-    rect.setAttribute('class', `node-box ${isSevered ? 'severed' : 'compromised'}`);
+    rect.setAttribute('class', boxClass);
     g.appendChild(rect);
 
     // MITRE Badge Tag
@@ -415,7 +548,15 @@ function renderAttackGraph() {
     tagText.setAttribute('x', '12');
     tagText.setAttribute('y', '22');
     tagText.setAttribute('class', 'node-tag-text');
-    tagText.textContent = isSevered ? `🛡️ ${node.mitre} [SEVERED]` : `⚠️ ${node.mitre}`;
+    if (isClean) {
+      tagText.textContent = `🛡️ ${node.mitre} [SECURE]`;
+    } else if (isFinal && isSevered) {
+      tagText.textContent = `🛡️ ${node.mitre} [NEUTRALIZED]`;
+    } else if (isSevered) {
+      tagText.textContent = `🛡️ ${node.mitre} [SEVERED]`;
+    } else {
+      tagText.textContent = `⚠️ ${node.mitre}`;
+    }
     g.appendChild(tagText);
 
     // Node Name
@@ -423,7 +564,11 @@ function renderAttackGraph() {
     nameText.setAttribute('x', '12');
     nameText.setAttribute('y', '42');
     nameText.setAttribute('class', 'node-name-text');
-    nameText.textContent = node.name;
+    if (isFinal && isSevered) {
+      nameText.textContent = 'Takeover Blocked!';
+    } else {
+      nameText.textContent = node.name;
+    }
     g.appendChild(nameText);
 
     // Node Tactic
@@ -431,7 +576,11 @@ function renderAttackGraph() {
     tacticText.setAttribute('x', '12');
     tacticText.setAttribute('y', '58');
     tacticText.setAttribute('class', 'node-tactic-text');
-    tacticText.textContent = node.tactic;
+    if (isFinal && isSevered) {
+      tacticText.textContent = 'Adversary Lockout Verified';
+    } else {
+      tacticText.textContent = node.tactic;
+    }
     g.appendChild(tacticText);
 
     nodesGroup.appendChild(g);
@@ -474,7 +623,14 @@ function updateRiskPosture() {
   if (state.defenses.dmarc) defenseReduction += 15;
   if (state.defenses.simPin) defenseReduction += 15;
 
-  let score = Math.max(10, Math.min(95, baseRisk - defenseReduction));
+  let score = Math.max(0, Math.min(95, baseRisk - defenseReduction));
+  const { nodes, edges } = getDynamicGraphData();
+  const { isTakeoverBlocked } = computeSeverance(nodes, edges);
+  if (state.defenses.mfa && state.defenses.passManager && state.defenses.dmarc && state.defenses.simPin) {
+    score = 0;
+  } else if (isTakeoverBlocked && state.defenses.mfa && state.defenses.passManager) {
+    score = Math.min(score, 10);
+  }
   state.riskScore = score;
 
   // Update formula pill weights in DOM so they strictly equal arithmetic
@@ -1644,6 +1800,7 @@ async function scanAnyEmail(rawInput) {
   }
 
   // Attempt live breach lookup
+  state.targetEmail = email;
   const lookup = await fetchBreachIntelligence(email);
 
   let breaches = [];
@@ -1657,6 +1814,8 @@ async function scanAnyEmail(rawInput) {
     isClean = true;
     state.hasPasswordLeak = false;
     state.hasRecentBreach = false;
+    state.hasPhoneLeak = false;
+    state.currentBreaches = [];
     state.isCleanTarget = true;
     attackVectorText = 'None - Baseline Protection (Hardened Posture)';
     if (scannerStatusPill) {
@@ -1669,6 +1828,8 @@ async function scanAnyEmail(rawInput) {
     leakedPassword = lookup.exposed_credentials || 'Password Hashes Identified in Known Breaches';
     state.hasPasswordLeak = lookup.has_password_leak !== false;
     state.hasRecentBreach = lookup.has_recent_breach === true;
+    state.hasPhoneLeak = Boolean(lookup.has_phone_leak);
+    state.currentBreaches = breaches;
     state.isCleanTarget = false;
     state.currentScenario = lookup.has_phone_leak ? 'sim-swap' : (lookup.has_recent_breach ? 'phishing-takeover' : 'cred-stuffing');
     attackVectorText = lookup.primary_vector || 'Automated Credential Stuffing (MITRE T1110.004)';
@@ -1995,30 +2156,57 @@ document.addEventListener('DOMContentLoaded', () => {
       document.querySelectorAll('.btn-scenario').forEach(b => b.classList.remove('active'));
       e.target.classList.add('active');
       state.currentScenario = e.target.dataset.scenario;
+      updateRiskPosture();
       runSimulation();
     });
   });
 
+  // Centralized Defense Toggle Handler with Live Telemetry & Intercept Alerts
+  function handleDefenseChange(defenseKey, isChecked, defenseName) {
+    state.defenses[defenseKey] = isChecked;
+    sfx.playShieldDeflect();
+    updateRiskPosture();
+
+    const terminal = document.getElementById('terminalBody');
+    if (terminal) {
+      const now = new Date();
+      const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+      const line = document.createElement('div');
+      if (isChecked) {
+        line.className = 'terminal-line success';
+        line.innerHTML = `<span class="prompt">[${timeStr} SOC]</span> 🛡️ DEFENSE ENGAGED: <strong>${defenseName}</strong> activated. MITRE attack vector severed!`;
+      } else {
+        line.className = 'terminal-line alert';
+        line.innerHTML = `<span class="prompt">[${timeStr} SOC]</span> ⚠️ DEFENSE DISENGAGED: <strong>${defenseName}</strong> deactivated. Vector exposed.`;
+      }
+      terminal.appendChild(line);
+
+      // Check if Account Takeover is now blocked
+      const { nodes, edges } = getDynamicGraphData();
+      const { isTakeoverBlocked } = computeSeverance(nodes, edges);
+      if (isTakeoverBlocked && isChecked) {
+        const interceptLine = document.createElement('div');
+        interceptLine.className = 'terminal-line success';
+        interceptLine.innerHTML = `<span class="prompt">[${timeStr} KILL-CHAIN]</span> 🎯 <strong>ATTACK PATHWAY FULLY SEVERED!</strong> Account Takeover (T1098) Neutralized!`;
+        terminal.appendChild(interceptLine);
+        setDazyMood('celebrate', `Incredible defense! We severed the adversary's attack path and neutralized Account Takeover!`, true);
+      }
+      terminal.scrollTop = terminal.scrollHeight;
+    }
+  }
+
   // Defense Toggles in Attack Graph
   document.getElementById('toggleMfa')?.addEventListener('change', (e) => {
-    state.defenses.mfa = e.target.checked;
-    sfx.playShieldDeflect();
-    updateRiskPosture();
+    handleDefenseChange('mfa', e.target.checked, 'FIDO2 / Hardware Passkey MFA');
   });
   document.getElementById('togglePassManager')?.addEventListener('change', (e) => {
-    state.defenses.passManager = e.target.checked;
-    sfx.playShieldDeflect();
-    updateRiskPosture();
+    handleDefenseChange('passManager', e.target.checked, 'Password Manager & Unique Passwords');
   });
   document.getElementById('toggleDmarc')?.addEventListener('change', (e) => {
-    state.defenses.dmarc = e.target.checked;
-    sfx.playShieldDeflect();
-    updateRiskPosture();
+    handleDefenseChange('dmarc', e.target.checked, 'Strict DMARC & Email Filtering');
   });
   document.getElementById('toggleSimPin')?.addEventListener('change', (e) => {
-    state.defenses.simPin = e.target.checked;
-    sfx.playShieldDeflect();
-    updateRiskPosture();
+    handleDefenseChange('simPin', e.target.checked, 'Carrier Port-Out PIN Lock');
   });
 
   // Close Node Inspector
