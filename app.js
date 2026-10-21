@@ -1837,38 +1837,47 @@ document.addEventListener('DOMContentLoaded', () => {
   // Judge Demo Button
   document.getElementById('btnJudgeDemo')?.addEventListener('click', loadJudgeMode);
 
-  // Red/Blue Team Switcher
-  const teamToggle = document.getElementById('teamToggleCheckbox');
-  const redText = document.getElementById('redTeamText');
-  const blueText = document.getElementById('blueTeamText');
+  // Red/Blue Team Switcher (Filtered Segmented Buttons)
+  const btnTeamRed = document.getElementById('btnTeamRed');
+  const btnTeamBlue = document.getElementById('btnTeamBlue');
   const terminalTitle = document.getElementById('terminalTitle');
 
-  // Red/Blue Team Switcher (Operational Mode)
-  teamToggle?.addEventListener('change', (e) => {
-    sfx.playClick();
-    if (e.target.checked) {
-      // Blue Team (SOC Defense)
+  function setOperationalTeam(team, isUserAction = false) {
+    if (isUserAction) {
+      sfx.playClick();
+    }
+
+    if (team === 'blue') {
       state.activeTeam = 'blue';
       document.body.classList.remove('theme-red-attack');
       document.body.classList.add('theme-blue-defense');
       document.body.setAttribute('data-team', 'blue');
-      redText.classList.remove('active-team');
-      blueText.classList.add('active-team');
+      btnTeamRed?.classList.remove('active');
+      btnTeamBlue?.classList.add('active');
       terminalTitle.innerHTML = '<span class="terminal-mode-icon">🛡️</span> <span class="terminal-mode-text">SOC DEFENSE TELEMETRY & SIEM ALERTS — BLUE TEAM</span>';
-      setDazyMood('shielded', "Switched to Blue Team! Now you're viewing our SOC detection engineering rules and defense logs!", true);
+      if (isUserAction) {
+        setDazyMood('shielded', "Switched to Blue Team! Now you're viewing our SOC detection engineering rules and defense logs!", true);
+      }
     } else {
-      // Red Team (Adversary Attack)
       state.activeTeam = 'red';
       document.body.classList.remove('theme-blue-defense');
       document.body.classList.add('theme-red-attack');
       document.body.setAttribute('data-team', 'red');
-      blueText.classList.remove('active-team');
-      redText.classList.add('active-team');
+      btnTeamBlue?.classList.remove('active');
+      btnTeamRed?.classList.add('active');
       terminalTitle.innerHTML = '<span class="terminal-mode-icon">⚡</span> <span class="terminal-mode-text">SIMULATED ADVERSARY TERMINAL — RED TEAM</span>';
-      setDazyMood('scared', "Switched to Red Team! You are seeing the adversary's offensive attack execution!", true);
+      if (isUserAction) {
+        setDazyMood('scared', "Switched to Red Team! You are seeing the adversary's offensive attack execution!", true);
+      }
     }
-    runSimulation();
-  });
+
+    if (isUserAction) {
+      runSimulation();
+    }
+  }
+
+  btnTeamRed?.addEventListener('click', () => setOperationalTeam('red', true));
+  btnTeamBlue?.addEventListener('click', () => setOperationalTeam('blue', true));
 
   // Visual Aesthetic Switcher (Pitch Black vs Soft Cyberpunk)
   const btnAestheticBlack = document.getElementById('btnAestheticBlack');

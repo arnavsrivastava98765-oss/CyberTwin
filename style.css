@@ -362,102 +362,117 @@ body[data-aesthetic="cyberpunk"] .badge-max {
   color: var(--text-muted);
 }
 
-/* Team Switcher Slider */
+/* ========================================================
+   OPERATIONAL TEAM SWITCHER (FILTERED & SLEEK PILL)
+   ======================================================== */
 .team-switcher-wrapper {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0.65rem;
   background: #09090b;
-  padding: 4px 10px;
-  border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 3px;
+  gap: 3px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
   transition: all 0.25s ease;
 }
 
 body[data-aesthetic="cyberpunk"] .team-switcher-wrapper {
   background: rgba(18, 14, 34, 0.85);
-  border-color: rgba(179, 136, 255, 0.22);
+  border-color: rgba(179, 136, 255, 0.25);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
-.team-label {
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: var(--text-dim);
-  transition: all 0.2s ease;
+.team-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 11px;
+  background: transparent;
+  border: 1px solid transparent;
   border-radius: 6px;
-  padding: 2px 4px;
-}
-
-.team-label.red-team-label.active-team {
-  color: #fff;
-  background: rgba(225, 29, 72, 0.2);
-  border: 1px solid rgba(225, 29, 72, 0.4);
-  padding: 2px 8px;
-  box-shadow: 0 0 10px rgba(225, 29, 72, 0.25);
-}
-
-.team-label.blue-team-label.active-team {
-  color: #fff;
-  background: rgba(2, 132, 199, 0.2);
-  border: 1px solid rgba(2, 132, 199, 0.4);
-  padding: 2px 8px;
-  box-shadow: 0 0 10px rgba(2, 132, 199, 0.25);
-}
-
-body[data-aesthetic="cyberpunk"] .team-label.red-team-label.active-team {
-  background: rgba(255, 51, 136, 0.25);
-  border-color: rgba(255, 51, 136, 0.6);
-  box-shadow: 0 0 12px rgba(255, 51, 136, 0.4);
-}
-
-body[data-aesthetic="cyberpunk"] .team-label.blue-team-label.active-team {
-  background: rgba(0, 240, 255, 0.25);
-  border-color: rgba(0, 240, 255, 0.6);
-  box-shadow: 0 0 12px rgba(0, 240, 255, 0.4);
-}
-
-.switch-pill {
-  position: relative;
-  display: inline-block;
-  width: 44px;
-  height: 22px;
-}
-
-.switch-pill input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.slider-round {
-  position: absolute;
+  color: var(--text-dim);
+  font-family: var(--font-heading);
+  font-size: 0.78rem;
+  font-weight: 600;
   cursor: pointer;
-  inset: 0;
-  background-color: var(--cyber-pink);
-  transition: 0.25s;
-  border-radius: 34px;
-  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.6);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
 }
 
-.slider-round:before {
-  position: absolute;
-  content: "";
-  height: 16px;
-  width: 16px;
-  left: 3px;
-  bottom: 3px;
-  background-color: white;
-  transition: 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+.team-btn:hover {
+  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.team-dot {
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+  display: inline-block;
+  flex-shrink: 0;
+  transition: all 0.25s ease;
 }
 
-input:checked + .slider-round {
-  background-color: var(--cyber-cyan);
+.team-dot.red-dot {
+  background: #e11d48;
+  box-shadow: 0 0 6px rgba(225, 29, 72, 0.5);
 }
 
-input:checked + .slider-round:before {
-  transform: translateX(22px);
+.team-dot.blue-dot {
+  background: #0284c7;
+  box-shadow: 0 0 6px rgba(2, 132, 199, 0.5);
+}
+
+/* Active State for Red Team Button */
+.team-btn.red-team-btn.active {
+  background: rgba(225, 29, 72, 0.16);
+  color: #ffffff;
+  border-color: rgba(225, 29, 72, 0.45);
+  box-shadow: 0 0 12px rgba(225, 29, 72, 0.25), inset 0 0 6px rgba(225, 29, 72, 0.1);
+}
+
+.team-btn.red-team-btn.active .team-dot.red-dot {
+  background: #f43f5e;
+  box-shadow: 0 0 8px #f43f5e;
+  transform: scale(1.15);
+}
+
+/* Active State for Blue Team Button */
+.team-btn.blue-team-btn.active {
+  background: rgba(2, 132, 199, 0.16);
+  color: #ffffff;
+  border-color: rgba(2, 132, 199, 0.45);
+  box-shadow: 0 0 12px rgba(2, 132, 199, 0.25), inset 0 0 6px rgba(2, 132, 199, 0.1);
+}
+
+.team-btn.blue-team-btn.active .team-dot.blue-dot {
+  background: #38bdf8;
+  box-shadow: 0 0 8px #38bdf8;
+  transform: scale(1.15);
+}
+
+/* Cyberpunk Active States */
+body[data-aesthetic="cyberpunk"] .team-dot.red-dot {
+  background: #ff3388;
+  box-shadow: 0 0 8px rgba(255, 51, 136, 0.7);
+}
+
+body[data-aesthetic="cyberpunk"] .team-dot.blue-dot {
+  background: #00f0ff;
+  box-shadow: 0 0 8px rgba(0, 240, 255, 0.7);
+}
+
+body[data-aesthetic="cyberpunk"] .team-btn.red-team-btn.active {
+  background: rgba(255, 51, 136, 0.22);
+  border-color: rgba(255, 51, 136, 0.6);
+  box-shadow: 0 0 14px rgba(255, 51, 136, 0.4);
+}
+
+body[data-aesthetic="cyberpunk"] .team-btn.blue-team-btn.active {
+  background: rgba(0, 240, 255, 0.22);
+  border-color: rgba(0, 240, 255, 0.6);
+  box-shadow: 0 0 14px rgba(0, 240, 255, 0.4);
 }
 
 /* Visual Aesthetic Switcher (Pitch Black vs Soft Cyberpunk) */

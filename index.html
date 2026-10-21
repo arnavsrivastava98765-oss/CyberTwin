@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=5.1">
+  <link rel="stylesheet" href="style.css?v=5.2">
 </head>
 <body class="theme-red-attack" data-aesthetic="pitch-black" data-team="red">
   <!-- Cyber Background Particles -->
@@ -55,13 +55,16 @@
           <span class="hotkey-pill">1-Click</span>
         </button>
 
-        <div class="team-switcher-wrapper" title="Operational Mode: Red Team Attack vs Blue Team Defense">
-          <span class="team-label red-team-label active-team" id="redTeamText">🔴 Red Team</span>
-          <label class="switch-pill">
-            <input type="checkbox" id="teamToggleCheckbox" aria-label="Toggle Red or Blue Team">
-            <span class="slider-round"></span>
-          </label>
-          <span class="team-label blue-team-label" id="blueTeamText">🔵 Blue Team</span>
+        <!-- Operational Team Switcher (Red Team vs Blue Team) -->
+        <div class="team-switcher-wrapper" id="teamSwitcher" title="Operational Mode: Red Team Attack vs Blue Team Defense">
+          <button type="button" class="team-btn red-team-btn active" id="btnTeamRed" aria-label="Red Team Mode">
+            <span class="team-dot red-dot"></span>
+            <span class="team-text" id="redTeamText">Red Team</span>
+          </button>
+          <button type="button" class="team-btn blue-team-btn" id="btnTeamBlue" aria-label="Blue Team Mode">
+            <span class="team-dot blue-dot"></span>
+            <span class="team-text" id="blueTeamText">Blue Team</span>
+          </button>
         </div>
 
         <!-- Visual Aesthetic Switcher (Pitch Black vs Soft Cyberpunk) -->
