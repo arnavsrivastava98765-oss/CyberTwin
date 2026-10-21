@@ -1,5 +1,5 @@
 // CyberTwin Max - Offline PWA Service Worker
-const CACHE_NAME = 'cybertwin-v5.0-dark';
+const CACHE_NAME = 'cybertwin-v5.2-dual-theme';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',

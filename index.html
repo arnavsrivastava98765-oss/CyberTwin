@@ -15,9 +15,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=5.0">
+  <link rel="stylesheet" href="style.css?v=5.1">
 </head>
-<body class="theme-red-attack">
+<body class="theme-red-attack" data-aesthetic="pitch-black" data-team="red">
   <!-- Cyber Background Particles -->
   <div class="cyber-stars" id="cyberStars"></div>
   <div class="cyber-grid-overlay"></div>
@@ -55,13 +55,25 @@
           <span class="hotkey-pill">1-Click</span>
         </button>
 
-        <div class="team-switcher-wrapper">
+        <div class="team-switcher-wrapper" title="Operational Mode: Red Team Attack vs Blue Team Defense">
           <span class="team-label red-team-label active-team" id="redTeamText">🔴 Red Team</span>
           <label class="switch-pill">
-            <input type="checkbox" id="teamToggleCheckbox">
+            <input type="checkbox" id="teamToggleCheckbox" aria-label="Toggle Red or Blue Team">
             <span class="slider-round"></span>
           </label>
           <span class="team-label blue-team-label" id="blueTeamText">🔵 Blue Team</span>
+        </div>
+
+        <!-- Visual Aesthetic Switcher (Pitch Black vs Soft Cyberpunk) -->
+        <div class="aesthetic-switcher-wrapper" id="aestheticSwitcher" title="Visual Style: Pitch Black vs Soft Cyberpunk">
+          <button type="button" class="aesthetic-btn active" id="btnAestheticBlack" data-aesthetic-target="pitch-black" aria-label="Pitch Black Mode">
+            <span class="swatch swatch-pitch-black"></span>
+            <span class="aesthetic-title">Pitch Black</span>
+          </button>
+          <button type="button" class="aesthetic-btn" id="btnAestheticCyber" data-aesthetic-target="cyberpunk" aria-label="Soft Cyberpunk Mode">
+            <span class="swatch swatch-cyberpunk"></span>
+            <span class="aesthetic-title">Soft Cyberpunk</span>
+          </button>
         </div>
 
         <button class="btn-voice-toggle" id="btnVoiceToggle" title="Toggle Dazy's Voice Lines">

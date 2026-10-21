@@ -1843,20 +1843,25 @@ document.addEventListener('DOMContentLoaded', () => {
   const blueText = document.getElementById('blueTeamText');
   const terminalTitle = document.getElementById('terminalTitle');
 
+  // Red/Blue Team Switcher (Operational Mode)
   teamToggle?.addEventListener('change', (e) => {
     sfx.playClick();
     if (e.target.checked) {
-      // Blue Team
+      // Blue Team (SOC Defense)
       state.activeTeam = 'blue';
-      document.body.className = 'theme-blue-defense';
+      document.body.classList.remove('theme-red-attack');
+      document.body.classList.add('theme-blue-defense');
+      document.body.setAttribute('data-team', 'blue');
       redText.classList.remove('active-team');
       blueText.classList.add('active-team');
       terminalTitle.innerHTML = '<span class="terminal-mode-icon">🛡️</span> <span class="terminal-mode-text">SOC DEFENSE TELEMETRY & SIEM ALERTS — BLUE TEAM</span>';
       setDazyMood('shielded', "Switched to Blue Team! Now you're viewing our SOC detection engineering rules and defense logs!", true);
     } else {
-      // Red Team
+      // Red Team (Adversary Attack)
       state.activeTeam = 'red';
-      document.body.className = 'theme-red-attack';
+      document.body.classList.remove('theme-blue-defense');
+      document.body.classList.add('theme-red-attack');
+      document.body.setAttribute('data-team', 'red');
       blueText.classList.remove('active-team');
       redText.classList.add('active-team');
       terminalTitle.innerHTML = '<span class="terminal-mode-icon">⚡</span> <span class="terminal-mode-text">SIMULATED ADVERSARY TERMINAL — RED TEAM</span>';
@@ -1864,6 +1869,70 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     runSimulation();
   });
+
+  // Visual Aesthetic Switcher (Pitch Black vs Soft Cyberpunk)
+  const btnAestheticBlack = document.getElementById('btnAestheticBlack');
+  const btnAestheticCyber = document.getElementById('btnAestheticCyber');
+  const edgeGradRedStop0 = document.querySelector('#edgeGradientRed stop:nth-child(1)');
+  const edgeGradRedStop1 = document.querySelector('#edgeGradientRed stop:nth-child(2)');
+  const edgeGradGreenStop0 = document.querySelector('#edgeGradientGreen stop:nth-child(1)');
+  const edgeGradGreenStop1 = document.querySelector('#edgeGradientGreen stop:nth-child(2)');
+
+  function setAestheticTheme(theme, isUserAction = false) {
+    if (isUserAction) {
+      sfx.playClick();
+    }
+
+    document.body.setAttribute('data-aesthetic', theme);
+    try {
+      localStorage.setItem('cybertwin_aesthetic', theme);
+    } catch (_) {}
+
+    if (theme === 'cyberpunk') {
+      btnAestheticCyber?.classList.add('active');
+      btnAestheticBlack?.classList.remove('active');
+
+      // Update SVG attack graph gradients to vibrant cyber neon
+      if (edgeGradRedStop0) edgeGradRedStop0.setAttribute('stop-color', '#ff3388');
+      if (edgeGradRedStop1) edgeGradRedStop1.setAttribute('stop-color', '#ff66c4');
+      if (edgeGradGreenStop0) edgeGradGreenStop0.setAttribute('stop-color', '#00ffb3');
+      if (edgeGradGreenStop1) edgeGradGreenStop1.setAttribute('stop-color', '#00f0ff');
+
+      if (isUserAction) {
+        setDazyMood('happy', "Switched to Soft Cyberpunk! Enjoy the cool neon hues and space obsidian vibes! ✨", true);
+      }
+    } else {
+      btnAestheticBlack?.classList.add('active');
+      btnAestheticCyber?.classList.remove('active');
+
+      // Update SVG attack graph gradients to sleek pitch black accents
+      if (edgeGradRedStop0) edgeGradRedStop0.setAttribute('stop-color', '#e11d48');
+      if (edgeGradRedStop1) edgeGradRedStop1.setAttribute('stop-color', '#f43f5e');
+      if (edgeGradGreenStop0) edgeGradGreenStop0.setAttribute('stop-color', '#10b981');
+      if (edgeGradGreenStop1) edgeGradGreenStop1.setAttribute('stop-color', '#38bdf8');
+
+      if (isUserAction) {
+        setDazyMood('curious', "Switched to Pitch Black! Clean, minimalist, and ultra-high-contrast developer look! 🖤", true);
+      }
+    }
+
+    if (typeof renderAttackGraph === 'function') {
+      renderAttackGraph();
+    }
+  }
+
+  btnAestheticBlack?.addEventListener('click', () => setAestheticTheme('pitch-black', true));
+  btnAestheticCyber?.addEventListener('click', () => setAestheticTheme('cyberpunk', true));
+
+  // Initialize from saved preference or default to pitch-black
+  let initialAesthetic = 'pitch-black';
+  try {
+    const saved = localStorage.getItem('cybertwin_aesthetic');
+    if (saved === 'cyberpunk' || saved === 'pitch-black') {
+      initialAesthetic = saved;
+    }
+  } catch (_) {}
+  setAestheticTheme(initialAesthetic, false);
 
   // Voice Toggle
   const btnVoice = document.getElementById('btnVoiceToggle');
