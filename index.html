@@ -200,8 +200,11 @@
         </div>
 
         <div class="results-action-strip">
-          <span class="action-tip">🛡️ Baby Dazy mapped this exact leaked chain to the MITRE attack graph below:</span>
-          <button type="button" class="btn-scroll-to-graph" id="btnScrollToGraph">View Chained MITRE Attack Path ↓</button>
+          <span class="action-tip">🛡️ Real-Time Diagnostic Mapped to MITRE Attack Graph:</span>
+          <div class="results-action-buttons">
+            <button type="button" class="btn-scroll-to-graph" id="btnScrollToGraph">View MITRE Attack Path ↓</button>
+            <button type="button" class="btn-action-glow btn-open-hardening-quick" id="btnResultsOpenHardening">🛡️ How to Make This Account Safe in Real Life →</button>
+          </div>
         </div>
       </div>
     </section>
@@ -431,6 +434,19 @@
                   <span class="defense-breaks">Breaks: MFA Interception (T1111)</span>
                 </div>
               </label>
+            </div>
+
+            <!-- Action Toolbar for Real-World Defense & Hardening -->
+            <div class="defense-action-toolbar">
+              <button type="button" class="btn-defense-shield" id="btnDeployDefenseShield">
+                <span class="btn-icon">⚡</span> Deploy Defense Shield (All 4 Controls)
+              </button>
+              <button type="button" class="btn-defense-guide" id="btnOpenHardeningModal">
+                <span class="btn-icon">🛡️</span> Real-World Account Protection Guide
+              </button>
+              <button type="button" class="btn-defense-passkey" id="btnTestWebAuthnQuick">
+                <span class="btn-icon">🔑</span> Test Hardware Passkeys
+              </button>
             </div>
           </div>
 
@@ -972,6 +988,156 @@ Subject: Urgent: Verify Account Immediately"></textarea>
     </div>
   </div>
 
+  <!-- Modal: Real-World Account Defense & Hardening Center -->
+  <div class="modal-backdrop" id="accountHardeningModal">
+    <div class="modal-card hardening-modal-card">
+      <div class="modal-header">
+        <div class="hardening-brand">
+          <span class="logo-cyber">CYBER</span><span class="logo-twin">TWIN</span> // REAL-WORLD ACCOUNT DEFENSE CENTER
+        </div>
+        <button class="btn-close-modal" id="btnCloseHardeningModal">✕</button>
+      </div>
+      <div class="modal-body hardening-modal-body">
+        <div class="hardening-target-banner">
+          <div class="target-col">
+            <span class="banner-lbl">TARGET IDENTITY:</span>
+            <h3 class="code-font" id="hardeningTargetEmail">alex.chen@cyber-demo.org</h3>
+          </div>
+          <div class="status-col">
+            <span class="banner-lbl">OPERATIONAL STATUS:</span>
+            <span class="badge-safe" id="hardeningStatusBadge">PROTECTION PLAYBOOK READY</span>
+          </div>
+        </div>
+
+        <!-- Section 1: Provider-Specific Direct Security Portals -->
+        <div class="hardening-section glass-subpanel">
+          <div class="section-title-row">
+            <span class="section-icon">🔑</span>
+            <div>
+              <h4 class="section-title" id="providerSecurityHeading">Official Provider Security Console: Google Workspace / Gmail</h4>
+              <p class="section-desc">Direct 1-click links to your official account provider security settings to enforce passkeys, revoke stolen sessions, and eliminate unauthorized devices:</p>
+            </div>
+          </div>
+          <div class="provider-action-grid" id="providerActionGrid">
+            <a href="https://myaccount.google.com/signinoptions/passkeys" target="_blank" rel="noopener noreferrer" class="btn-provider-action primary" id="linkProviderPasskey">
+              <span class="act-icon">🔑</span>
+              <div class="act-details">
+                <strong>Enroll FIDO2 / Biometric Passkeys</strong>
+                <span id="labelProviderPasskey">myaccount.google.com/signinoptions/passkeys ↗</span>
+              </div>
+            </a>
+            <a href="https://myaccount.google.com/device-activity" target="_blank" rel="noopener noreferrer" class="btn-provider-action danger" id="linkProviderSessions">
+              <span class="act-icon">🛑</span>
+              <div class="act-details">
+                <strong>Terminate Active Stolen Sessions</strong>
+                <span id="labelProviderSessions">myaccount.google.com/device-activity ↗</span>
+              </div>
+            </a>
+            <a href="https://landing.google.com/advancedprotection/" target="_blank" rel="noopener noreferrer" class="btn-provider-action warning" id="linkProvider2Fa">
+              <span class="act-icon">🛡️</span>
+              <div class="act-details">
+                <strong>Google Advanced Protection Program</strong>
+                <span id="labelProvider2Fa">Enforce physical hardware keys & disable SMS fallback ↗</span>
+              </div>
+            </a>
+            <a href="https://myaccount.google.com/signinoptions/two-step-verification" target="_blank" rel="noopener noreferrer" class="btn-provider-action ghost" id="linkProviderVerify">
+              <span class="act-icon">🔒</span>
+              <div class="act-details">
+                <strong>Authenticator App / 2-Step Verification</strong>
+                <span id="labelProviderVerify">Switch from SMS OTP to Authenticator app ↗</span>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- Section 2: Browser & Hardware Passkey Tester -->
+        <div class="hardening-section glass-subpanel">
+          <div class="section-title-row">
+            <span class="section-icon">🧪</span>
+            <div>
+              <h4 class="section-title">In-Browser Hardware Passkey & WebAuthn Diagnostics</h4>
+              <p class="section-desc">Test whether your current browser and physical device (Windows Hello, Touch ID, or FIDO2 Security Key) support phishing-resistant authentication:</p>
+            </div>
+          </div>
+          <div class="webauthn-test-box">
+            <button type="button" class="btn-action-glow" id="btnRunWebAuthnTest">
+              <span class="btn-icon">🔐</span> Test Device Passkey Hardware
+            </button>
+            <div class="webauthn-result-console code-font" id="webAuthnResultConsole">
+              Click 'Test Device Passkey Hardware' to test local FIDO2 / WebAuthn cryptographic support...
+            </div>
+          </div>
+          <div class="passkey-explanation-callout">
+            <strong>Why Passkeys Make Your Account 100% Safe in Real Life:</strong>
+            Unlike passwords, passkeys use asymmetric public-private keypairs. The private key NEVER leaves your physical chip (TPM / Secure Enclave). Even if an attacker has your password from an Adobe or Canva breach, or tricks you with a phishing link, they cannot log in without your physical device. Phishing is mathematically impossible!
+          </div>
+        </div>
+
+        <!-- Section 3: High-Entropy Password Vault Generator -->
+        <div class="hardening-section glass-subpanel">
+          <div class="section-title-row">
+            <span class="section-icon">🔐</span>
+            <div>
+              <h4 class="section-title">Cryptographically Secure 24-Character Password Generator</h4>
+              <p class="section-desc">Generate unique, salted 24-character passphrases with 128+ bits of entropy. Stop credential stuffing (T1110.004) forever:</p>
+            </div>
+          </div>
+          <div class="pass-gen-container">
+            <div class="pass-gen-input-row">
+              <input type="text" readonly id="genPassphraseInput" class="code-font pass-gen-input" value="Click Generate to produce 24-character key...">
+              <button type="button" class="btn-action-ghost" id="btnCopyPassphrase" title="Copy to clipboard">📋 Copy</button>
+              <button type="button" class="btn-action-glow" id="btnGeneratePassphrase">🎲 Generate</button>
+            </div>
+            <div class="pass-gen-meta">
+              <span class="entropy-pill" id="genEntropyPill">Entropy: 128+ Bits (Cryptographically Unbreakable)</span>
+              <button type="button" class="btn-link-action" id="btnTestInLab">Test this password in Password Lab →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 4: Carrier Port-Out Freeze Guide -->
+        <div class="hardening-section glass-subpanel">
+          <div class="section-title-row">
+            <span class="section-icon">📱</span>
+            <div>
+              <h4 class="section-title">Cellular Carrier SIM-Swap Lock (Port Freeze) Blueprint</h4>
+              <p class="section-desc">Prevent hackers from calling your mobile carrier to hijack your phone number and intercept SMS reset codes:</p>
+            </div>
+          </div>
+          <div class="carrier-grid">
+            <div class="carrier-item">
+              <strong>Verizon</strong>
+              <span>Enable "Number Lock" in My Verizon App, or call 1-800-922-0204 to request a port-out freeze PIN.</span>
+            </div>
+            <div class="carrier-item">
+              <strong>AT&T</strong>
+              <span>Set up an account passcode and enable "Transfer PIN" in myAT&T account settings before any SIM change.</span>
+            </div>
+            <div class="carrier-item">
+              <strong>T-Mobile</strong>
+              <span>Turn on "SIM Protection" in the T-Mobile app or dial 611 to block unauthorized SIM transfer.</span>
+            </div>
+            <div class="carrier-item">
+              <strong>Airtel / Jio / International</strong>
+              <span>Configure your SIM PIN (PUK code) in phone settings and request mandatory biometric store KYC for SIM reissue.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 5: 1-Click Defense Shield -->
+        <div class="hardening-footer-actions">
+          <button type="button" class="btn-action-glow btn-deploy-all-shield" id="btnHardeningDeployShield">
+            <span class="btn-icon">⚡</span> Apply Full Defense Shield to CyberTwin (Drop Risk to 0%)
+          </button>
+          <button type="button" class="btn-action-ghost" id="btnHardeningOpenDossier">
+            <span class="btn-icon">📋</span> View Executive Threat Dossier & PDF
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
   <!-- Modal: Biometric WebAuthn Passkey Handshake Simulation -->
   <div class="modal-backdrop" id="biometricScannerModal">
     <div class="modal-card biometric-modal-card">
@@ -1167,7 +1333,7 @@ Subject: Urgent: Verify Account Immediately"></textarea>
     </div>
   </aside>
 
-  <script src="app.js?v=5.5"></script>
+  <script src="app.js?v=5.6"></script>
 </body>
 </html>
 
