@@ -4274,6 +4274,312 @@ body[data-aesthetic="cyberpunk"].theme-blue-defense .terminal-title {
   text-shadow: 0 0 10px rgba(0, 240, 255, 0.5) !important;
 }
 
+/* ========================================================
+   ENTERPRISE SUITE: GRAPH ACTION BAR & VIEW SWITCHER
+   ======================================================== */
+.graph-action-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.1rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+}
 
+.graph-view-switcher {
+  display: flex;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+  padding: 3px;
+  gap: 3px;
+}
 
+.btn-graph-view {
+  background: transparent;
+  color: var(--text-dim);
+  border: none;
+  border-radius: 9999px;
+  padding: 6px 14px;
+  font-family: var(--font-heading);
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
 
+.btn-graph-view:hover {
+  color: var(--text-main);
+}
+
+.btn-graph-view.active {
+  background: linear-gradient(135deg, var(--cyber-cyan), #38bdf8);
+  color: #050510;
+  box-shadow: 0 2px 10px rgba(56, 189, 248, 0.35);
+}
+
+.graph-primary-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.btn-action-glow {
+  background: linear-gradient(135deg, #10b981, #06b6d4);
+  color: #050510;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 8px;
+  padding: 7px 16px;
+  font-family: var(--font-heading);
+  font-size: 0.84rem;
+  font-weight: 800;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.35);
+  transition: all 0.25s ease;
+}
+
+.btn-action-glow:hover {
+  transform: translateY(-1.5px);
+  box-shadow: 0 0 22px rgba(16, 185, 129, 0.6);
+}
+
+.btn-action-ghost {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-main);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-family: var(--font-heading);
+  font-size: 0.84rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.btn-action-ghost:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* ========================================================
+   ENTERPRISE SUITE: IDENTITY BLAST-RADIUS MAP
+   ======================================================== */
+.blast-node {
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.blast-node:hover {
+  filter: brightness(1.2);
+}
+
+.blast-node-box {
+  transition: all 0.3s ease;
+}
+
+.blast-node-box.central {
+  fill: #0c1222;
+  stroke: var(--cyber-cyan);
+  stroke-width: 2.2;
+  filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.4));
+}
+
+.blast-node-box.compromised {
+  fill: #1a0b12;
+  stroke: #f43f5e;
+  stroke-width: 2;
+  filter: drop-shadow(0 0 8px rgba(244, 63, 94, 0.4));
+}
+
+.blast-node-box.isolated {
+  fill: #061912;
+  stroke: #10b981;
+  stroke-width: 2;
+  filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.45));
+}
+
+.blast-node-box.clean {
+  fill: #061919;
+  stroke: var(--cyber-mint);
+  stroke-width: 1.8;
+}
+
+.blast-edge {
+  transition: all 0.4s ease;
+}
+
+.blast-edge.active-threat {
+  stroke: #f43f5e;
+  stroke-width: 2.5;
+  stroke-dasharray: 6 4;
+  animation: blastHazardPulse 1s linear infinite;
+}
+
+.blast-edge.isolated {
+  stroke: #10b981;
+  stroke-width: 2;
+  stroke-dasharray: none;
+}
+
+.blast-edge.clean {
+  stroke: var(--cyber-cyan);
+  stroke-width: 1.8;
+  opacity: 0.6;
+}
+
+@keyframes blastHazardPulse {
+  from { stroke-dashoffset: 20; }
+  to { stroke-dashoffset: 0; }
+}
+
+/* ========================================================
+   ENTERPRISE SUITE: BIOMETRIC WEBAUTHN PASSKEY MODAL
+   ======================================================== */
+.biometric-modal-card {
+  max-width: 400px;
+  background: rgba(10, 15, 28, 0.95);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  box-shadow: 0 0 35px rgba(56, 189, 248, 0.25);
+  padding: 2.2rem 1.8rem;
+  text-align: center;
+}
+
+.biometric-fingerprint-wrapper {
+  position: relative;
+  width: 90px;
+  height: 110px;
+  margin: 0 auto 1.4rem;
+  color: var(--cyber-cyan);
+}
+
+.biometric-fingerprint-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.biometric-laser-line {
+  position: absolute;
+  left: -10%;
+  right: -10%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #38bdf8, #10b981, transparent);
+  box-shadow: 0 0 10px #38bdf8;
+  animation: scanLaserSweep 1.4s ease-in-out infinite;
+}
+
+@keyframes scanLaserSweep {
+  0% { top: 10px; opacity: 0.6; }
+  50% { top: 95px; opacity: 1; }
+  100% { top: 10px; opacity: 0.6; }
+}
+
+.biometric-title {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  color: #f8fafc;
+  margin-bottom: 0.4rem;
+}
+
+.biometric-status {
+  font-family: var(--font-code);
+  font-size: 0.85rem;
+  color: var(--cyber-cyan);
+  margin-bottom: 1.2rem;
+}
+
+.biometric-progress-bar {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.biometric-progress-fill {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, #38bdf8, #10b981);
+  transition: width 0.3s ease;
+}
+
+/* ========================================================
+   ENTERPRISE SUITE: CISO EXECUTIVE THREAT DOSSIER PRINTING
+   ======================================================== */
+.dossier-classification-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.2rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.18);
+  font-family: var(--font-code);
+  font-size: 0.78rem;
+}
+
+.dossier-pill {
+  background: rgba(244, 63, 94, 0.18);
+  color: #ff4b72;
+  border: 1px solid rgba(244, 63, 94, 0.4);
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.dossier-case {
+  color: var(--text-dim);
+}
+
+.dossier-timestamp {
+  color: var(--cyber-cyan);
+}
+
+/* Crisp Clean PDF Print Engine */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #reportModal, #reportModal * {
+    visibility: visible;
+  }
+  #reportModal {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: auto;
+    background: #ffffff !important;
+    display: block !important;
+  }
+  .print-report-card {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border: none !important;
+    box-shadow: none !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+  .modal-header .modal-actions {
+    display: none !important;
+  }
+  .report-table th, .report-table td {
+    color: #0f172a !important;
+    border-color: #cbd5e1 !important;
+  }
+  .report-divider {
+    border-color: #cbd5e1 !important;
+  }
+}

@@ -328,7 +328,23 @@
             Adversaries chain small exposures into complete takeover. Click on any node to view MITRE technique intelligence or toggle defenses below to sever the attack chain!
           </p>
 
-          <!-- SVG Attack Graph Canvas -->
+          <!-- Graph Interactive Actions & Switcher -->
+          <div class="graph-action-bar">
+            <div class="graph-view-switcher">
+              <button class="btn-graph-view active" id="btnViewAttackPath">⚔️ MITRE Attack Path</button>
+              <button class="btn-graph-view" id="btnViewBlastRadius">🌐 Identity Blast Radius</button>
+            </div>
+            <div class="graph-primary-actions">
+              <button class="btn-action-glow btn-remediate" id="btnAutoRemediate">
+                <span class="btn-icon">⚡</span> Run Auto-Remediation Sandbox
+              </button>
+              <button class="btn-action-ghost btn-dossier" id="btnOpenDossier">
+                <span class="btn-icon">📋</span> Threat Dossier & PDF
+              </button>
+            </div>
+          </div>
+
+          <!-- SVG Attack Graph & Blast Radius Canvas -->
           <div class="graph-canvas-container" id="graphContainer">
             <svg class="attack-graph-svg" id="attackGraphSvg" viewBox="0 0 880 340">
               <defs>
@@ -350,6 +366,26 @@
               <g id="graphEdgesGroup"></g>
               <g id="graphNodesGroup"></g>
               <g id="graphShieldsGroup"></g>
+            </svg>
+
+            <!-- Dynamic Identity Blast-Radius Interactive Network SVG -->
+            <svg class="attack-graph-svg" id="blastRadiusSvg" viewBox="0 0 880 340" style="display:none;">
+              <defs>
+                <linearGradient id="blastGradRed" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#f43f5e" />
+                  <stop offset="100%" stop-color="#fb7185" />
+                </linearGradient>
+                <linearGradient id="blastGradGreen" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#10b981" />
+                  <stop offset="100%" stop-color="#06b6d4" />
+                </linearGradient>
+                <filter id="blastGlow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="3.5" result="blur" />
+                  <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                </filter>
+              </defs>
+              <g id="blastEdgesGroup"></g>
+              <g id="blastNodesGroup"></g>
             </svg>
           </div>
 
@@ -417,6 +453,33 @@
                 <span class="meta-label">Severed By Control:</span>
                 <span class="meta-val highlight-green" id="inspectorMitigation">Phishing-resistant MFA (WebAuthn / Passkeys).</span>
               </div>
+            </div>
+          </div>
+
+          <!-- Blast Radius Node Inspector Drawer -->
+          <div class="node-inspector-drawer" id="blastInspectorDrawer">
+            <div class="inspector-header">
+              <span class="inspector-badge" id="blastNodeBadge" style="background:var(--cyber-cyan); color:#000;">CLOUD IAM</span>
+              <h3 class="inspector-title" id="blastNodeTitle">AWS Production Console</h3>
+              <button class="btn-close-inspector" id="btnCloseBlastInspector">✕</button>
+            </div>
+            <p class="inspector-desc" id="blastNodeDesc">
+              Connected via corporate Single Sign-On (SSO). Stolen primary session token enables adversary to pivot into cloud infrastructure.
+            </p>
+            <div class="inspector-meta-row">
+              <div class="meta-block">
+                <span class="meta-label">Compromise Exposure:</span>
+                <span class="meta-val" id="blastNodeExposure">Critical Lateral Movement Risk</span>
+              </div>
+              <div class="meta-block">
+                <span class="meta-label">Mitigation:</span>
+                <span class="meta-val highlight-green" id="blastNodeMitigation">Isolate account & revoke active SAML SSO federation.</span>
+              </div>
+            </div>
+            <div style="margin-top:0.75rem; display:flex; justify-content:flex-end;">
+              <button class="btn-tool-action" id="btnIsolateBlastAccount" style="padding:0.4rem 1.1rem; font-size:0.85rem;">
+                🛡️ Isolate This Account
+              </button>
             </div>
           </div>
         </div>
@@ -828,26 +891,32 @@ Subject: Urgent: Verify Account Immediately"></textarea>
 
   </div>
 
-  <!-- Modal: Printable Pentest Report -->
+  <!-- Modal: Executive CISO Threat Intelligence Dossier & PDF -->
   <div class="modal-backdrop" id="reportModal">
     <div class="modal-card print-report-card">
       <div class="modal-header">
         <div class="report-brand">
-          <span class="logo-cyber">CYBER</span><span class="logo-twin">TWIN</span> MAX SIMULATED RISK REPORT
+          <span class="logo-cyber">CYBER</span><span class="logo-twin">TWIN</span> MAX // CISO EXECUTIVE THREAT DOSSIER
         </div>
         <div class="modal-actions">
-          <button class="btn-print" id="btnPrintReport">🖨️ Print / Save as PDF</button>
+          <button class="btn-print" id="btnPrintReport">🖨️ Export PDF / Print</button>
           <button class="btn-close-modal" id="btnCloseReport">✕</button>
         </div>
       </div>
       <div class="report-body" id="reportPrintArea">
+        <div class="dossier-classification-bar">
+          <span class="dossier-pill">CONFIDENTIAL // SECURITY ASSESSMENT</span>
+          <span class="dossier-case" id="reportCaseId">CASE #CT-2026-8941</span>
+          <span class="dossier-timestamp" id="reportDate">2026-10-22</span>
+        </div>
+
         <div class="report-meta-header">
           <div>
-            <h2>SIMULATED IDENTITY THREAT & RISK ASSESSMENT</h2>
-            <p>Target Identity: <strong id="reportTarget">alex.chen@cyber-demo.org</strong> | Date: 2026-10-20</p>
+            <h2>IDENTITY THREAT EXPOSURE & ADVERSARY PATH ASSESSMENT</h2>
+            <p>Target Identity: <strong id="reportTarget">alex.chen@cyber-demo.org</strong> | Scope: External Attack Surface & MITRE ATT&CK</p>
           </div>
           <div class="report-score-box">
-            <span>COMPOSITE RISK SCORE</span>
+            <span>COMPOSITE RISK POSTURE</span>
             <h1 id="reportScore">75/100</h1>
             <span class="badge-danger" id="reportPosture">HIGH RISK EXPOSURE</span>
           </div>
@@ -855,60 +924,74 @@ Subject: Urgent: Verify Account Immediately"></textarea>
 
         <hr class="report-divider">
 
-        <h3>1. Executive Summary</h3>
-        <p>
-          CyberTwin Max simulated multi-hop adversary attack paths chaining open-source breach intelligence and social engineering vulnerabilities. Without hardware-based MFA and domain authentication, the target identity is vulnerable to total account takeover across corporate and personal assets.
+        <h3>1. Executive Risk Summary</h3>
+        <p id="reportSummaryText">
+          CyberTwin Max simulated multi-hop adversary attack paths chaining real-world breach intelligence, credential stuffing, and session token hijacking. Without hardware-based MFA and domain authentication, the target identity is vulnerable to total account takeover across corporate and personal assets.
         </p>
 
-        <h3>2. Identified MITRE ATT&CK Attack Paths</h3>
+        <h3>2. Correlated Breach Telemetry & Leak History</h3>
+        <table class="report-table">
+          <thead>
+            <tr>
+              <th>Breach Source</th>
+              <th>Breach Date</th>
+              <th>Exposed Asset Type</th>
+              <th>Compromise Vector</th>
+            </tr>
+          </thead>
+          <tbody id="reportBreachesTbody">
+            <!-- Populated dynamically by app.js -->
+          </tbody>
+        </table>
+
+        <h3>3. Active MITRE ATT&CK® Kill-Chain Breakdown</h3>
         <table class="report-table">
           <thead>
             <tr>
               <th>Technique ID</th>
               <th>Adversary Tactic</th>
-              <th>Observed Evidence</th>
-              <th>Severing Control</th>
+              <th>Current Exposure Status</th>
+              <th>Required Defensive Countermeasure</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td><code>T1110.004</code></td>
-              <td>Credential Stuffing</td>
-              <td>Password hashes identified in 3 historical breach records</td>
-              <td>FIDO2 / WebAuthn Hardware MFA</td>
-            </tr>
-            <tr>
-              <td><code>T1566.002</code></td>
-              <td>Spearphishing Link</td>
-              <td>Unauthenticated sender spoofing + missing DMARC enforcement</td>
-              <td>DMARC p=reject policy + Anti-Phishing Training</td>
-            </tr>
-            <tr>
-              <td><code>T1078</code></td>
-              <td>Valid Accounts</td>
-              <td>Credential reuse across personal/cloud accounts</td>
-              <td>Unique 16+ Char Passphrases</td>
-            </tr>
-            <tr>
-              <td><code>T1111</code></td>
-              <td>MFA Interception</td>
-              <td>SMS fallback interception on recovery phone number</td>
-              <td>Carrier Port-Out PIN Freeze</td>
-            </tr>
+          <tbody id="reportMitreTbody">
+            <!-- Populated dynamically by app.js -->
           </tbody>
         </table>
 
-        <h3>3. Prioritized Remediation Roadmap (All 4 Defenses)</h3>
-        <ol class="report-remediation-list">
-          <li><strong>Immediate (24 hrs):</strong> Deploy hardware security keys (FIDO2) or biometric passkeys across core identity providers.</li>
-          <li><strong>Short-Term (7 days):</strong> Force password rotation using an enterprise/personal password manager with unique 16+ character passphrases.</li>
-          <li><strong>Medium-Term (30 days):</strong> Configure DMARC <code>p=reject</code> with DKIM signing to protect organizational sender reputation.</li>
-          <li><strong>Proactive Cellular:</strong> Enable carrier account Port-Out Freeze PIN to prevent fraudulent SIM-swap SMS interception.</li>
+        <h3>4. Prioritized Incident Remediation Roadmap</h3>
+        <ol class="report-remediation-list" id="reportRemediationList">
+          <!-- Populated dynamically by app.js -->
         </ol>
 
         <div class="report-sign-off">
-          <div>Assessment Engine: <strong>CyberTwin Max Automated Diagnostic (Educational Simulation)</strong></div>
-          <div>Framework Verification: <strong>Mapped to MITRE ATT&CK® Enterprise Knowledge Base</strong></div>
+          <div>Assessment Engine: <strong>CyberTwin Max Automated Diagnostic Engine v5.5</strong></div>
+          <div>Framework Verification: <strong>Mapped to MITRE ATT&CK® Enterprise v14 & NIST SP 800-63B</strong></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Biometric WebAuthn Passkey Handshake Simulation -->
+  <div class="modal-backdrop" id="biometricScannerModal">
+    <div class="modal-card biometric-modal-card">
+      <div class="biometric-scan-container">
+        <div class="biometric-fingerprint-wrapper">
+          <svg class="biometric-fingerprint-svg" viewBox="0 0 100 120">
+            <path d="M50 15 A 35 35 0 0 0 20 50 A 40 40 0 0 0 25 75" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" />
+            <path d="M50 25 A 25 25 0 0 0 30 50 A 30 30 0 0 0 35 85" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" />
+            <path d="M50 35 A 15 15 0 0 0 40 50 A 20 20 0 0 0 45 95" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" />
+            <path d="M50 45 A 5 5 0 0 0 50 55 A 10 10 0 0 0 52 105" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" />
+            <path d="M50 15 A 35 35 0 0 1 80 50 A 40 40 0 1 75 75" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" />
+            <path d="M50 25 A 25 25 0 0 1 70 50 A 30 30 0 0 1 65 85" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" />
+            <path d="M50 35 A 15 15 0 0 1 60 50 A 20 20 0 0 1 55 95" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" />
+          </svg>
+          <div class="biometric-laser-line"></div>
+        </div>
+        <h3 class="biometric-title">WebAuthn / FIDO2 Challenge</h3>
+        <p class="biometric-status" id="biometricStatusText">Simulating hardware biometric passkey handshake...</p>
+        <div class="biometric-progress-bar">
+          <div class="biometric-progress-fill" id="biometricProgressFill"></div>
         </div>
       </div>
     </div>
@@ -1084,7 +1167,7 @@ Subject: Urgent: Verify Account Immediately"></textarea>
     </div>
   </aside>
 
-  <script src="app.js?v=5.4"></script>
+  <script src="app.js?v=5.5"></script>
 </body>
 </html>
 

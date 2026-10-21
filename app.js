@@ -29,6 +29,9 @@ const state = {
     dmarc: false,
     sim: false
   },
+  isolatedBlastAccounts: {},
+  selectedBlastNodeId: null,
+  remediationRunning: false,
   dazyMood: 'idle', // 'idle', 'scared', 'shielded', 'celebrate'
   terminalRunning: false
 };
@@ -603,6 +606,476 @@ function showNodeInspector(mitreId) {
   drawer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
+// ========================================================
+// 🌐 IDENTITY BLAST-RADIUS & LATERAL MOVEMENT ENGINE
+// ========================================================
+const blastAccountsMeta = {
+  google: {
+    name: 'Google Workspace / Core SSO',
+    badge: 'CORE IDENTITY',
+    desc: 'Primary identity provider holding single sign-on federation. Compromise yields access to corporate drive and email.',
+    exposure: 'Critical SSO Session Hijack Risk',
+    mitigation: 'Enforce hardware WebAuthn passkey & invalidate session cookies.'
+  },
+  aws: {
+    name: 'AWS Production Cloud IAM',
+    badge: 'CLOUD INFRASTRUCTURE',
+    desc: 'Production cloud environment federated via corporate Google SSO. Attacker can assume administrative roles.',
+    exposure: 'Catastrophic Cloud Takeover & API Key Exfiltration',
+    mitigation: 'Revoke active IAM STS sessions & enforce IAM MFA.'
+  },
+  github: {
+    name: 'GitHub Enterprise Org',
+    badge: 'DEVOPS / SOURCE CODE',
+    desc: 'Source code repositories and CI/CD deployment pipelines authenticated via OAuth / SSO.',
+    exposure: 'Proprietary Source Code Theft & Pipeline Poisoning',
+    mitigation: 'Revoke compromised OAuth tokens & audit deploy keys.'
+  },
+  slack: {
+    name: 'Corporate Slack Workspace',
+    badge: 'INTERNAL COMMS',
+    desc: 'Internal corporate communications and incident channels accessed through federated session token.',
+    exposure: 'Internal Spearphishing & Sensitive Channel Recon',
+    mitigation: 'Sign out all active device sessions in Slack Admin Console.'
+  },
+  bank: {
+    name: 'Mobile Banking & Financial Portals',
+    badge: 'FINANCIAL ASSET',
+    desc: 'Online banking accounts linked via email recovery and phone number SMS 2FA.',
+    exposure: 'Direct Financial Fraud via SMS / Recovery Intercept',
+    mitigation: 'Switch recovery channel away from SMS to physical hardware key.'
+  },
+  carrier: {
+    name: 'Cellular Carrier Account',
+    badge: 'TELCO PROFILE',
+    desc: 'Mobile subscriber profile governing cellular SIM routing and SMS delivery.',
+    exposure: 'Carrier Port-Out / Fraudulent SIM-Swap Target',
+    mitigation: 'Enable Carrier Port Freeze PIN with cellular operator.'
+  }
+};
+
+function getBlastRadiusData() {
+  const email = state.targetEmail || 'alex.chen@cyber-demo.org';
+  const isClean = state.isCleanTarget === true;
+  const hasLeak = !isClean && (state.hasPasswordLeak !== false);
+  const hasPhone = state.hasPhoneLeak === true || state.currentScenario === 'sim-swap';
+
+  const nodes = [
+    { id: 'central', name: email, type: 'central', x: 440, y: 170, icon: '👤', status: isClean ? 'clean' : 'target' },
+    { id: 'google', name: 'Google SSO', type: 'satellite', x: 230, y: 75, icon: '🔑', status: isClean ? 'clean' : (state.isolatedBlastAccounts['google'] ? 'isolated' : (hasLeak ? 'compromised' : 'clean')) },
+    { id: 'aws', name: 'AWS Cloud IAM', type: 'satellite', x: 80, y: 170, icon: '☁️', status: isClean ? 'clean' : (state.isolatedBlastAccounts['aws'] ? 'isolated' : (hasLeak ? 'compromised' : 'clean')) },
+    { id: 'github', name: 'GitHub Org', type: 'satellite', x: 230, y: 265, icon: '🐙', status: isClean ? 'clean' : (state.isolatedBlastAccounts['github'] ? 'isolated' : (hasLeak ? 'compromised' : 'clean')) },
+    { id: 'slack', name: 'Corporate Slack', type: 'satellite', x: 650, y: 75, icon: '💬', status: isClean ? 'clean' : (state.isolatedBlastAccounts['slack'] ? 'isolated' : (hasLeak ? 'compromised' : 'clean')) },
+    { id: 'bank', name: 'Banking / PayPal', type: 'satellite', x: 800, y: 170, icon: '🏦', status: isClean ? 'clean' : (state.isolatedBlastAccounts['bank'] ? 'isolated' : (hasPhone ? 'compromised' : 'clean')) },
+    { id: 'carrier', name: 'Cellular Carrier', type: 'satellite', x: 650, y: 265, icon: '📱', status: isClean ? 'clean' : (state.isolatedBlastAccounts['carrier'] ? 'isolated' : (hasPhone ? 'compromised' : 'clean')) }
+  ];
+
+  const edges = [
+    { from: 'central', to: 'google', id: 'e_google' },
+    { from: 'google', to: 'aws', id: 'e_aws' },
+    { from: 'google', to: 'github', id: 'e_github' },
+    { from: 'central', to: 'slack', id: 'e_slack' },
+    { from: 'carrier', to: 'bank', id: 'e_bank' },
+    { from: 'central', to: 'carrier', id: 'e_carrier' }
+  ];
+
+  return { nodes, edges };
+}
+
+function renderBlastRadiusMap() {
+  const blastEdgesGroup = document.getElementById('blastEdgesGroup');
+  const blastNodesGroup = document.getElementById('blastNodesGroup');
+  if (!blastEdgesGroup || !blastNodesGroup) return;
+
+  blastEdgesGroup.innerHTML = '';
+  blastNodesGroup.innerHTML = '';
+
+  const { nodes, edges } = getBlastRadiusData();
+
+  // 1. Draw Blast Edges
+  edges.forEach(edge => {
+    const fromNode = nodes.find(n => n.id === edge.from);
+    const toNode = nodes.find(n => n.id === edge.to);
+    if (!fromNode || !toNode) return;
+
+    const isIsolated = state.isolatedBlastAccounts[toNode.id];
+    const isCompromised = toNode.status === 'compromised';
+
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    const d = `M ${fromNode.x} ${fromNode.y} L ${toNode.x} ${toNode.y}`;
+    path.setAttribute('d', d);
+
+    let edgeClass = 'blast-edge';
+    if (isIsolated) {
+      edgeClass += ' isolated';
+    } else if (isCompromised) {
+      edgeClass += ' active-threat';
+    } else {
+      edgeClass += ' clean';
+    }
+    path.setAttribute('class', edgeClass);
+    blastEdgesGroup.appendChild(path);
+  });
+
+  // 2. Draw Blast Nodes
+  nodes.forEach(node => {
+    const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    g.setAttribute('class', 'blast-node');
+    g.setAttribute('transform', `translate(${node.x}, ${node.y})`);
+    g.onclick = () => showBlastNodeInspector(node.id);
+
+    if (node.type === 'central') {
+      // Central Identity Circle
+      const aura = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      aura.setAttribute('r', '42');
+      aura.setAttribute('fill', 'rgba(56, 189, 248, 0.12)');
+      aura.setAttribute('stroke', 'var(--cyber-cyan)');
+      aura.setAttribute('stroke-width', '1.5');
+      aura.setAttribute('stroke-dasharray', '4 3');
+      g.appendChild(aura);
+
+      const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      circle.setAttribute('r', '32');
+      circle.setAttribute('class', 'blast-node-box central');
+      g.appendChild(circle);
+
+      const icon = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      icon.setAttribute('text-anchor', 'middle');
+      icon.setAttribute('y', '6');
+      icon.setAttribute('font-size', '20');
+      icon.textContent = node.icon;
+      g.appendChild(icon);
+
+      const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      label.setAttribute('text-anchor', 'middle');
+      label.setAttribute('y', '54');
+      label.setAttribute('class', 'node-name-text');
+      label.setAttribute('font-size', '11');
+      label.textContent = node.name.length > 20 ? node.name.slice(0, 18) + '...' : node.name;
+      g.appendChild(label);
+    } else {
+      // Satellite Account Box
+      const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      rect.setAttribute('x', '-65');
+      rect.setAttribute('y', '-25');
+      rect.setAttribute('width', '130');
+      rect.setAttribute('height', '50');
+      rect.setAttribute('rx', '8');
+      rect.setAttribute('ry', '8');
+
+      let boxClass = 'blast-node-box';
+      if (node.status === 'isolated') boxClass += ' isolated';
+      else if (node.status === 'compromised') boxClass += ' compromised';
+      else boxClass += ' clean';
+      rect.setAttribute('class', boxClass);
+      g.appendChild(rect);
+
+      // Icon & Name
+      const icon = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      icon.setAttribute('x', '-50');
+      icon.setAttribute('y', '6');
+      icon.setAttribute('font-size', '16');
+      icon.textContent = node.icon;
+      g.appendChild(icon);
+
+      const title = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      title.setAttribute('x', '-25');
+      title.setAttribute('y', '-2');
+      title.setAttribute('class', 'node-name-text');
+      title.setAttribute('font-size', '11');
+      title.setAttribute('font-weight', '700');
+      title.textContent = node.name;
+      g.appendChild(title);
+
+      const statusText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      statusText.setAttribute('x', '-25');
+      statusText.setAttribute('y', '15');
+      statusText.setAttribute('class', 'node-tag-text');
+      statusText.setAttribute('font-size', '9');
+      if (node.status === 'isolated') {
+        statusText.textContent = '🛡️ ISOLATED';
+        statusText.setAttribute('fill', 'var(--cyber-mint)');
+      } else if (node.status === 'compromised') {
+        statusText.textContent = '🚨 AT RISK';
+        statusText.setAttribute('fill', '#f43f5e');
+      } else {
+        statusText.textContent = '🛡️ SECURE';
+        statusText.setAttribute('fill', 'var(--cyber-cyan)');
+      }
+      g.appendChild(statusText);
+    }
+
+    blastNodesGroup.appendChild(g);
+  });
+}
+
+function showBlastNodeInspector(nodeId) {
+  if (nodeId === 'central') return;
+  const meta = blastAccountsMeta[nodeId];
+  if (!meta) return;
+
+  state.selectedBlastNodeId = nodeId;
+  sfx.playClick();
+
+  const drawer = document.getElementById('blastInspectorDrawer');
+  const badge = document.getElementById('blastNodeBadge');
+  const title = document.getElementById('blastNodeTitle');
+  const desc = document.getElementById('blastNodeDesc');
+  const exposure = document.getElementById('blastNodeExposure');
+  const mitigation = document.getElementById('blastNodeMitigation');
+  const btnIsolate = document.getElementById('btnIsolateBlastAccount');
+
+  if (badge) badge.textContent = meta.badge;
+  if (title) title.textContent = meta.name;
+  if (desc) desc.textContent = meta.desc;
+  if (exposure) exposure.textContent = meta.exposure;
+  if (mitigation) mitigation.textContent = meta.mitigation;
+
+  const isIsolated = Boolean(state.isolatedBlastAccounts[nodeId]);
+  if (btnIsolate) {
+    btnIsolate.textContent = isIsolated ? '🔓 Re-Enable Account Link' : '🛡️ Isolate This Account';
+    btnIsolate.className = isIsolated ? 'btn-tool-action secondary' : 'btn-tool-action';
+  }
+
+  drawer?.classList.add('active');
+  drawer?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function isolateBlastAccount(nodeId) {
+  state.isolatedBlastAccounts[nodeId] = !state.isolatedBlastAccounts[nodeId];
+  const isIsolated = state.isolatedBlastAccounts[nodeId];
+  sfx.playShieldDeflect();
+
+  renderBlastRadiusMap();
+  showBlastNodeInspector(nodeId);
+
+  const meta = blastAccountsMeta[nodeId];
+  const terminal = document.getElementById('terminalBody');
+  if (terminal && meta) {
+    const now = new Date();
+    const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+    const line = document.createElement('div');
+    if (isIsolated) {
+      line.className = 'terminal-line success';
+      line.innerHTML = `<span class="prompt">[${timeStr} BLAST-RADIUS]</span> 🛡️ ACCOUNT ISOLATED: <strong>${meta.name}</strong> lateral link severed. Blast boundary locked.`;
+    } else {
+      line.className = 'terminal-line alert';
+      line.innerHTML = `<span class="prompt">[${timeStr} BLAST-RADIUS]</span> ⚠️ ACCOUNT RE-ENABLED: <strong>${meta.name}</strong> lateral pathway restored.`;
+    }
+    terminal.appendChild(line);
+    terminal.scrollTop = terminal.scrollHeight;
+  }
+}
+
+// ========================================================
+// ⚡ 1-CLICK AUTO-REMEDIATION SANDBOX ENGINE
+// ========================================================
+async function runAutoRemediationSandbox() {
+  if (state.remediationRunning) return;
+  state.remediationRunning = true;
+  sfx.playFanfare();
+
+  const terminal = document.getElementById('terminalBody');
+  const appendTerminal = (text, type = 'info') => {
+    if (!terminal) return;
+    const now = new Date();
+    const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+    const line = document.createElement('div');
+    line.className = `terminal-line ${type}`;
+    line.innerHTML = `<span class="prompt">[${timeStr} IR-AUTOMATION]</span> ${text}`;
+    terminal.appendChild(line);
+    terminal.scrollTop = terminal.scrollHeight;
+  };
+
+  appendTerminal("⚡ <strong>AUTONOMOUS INCIDENT RESPONSE ENGAGED</strong>: Initiating threat path remediation drill...", "info");
+  setDazyMood('shielded', "Autonomous incident response drill engaged! Watch CyberTwin sever all threats step-by-step!", true);
+
+  // Stage 1: Leaked Session Invalidation & Password Manager (0.7s)
+  await new Promise(r => setTimeout(r, 700));
+  state.defenses.passManager = true;
+  const cbPass = document.getElementById('togglePassManager');
+  if (cbPass) cbPass.checked = true;
+  sfx.playShieldDeflect();
+  updateRiskPosture();
+  appendTerminal("🛡️ <strong>STAGE 1 COMPLETE:</strong> Active browser cookies invalidated. Compromised passwords rotated to 20-character keys (T1078 Severed).", "success");
+
+  // Stage 2: Biometric WebAuthn Passkey Handshake Simulation (1.2s)
+  await new Promise(r => setTimeout(r, 800));
+  const bioModal = document.getElementById('biometricScannerModal');
+  const bioStatus = document.getElementById('biometricStatusText');
+  const bioFill = document.getElementById('biometricProgressFill');
+  if (bioModal) {
+    bioModal.classList.add('active');
+    if (bioStatus) bioStatus.textContent = "FIDO2 Challenge: Presenting biometric thumbprint...";
+    if (bioFill) bioFill.style.width = "40%";
+    
+    await new Promise(r => setTimeout(r, 600));
+    if (bioStatus) bioStatus.textContent = "Cryptographic Origin Handshake: Verified ✅";
+    if (bioFill) bioFill.style.width = "100%";
+    sfx.playFanfare();
+
+    await new Promise(r => setTimeout(r, 500));
+    bioModal.classList.remove('active');
+    if (bioFill) bioFill.style.width = "0%";
+  }
+
+  state.defenses.mfa = true;
+  const cbMfa = document.getElementById('toggleMfa');
+  if (cbMfa) cbMfa.checked = true;
+  sfx.playShieldDeflect();
+  updateRiskPosture();
+  appendTerminal("🛡️ <strong>STAGE 2 COMPLETE:</strong> WebAuthn Passkey Handshake Verified. Automated credential spray blocked at gateway (T1110.004 Severed).", "success");
+
+  // Stage 3: DMARC Policy & Carrier Port-Out Freeze (0.7s)
+  await new Promise(r => setTimeout(r, 700));
+  state.defenses.dmarc = true;
+  state.defenses.simPin = true;
+  const cbDmarc = document.getElementById('toggleDmarc');
+  const cbSim = document.getElementById('toggleSimPin');
+  if (cbDmarc) cbDmarc.checked = true;
+  if (cbSim) cbSim.checked = true;
+  sfx.playShieldDeflect();
+  updateRiskPosture();
+  appendTerminal("🛡️ <strong>STAGE 3 COMPLETE:</strong> Strict DMARC p=reject quarantine active. Cellular carrier port freeze PIN engaged (T1566 & T1111 Severed).", "success");
+
+  // Stage 4: Isolate All Blast Radius Assets & Neutralize Takeover
+  await new Promise(r => setTimeout(r, 600));
+  state.isolatedBlastAccounts = { google: true, aws: true, github: true, slack: true, bank: true, carrier: true };
+  renderBlastRadiusMap();
+  updateRiskPosture();
+
+  appendTerminal("🎯 <strong>KILL-CHAIN COMPLETELY NEUTRALIZED!</strong> Account Takeover (T1098) Blocked. Risk Score dropped to 0%.", "success");
+  setDazyMood('celebrate', "Hooray! The automated remediation drill was 100% successful! All attack paths are severed and your identity is completely safe!", true);
+
+  state.remediationRunning = false;
+}
+
+// ========================================================
+// 📋 EXECUTIVE CISO THREAT INTELLIGENCE DOSSIER GENERATOR
+// ========================================================
+function updateThreatDossierContent() {
+  const email = state.targetEmail || 'alex.chen@cyber-demo.org';
+  const isClean = state.isCleanTarget === true;
+  const score = state.riskScore !== undefined ? state.riskScore : 75;
+  const breaches = (state.currentBreaches && state.currentBreaches.length > 0)
+    ? state.currentBreaches
+    : (email.includes('alex') ? ['LinkedIn (2012)', 'Adobe (2013)', 'Canva (2019)'] : []);
+
+  // Update Metadata
+  const caseEl = document.getElementById('reportCaseId');
+  const dateEl = document.getElementById('reportDate');
+  const targetEl = document.getElementById('reportTarget');
+  const scoreEl = document.getElementById('reportScore');
+  const postureEl = document.getElementById('reportPosture');
+  const summaryEl = document.getElementById('reportSummaryText');
+
+  if (caseEl) caseEl.textContent = `CASE #CT-2026-${Math.abs(email.split('').reduce((a,c)=>a+c.charCodeAt(0), 1000)) % 9000 + 1000}`;
+  if (dateEl) dateEl.textContent = new Date().toISOString().split('T')[0];
+  if (targetEl) targetEl.textContent = email;
+  if (scoreEl) scoreEl.textContent = `${score}/100`;
+
+  if (postureEl) {
+    if (score < 40) {
+      postureEl.textContent = 'HARDENED POSTURE (SECURED)';
+      postureEl.className = 'badge-safe';
+    } else if (score < 70) {
+      postureEl.textContent = 'MODERATE EXPOSURE';
+      postureEl.className = 'badge-warning';
+    } else {
+      postureEl.textContent = 'HIGH RISK EXPOSURE';
+      postureEl.className = 'badge-danger';
+    }
+  }
+
+  if (summaryEl) {
+    if (isClean) {
+      summaryEl.textContent = `CyberTwin Max simulated comprehensive adversarial attack paths against ${email}. Analysis of open-source intelligence and global credential exposure indexes confirmed 0 compromises. Baseline protection and proactive defenses are currently effective.`;
+    } else {
+      summaryEl.textContent = `CyberTwin Max correlated ${breaches.length} confirmed third-party breach incidents for target identity ${email}. Adversary emulation demonstrated chained credential reuse, session hijacking, and account takeover vulnerabilities prior to defensive severance.`;
+    }
+  }
+
+  // Populate Breach Table
+  const breachesTbody = document.getElementById('reportBreachesTbody');
+  if (breachesTbody) {
+    if (isClean || breaches.length === 0) {
+      breachesTbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--cyber-mint); padding:1rem; font-weight:600;">🛡️ Zero public leak records detected in global threat intelligence telemetry. Clean digital twin.</td></tr>`;
+    } else {
+      breachesTbody.innerHTML = breaches.map(b => {
+        const yearMatch = b.match(/\((\d{4})\)/);
+        const year = yearMatch ? yearMatch[1] : 'Archived';
+        const name = b.replace(/\s*\(\d+\)/, '');
+        return `
+          <tr>
+            <td><strong>${name}</strong></td>
+            <td><code>${year}</code></td>
+            <td>Password Hashes & Metadata</td>
+            <td>Automated Credential Spray (T1110)</td>
+          </tr>
+        `;
+      }).join('');
+    }
+  }
+
+  // Populate MITRE Kill-Chain Table
+  const mitreTbody = document.getElementById('reportMitreTbody');
+  if (mitreTbody) {
+    const { nodes, edges } = getDynamicGraphData();
+    const { nodeSevered } = computeSeverance(nodes, edges);
+
+    mitreTbody.innerHTML = nodes.map(n => {
+      const isSev = nodeSevered[n.id];
+      const statusHtml = isSev 
+        ? '<span style="color:var(--cyber-mint); font-weight:700;">🛡️ SEVERED / DEFENDED</span>' 
+        : '<span style="color:#f43f5e; font-weight:700;">⚠️ ACTIVE COMPROMISE</span>';
+      
+      let countermeasure = 'Defense-in-depth posture monitoring.';
+      if (n.brokenBy === 'mfa') countermeasure = 'Enforce WebAuthn / FIDO2 Passkeys';
+      if (n.brokenBy === 'passManager') countermeasure = 'Force Unique 16+ Char Passphrases';
+      if (n.brokenBy === 'dmarc') countermeasure = 'Enforce Strict DMARC p=reject';
+      if (n.brokenBy === 'simPin') countermeasure = 'Configure Carrier Port-Out Freeze PIN';
+      if (n.isFinalTarget) countermeasure = 'Upstream Chained Defense Lockout';
+
+      return `
+        <tr>
+          <td><code>${n.mitre}</code></td>
+          <td>${n.name} (${n.tactic})</td>
+          <td>${statusHtml}</td>
+          <td>${countermeasure}</td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  // Populate Remediation List
+  const remList = document.getElementById('reportRemediationList');
+  if (remList) {
+    const mfaChecked = state.defenses.mfa;
+    const passChecked = state.defenses.passManager;
+    const dmarcChecked = state.defenses.dmarc;
+    const simChecked = state.defenses.simPin;
+
+    remList.innerHTML = `
+      <li>
+        <strong>Immediate (24 hrs) - Hardware WebAuthn Passkeys:</strong> Deploy physical security keys (FIDO2) or biometric device passkeys to invalidate credential stuffing.
+        ${mfaChecked ? '<span style="color:var(--cyber-mint); font-weight:700; margin-left:8px;">[✅ ENFORCED]</span>' : '<span style="color:#f43f5e; margin-left:8px;">[⏳ PENDING ACTION]</span>'}
+      </li>
+      <li>
+        <strong>Short-Term (7 days) - Password Manager Rotation:</strong> Rotate any reused passwords across primary cloud and developer portals with unique 20-character keys.
+        ${passChecked ? '<span style="color:var(--cyber-mint); font-weight:700; margin-left:8px;">[✅ ENFORCED]</span>' : '<span style="color:#f43f5e; margin-left:8px;">[⏳ PENDING ACTION]</span>'}
+      </li>
+      <li>
+        <strong>Medium-Term (30 days) - DMARC Anti-Spoofing:</strong> Publish DNS SPF, DKIM 2048-bit keys, and DMARC <code>p=reject</code> to eliminate inbound lookalike spoofing.
+        ${dmarcChecked ? '<span style="color:var(--cyber-mint); font-weight:700; margin-left:8px;">[✅ ENFORCED]</span>' : '<span style="color:#f43f5e; margin-left:8px;">[⏳ PENDING ACTION]</span>'}
+      </li>
+      <li>
+        <strong>Proactive Cellular - Carrier Port Freeze PIN:</strong> Add verbal password and port-out freeze PIN to subscriber profile with mobile carrier.
+        ${simChecked ? '<span style="color:var(--cyber-mint); font-weight:700; margin-left:8px;">[✅ ENFORCED]</span>' : '<span style="color:#f43f5e; margin-left:8px;">[⏳ PENDING ACTION]</span>'}
+      </li>
+    `;
+  }
+}
+
 // --- Recalculate Transparent Risk Formula (Exact Arithmetic Addition) ---
 function updateRiskPosture() {
   const isClean = state.isCleanTarget || false;
@@ -687,8 +1160,9 @@ function updateRiskPosture() {
     }
   }
 
-  // Sync with SVG graph
+  // Sync with SVG graphs
   renderAttackGraph();
+  renderBlastRadiusMap();
 }
 
 // --- Terminal Simulation Engine ---
@@ -2326,21 +2800,63 @@ document.addEventListener('DOMContentLoaded', () => {
   updatePasswordLab('Winter2023!');
   analyzePhishingText(document.getElementById('phishTextInput')?.value || '');
 
-  // Report Modal
+  // Report Modal / Executive Threat Dossier
   const reportModal = document.getElementById('reportModal');
-  document.getElementById('btnExportPdfTop')?.addEventListener('click', () => {
+  function openDossierModal() {
     sfx.playClick();
+    updateThreatDossierContent();
     reportModal?.classList.add('active');
-  });
-  document.getElementById('btnExportPdfBottom')?.addEventListener('click', () => {
-    sfx.playClick();
-    reportModal?.classList.add('active');
-  });
+  }
+  document.getElementById('btnExportPdfTop')?.addEventListener('click', openDossierModal);
+  document.getElementById('btnExportPdfBottom')?.addEventListener('click', openDossierModal);
+  document.getElementById('btnOpenDossier')?.addEventListener('click', openDossierModal);
   document.getElementById('btnCloseReport')?.addEventListener('click', () => {
     reportModal?.classList.remove('active');
   });
   document.getElementById('btnPrintReport')?.addEventListener('click', () => {
     window.print();
+  });
+
+  // Graph View Switcher (MITRE Attack Path vs Identity Blast Radius)
+  const btnViewAttack = document.getElementById('btnViewAttackPath');
+  const btnViewBlast = document.getElementById('btnViewBlastRadius');
+  const attackSvg = document.getElementById('attackGraphSvg');
+  const blastSvg = document.getElementById('blastRadiusSvg');
+
+  btnViewAttack?.addEventListener('click', () => {
+    sfx.playClick();
+    btnViewAttack.classList.add('active');
+    btnViewBlast?.classList.remove('active');
+    if (attackSvg) attackSvg.style.display = 'block';
+    if (blastSvg) blastSvg.style.display = 'none';
+    document.getElementById('blastInspectorDrawer')?.classList.remove('active');
+    renderAttackGraph();
+  });
+
+  btnViewBlast?.addEventListener('click', () => {
+    sfx.playClick();
+    btnViewBlast?.classList.add('active');
+    btnViewAttack?.classList.remove('active');
+    if (attackSvg) attackSvg.style.display = 'none';
+    if (blastSvg) blastSvg.style.display = 'block';
+    document.getElementById('nodeInspectorDrawer')?.classList.remove('active');
+    renderBlastRadiusMap();
+  });
+
+  // Auto-Remediation Sandbox Button
+  document.getElementById('btnAutoRemediate')?.addEventListener('click', () => {
+    runAutoRemediationSandbox();
+  });
+
+  // Blast Node Inspector Actions
+  document.getElementById('btnCloseBlastInspector')?.addEventListener('click', () => {
+    document.getElementById('blastInspectorDrawer')?.classList.remove('active');
+  });
+
+  document.getElementById('btnIsolateBlastAccount')?.addEventListener('click', () => {
+    if (state.selectedBlastNodeId) {
+      isolateBlastAccount(state.selectedBlastNodeId);
+    }
   });
 
   // STRIDE Modal
