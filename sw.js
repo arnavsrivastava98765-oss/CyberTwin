@@ -1,5 +1,5 @@
 // CyberTwin Max - Offline PWA Service Worker
-const CACHE_NAME = 'cybertwin-v4.1';
+const CACHE_NAME = 'cybertwin-v5.0-dark';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -25,6 +25,7 @@ self.addEventListener('activate', (e) => {
     caches.keys().then((keys) => {
       return Promise.all(
         keys.map((k) => {
+          
           if (k !== CACHE_NAME) return caches.delete(k);
         })
       );
