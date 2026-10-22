@@ -3131,33 +3131,34 @@ const dazyTourSteps = [
     step: 1,
     title: "✨ Welcome to CyberTwin Max",
     targetSelector: null,
-    speech: "Welcome to CyberTwin! I'm Dazy, your floating cyber companion! Unlike static breach checkers that only show scary lists, CyberTwin simulates how adversaries actually chain leaked credentials and phishing into full account takeovers — and teaches you how to break the chain with Defense-in-Depth!",
+    speech: "Welcome to CyberTwin! I'm Dazy, your floating cyber companion! Unlike static breach checkers that only show scary lists, CyberTwin creates an interactive digital twin of your online identity. We model how hackers chain leaked credentials and phishing into full account takeovers — and teach you how to break the chain with Defense-in-Depth!",
     html: `<strong>✨ Welcome to CyberTwin Max!</strong><br>
-I'm <strong>Dazy</strong>, your floating cyber companion! 🌸<br><br>
-CyberTwin is an interactive cybersecurity digital twin. It models how adversaries chain disparate breach leaks into an attack path, maps every step to <strong>MITRE ATT&CK</strong>, and shows how <strong>Defense-in-Depth</strong> severs the chain.<br><br>
-<span class="dazy-tour-tip">💡 Tip: Use 'Next' or the dropdown above to learn about every feature!</span>`
+I'm <strong>Dazy</strong>, your floating cyber guardian companion! 🌸<br><br>
+CyberTwin creates a realistic <strong>Digital Twin</strong> of your digital identity. Instead of just listing past leaks, it simulates how real adversaries chain stolen credentials, phishing, and SSO session hijacking into full account takeovers — and teaches you how to stop them.<br><br>
+<span class="dazy-tour-tip">💡 Tip: Use 'Next' or the dropdown above to learn about all 12 functions!</span>`
   },
   {
     step: 2,
-    title: "⚡ Top Controls & Judge Mode",
+    title: "⚡ Navigation, Themes & Judge Mode",
     targetSelector: ".header-controls",
-    speech: "Up here in the top navigation are your primary controls! 'Judge Mode' is a one-click preset for competitions that instantly loads a realistic three-breach attack graph without typing personal data. You can also toggle between Red Team and Blue Team, and switch my cute voice on or off!",
-    html: `<strong>⚡ Navigation & Judge Controls:</strong><br>
-• <strong>Judge Mode (Alex Chen):</strong> 1-click evaluation preset that instantly loads Alex's preconfigured breach history and attack graph in under 2 seconds.<br>
+    speech: "Up here in the top navigation are your primary controls! You can toggle between sleek Pitch Black and Soft Cyberpunk themes, switch between Red Team exploit scripts and Blue Team defense telemetry, turn my cute voice on or off, and click Judge Mode to instantly test as Alex Chen with zero setup!",
+    html: `<strong>⚡ Navigation, Themes & Controls:</strong><br>
+• <strong>Judge Mode (Alex Chen):</strong> 1-click evaluation preset that instantly loads Alex's breach history and attack graph in under 2 seconds.<br>
 • <strong>🔴 Red / 🔵 Blue Switch:</strong> Flips the entire twin between attacker exploit scripts and SOC defensive telemetry.<br>
-• <strong>🔊 Dazy Voice:</strong> Toggles my synthesized cute voice lines on or off.<br>
-• <strong>Risk Score Circle:</strong> Live composite posture gauge (0–100).`
+• <strong>🎨 Theme Switcher:</strong> Switch between sleek Pitch Black (Linear/Vercel style) and Soft Cyberpunk.<br>
+• <strong>🔊 Dazy Voice:</strong> Toggles my synthesized cute speech on or off.<br>
+• <strong>Risk Score Circle:</strong> Real-time composite posture gauge (0–100).`
   },
   {
     step: 3,
-    title: "📧 Universal Threat Scanner",
+    title: "📧 Universal Live Threat Scanner",
     targetSelector: ".email-scanner-hero",
-    speech: "This is the Identity Threat Scanner! You can enter any email address or username to simulate exposures in real time. We use pure client-side k-anonymity with zero data logging, so no personal passwords or emails are ever saved. You can also click the quick presets for instant testing!",
-    html: `<strong>📧 Identity Threat Scanner:</strong><br>
-• <strong>Universal Search:</strong> Type any email address or ID to evaluate breach intelligence in real time.<br>
+    speech: "This is the Identity Threat Scanner! You can type in any email address to query live worldwide breach intelligence via XposedOrNot. It checks for exposed passwords and recent breaches with zero data logging to protect your privacy, or you can use our built-in persona presets for instant testing!",
+    html: `<strong>📧 Identity Threat Scanner & Privacy:</strong><br>
+• <strong>Universal Live Search:</strong> Enter any email to query global breach intelligence via XposedOrNot in real time.<br>
 • <strong>Zero-Trust Privacy:</strong> 100% ephemeral processing. Passwords and emails are NEVER stored or logged.<br>
 • <strong>Quick Presets:</strong> Test <em>Alex Chen</em> (3 leaks), <em>Sarah Dev</em> (clean / 0 leaks), or <em>CEO Target</em> (critical).<br>
-• <strong>Live Results Card:</strong> Displays compromised databases, leaked password hashes, and initial attack vectors.`
+• <strong>Live Results Card:</strong> Shows correlated breach databases, leaked credentials, and initial adversary entry vectors.`
   },
   {
     step: 4,
@@ -3166,18 +3167,18 @@ CyberTwin is an interactive cybersecurity digital twin. It models how adversarie
     speech: "This animated terminal demonstrates real-world adversary execution! Click 'Run Simulation' to watch live command-line attacks. You can switch between Credential Stuffing, Phishing Takeover, and SIM-Swap. When in Blue Team mode, it displays SOC alerts, Sigma rules, and detection telemetry!",
     html: `<strong>💻 Attack Simulator Terminal:</strong><br>
 • <strong>▶ Run Simulation:</strong> Animates an attacker executing credential spray attacks, port scans, and session hijacks.<br>
-• <strong>Scenario Switcher:</strong> Switch between 3 real attack vectors: <em>Credential Stuffing (T1110.004)</em>, <em>Phishing (T1566)</em>, and <em>SIM-Swap (T1111)</em>.<br>
-• <strong>Dual Mode Telemetry:</strong> In Red mode, see live exploit commands; in Blue mode, see SIEM detection logs and YARA/Sigma rules!`
+• <strong>Scenario Switcher:</strong> Switch between 3 attack vectors: <em>Credential Stuffing (T1110.004)</em>, <em>Phishing (T1566)</em>, and <em>SIM-Swap (T1111)</em>.<br>
+• <strong>Dual Mode Telemetry:</strong> In Red mode, see live exploit commands; in Blue mode, see SIEM detection logs and Sigma defense rules!`
   },
   {
     step: 5,
     title: "🛡️ MITRE ATT&CK Attack Graph",
     targetSelector: ".attack-graph-card",
-    speech: "This is the heart of CyberTwin: the interactive MITRE ATT&CK attack graph! It maps how an attacker progresses step-by-step from initial phishing to credential access and full session takeover. Click on any node circle to inspect technical adversary details, detection logs, and remediations!",
+    speech: "This is the core of CyberTwin: the interactive MITRE ATT&CK attack graph! It maps how an attacker progresses step-by-step from initial phishing to credential access and full session takeover. Click on any node circle to inspect technical adversary details, detection logs, and remediations!",
     html: `<strong>🛡️ MITRE ATT&CK Attack Graph:</strong><br>
 • <strong>Multi-Hop Attack Path:</strong> Shows how an adversary chains Initial Access (T1566 Phishing) ➔ Credential Access (T1078 Leaked Hashes) ➔ Lateral Movement (T1539 Session Hijack).<br>
 • <strong>Interactive Node Inspector:</strong> Click any circular node to view official MITRE ATT&CK technique IDs, detection telemetry, and mitigation guides.<br>
-• <strong>Visual Legend:</strong> Pink = Compromised, Green = Severed, Blue = Inactive.`
+• <strong>Visual Status:</strong> Pink = Compromised, Green = Severed by Defense, Blue = Inactive.`
   },
   {
     step: 6,
@@ -3192,19 +3193,40 @@ CyberTwin is an interactive cybersecurity digital twin. It models how adversarie
   },
   {
     step: 7,
+    title: "💥 Identity Blast Radius & SSO",
+    targetSelector: ".attack-graph-card",
+    speech: "Here is one of our newest enterprise features: the Identity Blast Radius Map! Click 'Identity Blast Radius' above the graph to see how a stolen identity spreads laterally. Stolen Single Sign-On tokens let adversaries pivot into Google Workspace, AWS, GitHub, Slack, and Banking! Click any node and choose 'Isolate Account' to revoke its session tokens!",
+    html: `<strong>💥 Identity Blast Radius & Lateral Movement:</strong><br>
+• <strong>SAML SSO Pivot Map:</strong> Visualizes how one compromised corporate identity enables lateral movement across interconnected SaaS services.<br>
+• <strong>Monitored Cloud Assets:</strong> Tracks Google Workspace, AWS Production, GitHub Enterprise, Slack, Corporate Banking, and Carrier accounts.<br>
+• <strong>🛡️ Interactive Isolation:</strong> Click any asset node and choose <em>'Isolate This Account'</em> to immediately sever active SSO federation!`
+  },
+  {
+    step: 8,
+    title: "⚡ 1-Click Auto Remediation",
+    targetSelector: ".graph-primary-actions",
+    speech: "Want to see autonomous defense in action? Click 'Run Auto-Remediation Sandbox'! It runs a live 4-stage automated incident response drill: invalidating browser cookies, completing a biometric WebAuthn passkey handshake, enforcing DMARC, freezing carrier ports, and dropping your risk score straight to 0%!",
+    html: `<strong>⚡ 1-Click Auto-Remediation Sandbox:</strong><br>
+• <strong>4-Stage Automated Drill:</strong> Executes automated incident response across all four defensive layers in seconds.<br>
+• <strong>Biometric Passkey Challenge:</strong> Simulates a real-time cryptographic WebAuthn biometric thumbprint handshake.<br>
+• <strong>Kill-Chain Neutralization:</strong> Invalidates stolen cookies, rotates credentials to 20-character vaults, and sets strict DMARC.<br>
+• <strong>Instant 0% Risk:</strong> Watch the risk gauge plunge to 0% as all lateral attack vectors are locked down!`
+  },
+  {
+    step: 9,
     title: "📐 Transparent Risk Formula",
     targetSelector: ".formula-card",
     speech: "CyberTwin calculates risk posture using a completely transparent arithmetic formula, not an arbitrary black-box percentage! It weights leaked password hashes, breach recency, phishing vulnerability, and missing MFA, and immediately subtracts points for each defense you deploy!",
     html: `<strong>📐 Transparent Risk Formula:</strong><br>
 • <strong>Exact Arithmetic:</strong> Calculated as: <code>(Leaked Hashes + Breach Recency + Phishing Vulnerability + Missing MFA) - Active Defenses</code>.<br>
 • <strong>Visible Weights:</strong> Plaintext/hash leaks (+30), recent breaches (+15), unmitigated phishing (+25), missing MFA (+20).<br>
-• <strong>Dynamic Recalculation:</strong> Drops automatically towards 0 as you activate defense-in-depth controls.`
+• <strong>Deterministic Scoring:</strong> Drops automatically towards 0 as you activate defense-in-depth controls.`
   },
   {
-    step: 8,
+    step: 10,
     title: "🔬 Defensive Forensic Labs",
     targetSelector: ".tools-section",
-    speech: "Below the main twin are three deep-dive forensic labs! The Email Header Analyzer parses SPF, DKIM, and DMARC hops. The Lookalike Link Checker detects typosquatting and homoglyph attacks using Levenshtein distance. And the Password Lab tests entropy and checks breach leaks using safe k-anonymity SHA-1 prefixes!",
+    speech: "Below the main twin are deep-dive forensic labs! The Email Header Analyzer parses SPF, DKIM, and DMARC hops. The Lookalike Link Checker detects typosquatting and homoglyphs with Levenshtein distance. And the Password Lab tests entropy and checks breach leaks using safe k-anonymity SHA-1 prefixes!",
     html: `<strong>🔬 Defensive Threat Labs:</strong><br>
 • <strong>Email Header Analyzer:</strong> Parses RFC 822 email headers for SPF, DKIM, and DMARC alignment, plus hop delivery delays.<br>
 • <strong>Lookalike Link Checker:</strong> Uses Levenshtein distance algorithms to spot typosquatting and phishing domains (e.g. <code>paypa1.com</code>).<br>
@@ -3212,14 +3234,25 @@ CyberTwin is an interactive cybersecurity digital twin. It models how adversarie
 • <strong>Phishing Detector:</strong> Highlights urgency keywords and social engineering tactics in raw email text.`
   },
   {
-    step: 9,
+    step: 11,
     title: "🎮 Quests & Phishing Showdown",
     targetSelector: "#tab-quiz",
-    speech: "Ready to put your security skills to the test? Complete the gamified Fix-It Quests to level up your posture rank from Script Kiddie Bait to Hardened Guardian! Then challenge our neural classifier in the Human vs AI Phishing Showdown. When you're done, download a branded executive PDF pentest report!",
+    speech: "Ready to put your security skills to the test? Complete the gamified Fix-It Quests to level up your posture rank from Script Kiddie Bait to Hardened Guardian! Then challenge our neural classifier in the Human vs AI Phishing Showdown across 8 real-world email scenarios!",
     html: `<strong>🎮 Gamified Quests & Showdown:</strong><br>
 • <strong>Fix-It Quests:</strong> Guided remediation tasks that reward badges and advance your twin posture rank.<br>
-• <strong>Human vs AI Showdown:</strong> Test your social engineering detection against 8 authentic email scenarios.<br>
-• <strong>📄 PDF Report Export:</strong> Click 'Download Report' in the header to generate a printable executive security audit summary!<br><br>
+• <strong>Time-to-Hack Metric:</strong> Calculates how each defense extends adversary crack time from 4 minutes to 800+ years.<br>
+• <strong>Human vs AI Showdown:</strong> Test your social engineering detection against 8 authentic email scenarios.`
+  },
+  {
+    step: 12,
+    title: "📋 CISO Threat Dossier & Executive PDF",
+    targetSelector: "#btnOpenDossier",
+    speech: "Finally, need to present findings to leadership, executives, or judges? Click 'Threat Dossier & PDF' to generate a full CISO executive audit report! It compiles all breach intelligence, MITRE kill-chain statuses, and prioritized remediations into an exportable, printable PDF pentest report!",
+    html: `<strong>📋 CISO Threat Dossier & PDF Pentest Report:</strong><br>
+• <strong>Executive Intelligence Dossier:</strong> Generates a full CISO-grade security briefing complete with case ID and scope metadata.<br>
+• <strong>MITRE Attack Matrix:</strong> Itemizes every attack stage with severance status and defensive countermeasures.<br>
+• <strong>Prioritized Remediations:</strong> Actionable 24-hour, 7-day, and 30-day security roadmaps.<br>
+• <strong>🖨️ Printable PDF Export:</strong> 1-click export to download a polished, audit-ready security report!<br><br>
 <span class="dazy-tour-tip">✨ You're all set! Drag me anywhere on your screen, click 'Pet Me' for love, or click 'Guide Tip' whenever you need help!</span>`
   }
 ];
@@ -3253,10 +3286,18 @@ function dazyRunTourStep(stepIndex) {
 
   // Target spotlight and smooth scroll
   if (step.targetSelector) {
-    if (step.step === 8) {
+    if (step.step === 7) {
+      document.getElementById('btnViewBlastRadius')?.click();
+    } else if (step.step === 5 || step.step === 6 || step.step === 8) {
+      document.getElementById('btnViewAttackPath')?.click();
+    } else if (step.step === 10) {
       document.querySelector('.tab-btn[data-tab="tab-header"]')?.click();
-    } else if (step.step === 9) {
+    } else if (step.step === 11) {
       document.querySelector('.tab-btn[data-tab="tab-quiz"]')?.click();
+    } else if (step.step === 12) {
+      document.getElementById('btnViewAttackPath')?.click();
+    } else {
+      document.getElementById('btnViewAttackPath')?.click();
     }
 
     setTimeout(() => {
@@ -3267,6 +3308,7 @@ function dazyRunTourStep(stepIndex) {
       }
     }, 60);
   } else {
+    document.getElementById('btnViewAttackPath')?.click();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -3300,6 +3342,9 @@ function dazyExitTour(restoreDefaultText = true) {
   if (restoreDefaultText && bubbleText) {
     bubbleText.textContent = "I'm always floating here to help! Click '🎓 Explain Everything' anytime for a full tour! ✨";
   }
+
+  // Restore attack path view if exited during blast radius
+  document.getElementById('btnViewAttackPath')?.click();
 
   sfx.playClick();
   dazySpawnParticle('💖', 0);
@@ -3518,17 +3563,40 @@ function initFloatingDazy() {
     dazySpawnParticle('✨', 0);
     dazySpawnParticle('🐙', 20);
 
-    const responses = [
-      `Dazy: "Regarding '${query}', always combine strong passphrases with FIDO2 MFA! Attackers can't crack math with sheer brute force! 🛡️"`,
-      `Dazy: "Smart question about '${query}'! In Alex's cyber digital twin, closing breached password paths stops credential-stuffing instantly! ✨"`,
-      `Dazy: "Cyber analysis: '${query}' relates to identity resilience. Check the MITRE ATT&CK map to see defense mitigations in action! 💡"`,
-      `Dazy: "Security Tip: '${query}' is a prime target for social engineering phishing. Never click urgent links before checking the domain! 🫧"`
-    ];
+    const qLower = query.toLowerCase();
+    let reply = '';
 
-    const pick = responses[Math.floor(Math.random() * responses.length)];
+    if (qLower.includes('blast') || qLower.includes('radius') || qLower.includes('sso') || qLower.includes('lateral')) {
+      reply = `Dazy: "The Identity Blast Radius Map shows how one stolen login lets attackers pivot laterally into Google, AWS, GitHub, Slack, and Banking via SSO! Click any node and select 'Isolate Account' to stop them! 🌐💥"`;
+    } else if (qLower.includes('remediat') || qLower.includes('auto') || qLower.includes('drill') || qLower.includes('sandbox')) {
+      reply = `Dazy: "Our 1-Click Auto-Remediation Sandbox runs a 4-stage automated incident response drill—simulating a biometric passkey handshake, cookie invalidation, and DMARC enforcement to drop risk straight to 0%! ⚡🛡️"`;
+    } else if (qLower.includes('dossier') || qLower.includes('pdf') || qLower.includes('report') || qLower.includes('print')) {
+      reply = `Dazy: "The CISO Threat Dossier compiles correlated breaches, MITRE kill-chain statuses, and prioritized remediations into an executive, printable PDF pentest report! Click 'Threat Dossier & PDF' to see it! 📋📄"`;
+    } else if (qLower.includes('score') || qLower.includes('calculate') || qLower.includes('formula') || qLower.includes('point') || qLower.includes('75') || qLower.includes('90') || qLower.includes('10')) {
+      reply = `Dazy: "Our transparent score starts with leaked passwords (+30), phishing risk (+25), missing MFA (+20), and recent breaches (+15), then subtracts active defenses down to 0%! 📐✨"`;
+    } else if (qLower.includes('mfa') || qLower.includes('passkey') || qLower.includes('fido2') || qLower.includes('auth')) {
+      reply = `Dazy: "FIDO2 WebAuthn Passkeys are phishing-resistant! They use cryptographic hardware origin binding so attackers can't steal your session with fake login pages! 🔑🛡️"`;
+    } else if (qLower.includes('password') || qLower.includes('manager') || qLower.includes('hibp') || qLower.includes('k-anonymity')) {
+      reply = `Dazy: "Our Password Lab checks passwords against billions of breaches using privacy-preserving k-anonymity SHA-1 prefixes—your actual password never leaves your browser! 🔐✨"`;
+    } else if (qLower.includes('phish') || qLower.includes('email') || qLower.includes('header') || qLower.includes('dmarc') || qLower.includes('spf')) {
+      reply = `Dazy: "Check out our Email Header Forensics and Phishing Keyword Detector! We parse SPF, DKIM, and DMARC alignment to catch lookalike domains and spoofed senders! 📧🎣"`;
+    } else if (qLower.includes('theme') || qLower.includes('dark') || qLower.includes('black') || qLower.includes('cyberpunk') || qLower.includes('color')) {
+      reply = `Dazy: "You can toggle between sleek Pitch Black (Linear style) and Soft Cyberpunk themes up in the top navigation bar! 🎨✨"`;
+    } else if (qLower.includes('alex') || qLower.includes('judge') || qLower.includes('demo')) {
+      reply = `Dazy: "Judge Mode loads Alex Chen's realistic digital twin—correlating 3 breaches (LinkedIn, Adobe, Canva) with MITRE attack paths in under 2 seconds! ⚡👤"`;
+    } else {
+      const genericTips = [
+        `Dazy: "Regarding '${query}', always combine strong passphrases with FIDO2 MFA! Attackers can't crack math with sheer brute force! 🛡️"`,
+        `Dazy: "Smart question about '${query}'! In Alex's cyber digital twin, closing breached password paths stops credential-stuffing instantly! ✨"`,
+        `Dazy: "Cyber analysis: '${query}' relates to identity resilience. Check the MITRE ATT&CK map to see defense mitigations in action! 💡"`,
+        `Dazy: "Security Tip: '${query}' is a prime target for social engineering phishing. Never click urgent links before checking the domain! 🫧"`
+      ];
+      reply = genericTips[Math.floor(Math.random() * genericTips.length)];
+    }
+
     if (aiInput) aiInput.value = '';
-    if (bubbleText) bubbleText.textContent = pick;
-    dazyVoice.speak(pick);
+    if (bubbleText) bubbleText.textContent = reply;
+    dazyVoice.speak(reply);
     dazySpawnParticle('💖', -15);
   }
 
@@ -3800,48 +3868,48 @@ function updateFloatingDazyMood(mood, dialogueText, speakNow = false) {
 const sectionGuideTips = {
   heroScanner: {
     mood: '🌸 Happy',
-    text: "Type any email or click the 'Judge Mode: Alex' demo preset! I'll query public breach data with zero PII retention! ✨"
+    text: "Type any email or click the 'Judge Mode: Alex' demo preset! I'll query live public breach data with zero PII retention! ✨"
   },
   dazyPodCard: {
     mood: '🥰 Loving',
-    text: "That's my twin pod in the left column, and I'm Dazy version 3.75 floating with you! Pet me or ask for advice! 💖"
+    text: "That's my twin telemetry pod! I'm Dazy, your cyber companion! Ask me anything or click 'Pet Me' anytime! 💖"
   },
   terminalCard: {
     mood: '😱 Alert',
-    text: "Adversary terminal! Watch how attackers execute credential stuffing and chain leaked passwords in real time! ⚡"
+    text: "Adversary terminal! Watch how attackers execute credential stuffing in Red mode, or inspect SOC detection logs in Blue mode! ⚡"
   },
   mitreGraphCard: {
     mood: '🔍 Analyzing',
-    text: "This is the interactive MITRE ATT&CK chain! Click any node or toggle defenses to see the hack broken! 🛡️"
+    text: "Interactive MITRE ATT&CK chain & Blast Radius! Click any node or toggle defenses to see attacks physically severed! 🛡️"
   },
   formulaSection: {
     mood: '📐 Smart',
-    text: "Risk Posture Formula: Calculated deterministically with exact mathematical weights, not fake static numbers! 🧠"
+    text: "Transparent Risk Formula: Calculated deterministically with exact arithmetic weights (+30, +25, +20, +15), not fake numbers! 🧠"
   },
   toolsSection: {
     mood: '🔬 Forensics',
-    text: "Deep-dive Labs: Analyze raw email headers, inspect typosquatting URLs, and calculate password crack time! 💻"
+    text: "Deep-dive Labs: Analyze email RFC headers, inspect typosquatting URLs with Levenshtein distance, and test password entropy! 💻"
   },
   questsSection: {
     mood: '🐾 Quests',
-    text: "Complete these fix-it security quests to level up Alex's digital twin, deploy shields, and keep me safe! 🌟"
+    text: "Complete these fix-it security quests to deploy defense shields, extend adversary crack time to centuries, and keep us safe! 🌟"
   },
   quizSection: {
     mood: '🎮 Showdown',
-    text: "Human vs AI Phishing Showdown: 8 real-world email scenarios. Can you outsmart our neural classification model? 🏆"
+    text: "Human vs AI Phishing Showdown: 8 real-world email scenarios. Can your human intuition beat our neural classification model? 🏆"
   }
 };
 
 function setupGuideObserver() {
   const sections = [
-    { id: 'heroScanner', elem: document.querySelector('.scanner-hero') },
+    { id: 'heroScanner', elem: document.querySelector('.email-scanner-hero') },
     { id: 'dazyPodCard', elem: document.getElementById('dazyPodCard') },
-    { id: 'terminalCard', elem: document.getElementById('terminalCard') },
-    { id: 'mitreGraphCard', elem: document.getElementById('attackGraphCard') },
-    { id: 'formulaSection', elem: document.querySelector('.formula-breakdown-card') },
-    { id: 'toolsSection', elem: document.querySelector('.deep-dive-tools-section') },
-    { id: 'questsSection', elem: document.getElementById('questsCard') },
-    { id: 'quizSection', elem: document.getElementById('quizShowdown') }
+    { id: 'terminalCard', elem: document.querySelector('.terminal-card') },
+    { id: 'mitreGraphCard', elem: document.querySelector('.attack-graph-card') },
+    { id: 'formulaSection', elem: document.querySelector('.formula-card') },
+    { id: 'toolsSection', elem: document.querySelector('.tools-section') },
+    { id: 'questsSection', elem: document.getElementById('tab-quests') },
+    { id: 'quizSection', elem: document.getElementById('tab-quiz') }
   ];
 
   const observer = new IntersectionObserver((entries) => {
